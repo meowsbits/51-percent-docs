@@ -42,5 +42,8 @@
     "ES6+",
     "live reload",
     "Sass"
-  ]
+  ],
+  "dependencies": {
+    "chart.js": "^3.8.2"
+  }
 }

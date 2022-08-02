@@ -1,4 +1,5 @@
 import { ECBP1100_Penalty } from './utils';
+import Chart from 'chart.js/auto';
 
 const summaryTable = document.querySelector('#summary-table');
 
@@ -71,6 +72,8 @@ const attackDurationVals = [5, 10, 15, 30, 60, 90, 120,
     60 *3, 60*4, 60*5, 60*6, 60*7, 60*8];
 
 function fillTable() {
+    let messNetData = [];
+
     for (let v of attackDurationVals) {
         const row = document.createElement('tr');
         row.classList.add('summary-row');
@@ -101,7 +104,10 @@ function fillTable() {
         const penalizedCostV = costV * ECBP1100_Penalty(v * 60);
         penalizedCost.innerHTML = penalizedCostV.toFixed(0);
 
-        penalizedNet.innerHTML = (revenueV + penalizedCostV).toFixed(0);
+        const penalizedNetV = (revenueV + penalizedCostV);
+        penalizedNet.innerHTML = penalizedNetV.toFixed(0);
+
+        messNetData.push({x: v, y: penalizedNetV});
 
         row.appendChild(duration);
         row.appendChild(blocks);
@@ -114,6 +120,45 @@ function fillTable() {
 
         summaryTable.appendChild(row);
     }
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    if (!ctx) return; // development; chart is borken
+
+    console.log("data", messNetData);
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        // data: messNetData,
+
+        // data: {
+        //     datasets: [{
+        //         data: [{x: 10, y: 20}, {x: 15, y: null}, {x: 20, y: 10}]
+        //     }]
+        // },
+
+        data: {
+            // labels: ['Mess Net'],
+            datasets: [{
+                // label: 'Mess Net',
+                data: messNetData,
+            }]
+        },
+        options: {
+            tick: {
+                index: 5,
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
 
 fillTable();
+
+
+
