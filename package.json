@@ -9,7 +9,8 @@
     "dev:assets": "webpack --watch",
     "dev:start": "live-server --open=./public/ --host=localhost --watch=./public/",
     "dev": "npm-run-all -p dev:*",
-    "build": "cross-env NODE_ENV=production webpack"
+    "build": "cross-env NODE_ENV=production webpack",
+    "gh-pages": "yarn build && rm -rf ./docs && cp -a ./public ./docs"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
