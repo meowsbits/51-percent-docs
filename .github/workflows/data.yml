@@ -29,7 +29,7 @@ jobs:
           node-version: v14.17.2
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Fetch and interpolate the data
         env:
           NOMICS_API_KEY: ${{ secrets.NOMICS_API_KEY }}
         run: |
@@ -39,13 +39,11 @@ jobs:
           cat data/exchange_rates.json >> src/scripts/data.js
           echo -n ";" >> src/scripts/data.js
 
-      - uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: '' # will run `yarn`, installing deps if needed
-      - uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: gh-pages # will run `yarn gh-pages` command
-            
+      - name: Run yarn commands
+        run: |
+          yarn
+          yarn gh-pages
+
       - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
         with:
           # The arguments for the `git add` command (see the paragraph below for more info)
