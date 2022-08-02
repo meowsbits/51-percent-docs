@@ -6,13 +6,6 @@ var humanFormat = require("human-format");
 
 const summaryTable = document.querySelector('#summary-table');
 
-// GetBacon()
-//   .then(res => {
-//     const markup = res.reduce((acc, val) => (acc += `<p>${val}</p>`), '');
-//     baconEl.innerHTML = markup;
-//   })
-//   .catch(err => (baconEl.innerHTML = err));
-
 let blockReward = 2.56;
 const input_blockReward = document.getElementById('block-reward');
 input_blockReward.value = blockReward;
@@ -258,5 +251,43 @@ const dataToUI = () => {
     });
 }
 
-dataToUI();
+/*
+ethrpc --http-addr https://classic.rpc.etccore.in eth_blockNumber
+{"jsonrpc":"2.0","id":21603,"result":"0xeee8e4"}
+
+ */
+fetch('https://classic.rpc.etccore.in', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_blockNumber',
+        params: [],
+    })
+}).then(res => res.json()).then(data => {
+    console.log("eth_blockNumber", data);
+    const blockNumber = parseInt(data.result, 16);
+    const monetaryPolicyStart = 5000000, monetaryPolicyEpoch = 5000000;
+
+    const currentMonetaryPolicyEpoch = Math.ceil((blockNumber - monetaryPolicyStart) / monetaryPolicyEpoch);
+    const originalReward = 5;
+    blockReward = originalReward * Math.pow(0.8, currentMonetaryPolicyEpoch);
+    blockReward = Math.round(blockReward * 100) / 100;
+    input_blockReward.value = blockReward;
+
+    return dataToUI();
+
+}).catch(err => {
+    console.log(err);
+
+    // We always want to push the data to the UI.
+    // This fetch is only used to get the block number,
+    // other data is expected to be persisted with the repo.
+    // If the fetch failed, we still have sane defaults (at least for a year or two).
+    return dataToUI();
+});
+
 
