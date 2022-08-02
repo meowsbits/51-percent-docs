@@ -1,5 +1,6 @@
 import {ECBP1100_Penalty} from './utils';
 import Chart from 'chart.js/auto';
+import {checkNoUnwrappedItemOptionPairs} from "@babel/core/lib/config/validation/options";
 
 var humanFormat = require("human-format");
 
@@ -126,7 +127,9 @@ function fillTable(data) {
         if (+num < 0) {
             classList = "negative";
         }
-        return `<span class='number ${classList}'>${Math.abs(num)}</span>`;
+        let content = Math.abs(num);
+        content = humanFormat(content).replace(/\ /g, '');
+        return `<span class='number ${classList}'>${content}</span>`;
     }
 
     for (let r of data.rows) {

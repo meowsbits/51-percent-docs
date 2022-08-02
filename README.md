@@ -1,6 +1,8 @@
-# live-reload-vanilla-website-template
+# 51-percent-docs
 
-Starter template to build a website without a front-end framework but making use of Webpack to support writing modern JavaScript (ES6+), including ES Modules and Sass.
+This repo contains source code for a website documenting
+the current state and estimates for a 51-percent attack
+on ETC.
 
 ## Features
 
@@ -14,13 +16,13 @@ Starter template to build a website without a front-end framework but making use
 
 - Install dependencies
 
-```
+```shell
 yarn
 ```
 
 - Run development server
 
-```
+```shell
 yarn dev
 ```
 
@@ -30,22 +32,16 @@ Webpack will watch for changes in the `./src` directory and output the bundled a
 
 - Build production bundles
 
-```
+```shell
 yarn build
 ```
 
-Will compile, minify and autoprefix Sass to CSS. Will Minify and uglify JavaScript and output the bundled assets to `./public/assets`.
+- Build and deploy to __Github Pages__
 
-After building for production you can take the `./public` directory and deploy it.
+```shell
+git checkout gh-pages
+yarn gh-pages
+git add . && git commit -m "Update site"
+git push origin gh-pages
+```
 
-## Tutorial
-
-Visit my [blog entry](https://esausilva.com/2018/09/17/build-a-website-with-modern-tooling-and-no-frameworks/) where I go step-by-step on how to build this template from scratch.
-
-## Giving Back
-
-If you would like to support my work and the time I put into making tutorials, consider getting me a coffee by clicking on the image below. I would really appreciate it!
-
-[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/esausilva)
-
--Esau Silva
