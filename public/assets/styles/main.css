@@ -21,7 +21,8 @@ h2,
 h3,
 h4,
 h5 {
-  margin: 6px;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
   padding: 0; }
 
 code {
@@ -50,18 +51,12 @@ tr.header {
   .wrapper > * {
     grid-column: 2 / -2; }
   .wrapper header {
-    grid-column: 1 / -1;
     background-size: cover;
     padding-top: 2rem;
     padding-bottom: 1rem;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: left; }
+    margin-bottom: 20px; }
     .wrapper header h1 {
-      font-size: 1.5rem;
-      padding-right: 0rem; }
+      font-size: 1.5rem; }
   .wrapper footer {
     height: 50px;
     display: flex;

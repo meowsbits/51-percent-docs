@@ -12,7 +12,7 @@
   }
 
   header {
-    grid-column: 1 / -1;
+    //grid-column: 1 / -1;
     // Photo by Karsten Würth (@inf1783) on Unsplash
     //background: #fdbc9a url('../../public/assets/images/venice-italy.jpg')
     //  no-repeat center;
@@ -21,14 +21,15 @@
     padding-top: 2rem;
     padding-bottom: 1rem;
     margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: left;
+    //display: flex;
+    //justify-content: start;
+    //align-items: center;
+    //text-align: left;
+
     h1 {
       font-size: 1.5rem;
       //font-weight: normal;
-      padding-right: 0rem;
+      //padding-right: 0rem;
       //margin: 0;
       //padding: 0;
     }
