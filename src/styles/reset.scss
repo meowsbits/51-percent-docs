@@ -32,18 +32,21 @@ h5 {
 
 code {
     font-family: monospace;
-    font-size: 1.2em;
   background-color: #eee;
   color: #111;
 }
 
-table {
-  td {
-    border-top: 1px solid gray;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
+td {
+  border-top: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
+th {
+  //border-bottom: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
 
 tr.header {
   text-align: left;

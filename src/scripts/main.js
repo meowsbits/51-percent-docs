@@ -88,19 +88,20 @@ function fillTable() {
         blocks.innerHTML = `${Math.round(v / 60 * blocksPerHour)}`;
 
         const basisV = blockEmissionETC(v / 60) * usdETC;
-        const costV = (basisV * marketHashrateRentalCost);
+        const costV = -1 * (basisV * marketHashrateRentalCost);
         cost.innerHTML = costV.toFixed(0);
 
         const revenueV = basisV;
         revenue.innerHTML = revenueV.toFixed(0);
 
-        net.innerHTML = (revenueV - costV).toFixed(0);
+        net.innerHTML = (revenueV + costV).toFixed(0);
 
         messPenalty.innerHTML = ECBP1100_Penalty(v * 60).toFixed(2);
 
-        penalizedCost.innerHTML = (costV * ECBP1100_Penalty(v * 60)).toFixed(0);
+        const penalizedCostV = costV * ECBP1100_Penalty(v * 60);
+        penalizedCost.innerHTML = penalizedCostV.toFixed(0);
 
-        penalizedNet.innerHTML = (revenueV - penalizedCost.innerHTML).toFixed(0);
+        penalizedNet.innerHTML = (revenueV + penalizedCostV).toFixed(0);
 
         row.appendChild(duration);
         row.appendChild(blocks);

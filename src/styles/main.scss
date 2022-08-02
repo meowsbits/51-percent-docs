@@ -17,12 +17,21 @@
     //background: #fdbc9a url('../../public/assets/images/venice-italy.jpg')
     //  no-repeat center;
     background-size: cover;
-    height: 50px;
+    //height: 50px;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
     margin-bottom: 20px;
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     text-align: left;
+    h1 {
+      font-size: 1.5rem;
+      //font-weight: normal;
+      padding-right: 0rem;
+      //margin: 0;
+      //padding: 0;
+    }
   }
 
   footer {
@@ -30,10 +39,4 @@
     display: flex;
     justify-content: flex-end;
   }
-}
-
-.bacon > img {
-  width: 75px;
-  display: block;
-  margin: auto;
 }
