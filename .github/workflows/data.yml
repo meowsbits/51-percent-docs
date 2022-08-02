@@ -35,6 +35,10 @@ jobs:
           echo -n "export const ExchangeData =" > src/scripts/data.js
           cat data/exchange_rates.json >> src/scripts/data.js
           echo -n ";" >> src/scripts/data.js
+
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: gh-pages # will run `yarn gh-pages` command
             
       - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
         with:
