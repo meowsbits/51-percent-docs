@@ -1,4 +1,5 @@
 import {ECBP1100_Penalty} from './utils';
+import {ExchangeData} from "./data";
 import Chart from 'chart.js/auto';
 import {checkNoUnwrappedItemOptionPairs} from "@babel/core/lib/config/validation/options";
 
@@ -23,7 +24,7 @@ input_blockReward.onchange = function () {
 
 const blocksPerHour = 60.0 * 60 / 13.0;
 
-let usdETC = 36.0;
+let usdETC = Math.round(ExchangeData[0].price) || 36;
 const input_usdETC = document.getElementById('usd-etc');
 input_usdETC.value = usdETC;
 input_usdETC.onchange = function () {
