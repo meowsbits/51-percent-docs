@@ -48,7 +48,7 @@ jobs:
 
           # The email of the user that will be displayed as the author of the commit.
           # Default: depends on the default_author input
-          author_email: kmtp@protonmail.com
+          author_email: b5c6@protonmail.com
 
           # Additional arguments for the git commit command. The --message argument is already set by the message input.
           # Default: ''
@@ -60,7 +60,7 @@ jobs:
 
           # The email of the custom committer you want to use, if different from the author of the commit.
           # Default: the email of the author (set with either author_email or default_author)
-          committer_email: kmtp@protonmail.com
+          committer_email: b5c6@protonmail.com
 
           # The local path to the directory where your repository is located. You should use actions/checkout first to set it up.
           # Default: '.'
