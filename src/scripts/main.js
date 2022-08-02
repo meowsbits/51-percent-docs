@@ -24,7 +24,7 @@ input_blockReward.onchange = function () {
 
 const blocksPerHour = 60.0 * 60 / 13.0;
 
-let usdETC = Math.round(ExchangeData[0].price) || 36;
+let usdETC = Math.round(+ExchangeData[0].price * 100) / 100 || 36;
 const input_usdETC = document.getElementById('usd-etc');
 input_usdETC.value = usdETC;
 input_usdETC.onchange = function () {
