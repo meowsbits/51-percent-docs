@@ -1,6 +1,7 @@
 import {ECBP1100_Penalty} from './utils';
 import {ExchangeData} from "./data";
 import Chart from 'chart.js/auto';
+import moment from 'moment';
 
 var humanFormat = require("human-format");
 
@@ -85,7 +86,7 @@ function blockEmissionETC(hours) {
 
 const attackDurationVals = [5, 10, 15, 30, 60, 90, 120,
     60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8,
-    60 * 16, 60 * 24];
+    60 * 16, 60 * 24 - 1];
 
 function buildData() {
     let data = {
@@ -113,6 +114,10 @@ function buildData() {
     return Promise.resolve(data);
 }
 
+function formatDuration(durationMinutes) {
+    return `${new Date(durationMinutes * 60 * 1000).toISOString().substring(11, 16)}`;
+}
+
 function fillTable(data) {
 
     function formatNumber(num) {
@@ -138,7 +143,8 @@ function fillTable(data) {
         const penalizedCost = document.createElement('td');
         const penalizedNet = document.createElement('td');
 
-        duration.innerHTML = `${r.duration} minutes`;
+
+        duration.innerHTML = `${formatDuration(r.duration)}`;
         blocks.innerHTML = `${Math.round(r.blocks)}`;
         cost.innerHTML = formatNumber(r.cost.toFixed(0));
         revenue.innerHTML = formatNumber(r.revenue.toFixed(0));
@@ -212,11 +218,16 @@ function chart(data) {
                 x: {
                     title: {
                         display: true,
-                        text: 'Attack Duration in Minutes',
+                        text: 'Attack Duration',
                     },
                     min: 0,
                     max: Math.max(...attackCostObjectData.map(v => v.x)),
                     type: 'linear',
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return formatDuration(value);
+                        }
+                    }
                 },
                 y: {
                     title: {
