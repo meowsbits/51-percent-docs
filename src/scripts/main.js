@@ -1,7 +1,6 @@
 import {ECBP1100_Penalty} from './utils';
 import {ExchangeData} from "./data";
 import Chart from 'chart.js/auto';
-import {checkNoUnwrappedItemOptionPairs} from "@babel/core/lib/config/validation/options";
 
 var humanFormat = require("human-format");
 
