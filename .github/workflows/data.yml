@@ -31,10 +31,10 @@ jobs:
           NOMICS_API_KEY: ${{ secrets.NOMICS_API_KEY }}
         run: |
           mkdir -p data
-          curl "https://api.nomics.com/v1/currencies/ticker\
-            ?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1"\
+          curl "https://api.nomics.com/v1/currencies/ticker"\
+            "?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1"\
             > data/exchange_rates.json
-          echo -n "export const ExchangeData =" > src/scripts/data.js"
+          echo -n "export const ExchangeData =" > src/scripts/data.js
           cat data/exchange_rates.json >> src/scripts/data.js
           echo -n ";" >> src/scripts/data.js
             
