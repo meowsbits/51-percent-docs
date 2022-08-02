@@ -44,11 +44,11 @@
             <tr class="header">
                 <th>Duration</th>
                 <th>Number of Blocks</th>
-                <th>Cost (w/o MESS) (USD)</th>
+                <th>Expense (w/o MESS) (USD)</th>
                 <th>Revenue (USD)</th>
                 <th>Net (USD)</th>
                 <th>MESS Penalty</th>
-                <th>Cost with MESS (USD)</th>
+                <th>Expense with MESS (USD)</th>
                 <th>Net with MESS (USD)</th>
             </tr>
         </table>
@@ -66,11 +66,11 @@
 
         <p>
             While a theoretical cost can be derived for arbitrary hashrates,
-            actual hardware resource availability is both extremely difficult to estimate reasonably,
-            and a very important limiting factor for the attack strategy.
+            actual hardware resource availability is both extremely difficult to estimate,
+            and a very important limitation for the attack strategy.
         </p>
 
-        <h4 id="etc-daggerhashimoto-etchash">The mining algorithm DaggerHashimoto has become <code>etchash</code></h4>
+        <h4 id="etc-daggerhashimoto-etchash">The original mining algorithm DaggerHashimoto has become <code>etchash</code></h4>
         <p>At block 11_700_000 (2020 November 28), Ethereum Classic implemented <a
                 href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1099.md/">ECIP-1099</a>,
             extending the Hashimoto DAG epoch length by a factor of 2, and thus reducing the requirement for mining
@@ -79,13 +79,13 @@
             also had the side-effect of removing the Ethereum Classic mining protocol from defaults provided by
             on-demand hashrate marketplaces, notably <a href="https://www.nicehash.com/">Nicehash.com</a>.</p>
         <p>The hardware available for mining on ETC is now a <em>superset</em> of the hardware capable of mining ETH.
-            Hardware used to mine ETH could also be used to mine ETC, but not necessarily vice versa.</p>
-        <p>This means that while the current hashrate on ETH must be considered to be representative of potentially
-            applicable hardware to ETC, it is not solely representative of the universal hardware potential.</p>
+            This means that while the current hashrate on ETH must be considered to be representative of potentially
+            applicable hardware to ETC, it is (probably) not solely representative of the universal hardware potential.</p>
         <p>The <code>etchash</code> algorithm is supported by various mining software; including but not limited to
-            <code>PhoenixMiner</code>, <code>T-Rex</code>, <code>Gminer</code>, and <code>lolMiner</code>. &gt;
-            https://2miners.com/blog/how-to-mine-ethereum-classic-etc-mining-and-profitability/</p>
-        <p><a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a cost/benefit analysis tool
+            <code>PhoenixMiner</code>, <code>T-Rex</code>, <code>Gminer</code>, and <code>lolMiner</code>.<sup><a
+                    href="https://2miners.com/blog/how-to-mine-ethereum-classic-etc-mining-and-profitability">2miners</a></sup>
+            </p>
+        <p><a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a hardware cost/benefit analysis tool
             for ETC and <code>etchash</code>.</p>
 
         <h2 id="mess">MESS</h2>

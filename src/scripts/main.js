@@ -42,7 +42,9 @@ input_usdETC.onchange = function () {
 //
 // This value is defined as HOW MUCH MORE ETC/HOUR THE RENTER PAYS
 // compared to how much they could EARN if they were mining.
-const empiricalCost_Ethash_930THs_24h_ETH = 12910.1;
+const empiricalHashrate_ETH = 930; // TH/s
+const empiricalCost_Ethash_1Ths_24h = 13.9; // ETH
+const empiricalCost_Ethash_930THs_24h_ETH = empiricalCost_Ethash_1Ths_24h * empiricalHashrate_ETH;
 const empiricalReward_Ethash_24h_ETH = 60 * 60 * 24 / 13.5 * 2; // =12800
 
 let marketHashrateRentalCost =
@@ -56,6 +58,32 @@ input_marketHashrateRentalCost.onchange = function () {
     marketHashrateRentalCost = this.value;
     dataToUI();
 }
+
+
+// https://etherscan.io/stat/miner?range=7&blocktype=blocks
+// Tue Aug  2 09:42:24 PDT 2022
+const empiricalMinerHashrateShares_ETH = [
+    {address: "0xea674fdde714fd979de3edf0f56aa9716b898ec8", name: "Ethermine", percentage: 28.2545},
+    {address: "0x829bd824b016326a401d083b33d092293333a830", name: "F2Pool Old", percentage: 13.9257},
+    {address: "0x1ad91ee08f21be3de0ba2ba6918e714da6b45836", name: "Hiveon Pool", percentage: 10.1252},
+    {address: "0x00192fb10df37c9fb26829eb2cc623cd1bf599e8", name: "2Miners: PPLNS", percentage: 6.7623},
+    {address: "0x7f101fe45e6649a6fb8f3f8b43ed03d353f2b90c", name: "Flexpool.io", percentage: 5.5144},
+    {address: "0x2daa35962a6d43eb54c48367b33d0b379c930e5e", name: "Poolin 2", percentage: 3.7195},
+    {address: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5", name: "Nanopool", percentage: 2.8200},
+    {address: "0xab3b229eb4bcff881275e7ea2f0fd24eeac8c83a", name: "Miner: 0xab3...83a", percentage: 2.6984},
+    {address: "0xc730b028da66ebb14f20e67c68dd809fbc49890d", name: "Ezil.me : Ezil Pool 4", percentage: 2.5080},
+    {address: "0xcd458d7f11023556cc9058f729831a038cb8df9c", name: "Poolin 4", percentage: 2.4371},
+    {address: "0x3ecef08d0e2dad803847e052249bb4f8bff2d5bb", name: "MiningPoolHub", percentage: 2.2568},
+    {address: "0x646db8ffc21e7ddc2b6327448dd9fa560df41087", name: "Miner: 0x646...087", percentage: 1.9084},
+    {address: "0xc365c3315cf926351ccaf13fa7d19c8c4058c8e1", name: "Binance Pool", percentage: 1.8212},
+    {address: "0xb7e390864a90b7b923c9f9310c6f98aafe43f707", name: "Miner: 0xb7e...707", percentage: 1.7990},
+    {address: "0x2a20380dca5bc24d052acfbf79ba23e988ad0050", name: "Poolin 3", percentage: 1.5153},
+    {address: "0x5b310960a7922092fdcb9295ece336012f9cf87e", name: "BTC.com Pool 2", percentage: 1.3978},
+    {address: "0x8f03f1a3f10c05e7cccf75c1fd10168e06659be7", name: "Miner: 0x8f0...be7", percentage: 1.3553},
+    {address: "0x03e75d7dd38cce2e20ffee35ec914c57780a8e29", name: "GPUMINE Pool 1", percentage: 1.3026},
+    {address: "0x8b4de256180cfec54c436a470af50f9ee2813dbb", name: "SBI Crypto Pool", percentage: 1.2540},
+    {address: "0x28846f1ec065eea239152213373bb58b1c9fc93b", name: "Miner: 0x288...93B", percentage: 0.8995},
+];
 
 function blockEmissionETC(hours) {
     return blocksPerHour * blockReward * hours;
@@ -93,6 +121,14 @@ function buildData() {
 
 function fillTable(data) {
 
+    function formatNumber(num) {
+        let classList = "positive";
+        if (+num < 0) {
+            classList = "negative";
+        }
+        return `<span class='number ${classList}'>${Math.abs(num)}</span>`;
+    }
+
     for (let r of data.rows) {
         const row = document.createElement('tr');
         row.classList.add('summary-row');
@@ -108,12 +144,12 @@ function fillTable(data) {
 
         duration.innerHTML = `${r.duration} minutes`;
         blocks.innerHTML = `${Math.round(r.blocks)}`;
-        cost.innerHTML = r.cost.toFixed(0);
-        revenue.innerHTML = r.revenue.toFixed(0);
-        net.innerHTML = (r.revenue + r.cost).toFixed(0);
+        cost.innerHTML = formatNumber(r.cost.toFixed(0));
+        revenue.innerHTML = formatNumber(r.revenue.toFixed(0));
+        net.innerHTML = formatNumber((r.revenue + r.cost).toFixed(0));
         messPenalty.innerHTML = r.penalty.toFixed(2);
-        penalizedCost.innerHTML = r.penalizedCost.toFixed(0);
-        penalizedNet.innerHTML = (r.revenue + r.penalizedCost).toFixed(0);
+        penalizedCost.innerHTML = formatNumber(r.penalizedCost.toFixed(0));
+        penalizedNet.innerHTML = formatNumber((r.revenue + r.penalizedCost).toFixed(0));
 
         row.appendChild(duration);
         row.appendChild(blocks);
@@ -135,13 +171,16 @@ function chart(data) {
     console.log("chart data", data);
 
     let attackCostObjectData = data.rows.map(v => {
-        return {x: v.duration, y: v.penalizedCost + v.revenue};
+        return {x: v.duration, y: v.revenue + v.penalizedCost};
     });
 
-    attackCostObjectData = attackCostObjectData.filter(v => v.x < 600);
+    // Filter to show only first 8 hours. The rest is too much.
+    attackCostObjectData = attackCostObjectData.filter(v => v.x < 60*8);
 
     console.log("line data", attackCostObjectData);
 
+    // We have to destroy the chart if we want to repaint it,
+    // which we always do, since the chart variable is initialized globally.
     myChart.destroy();
 
     let chartData = {
@@ -149,7 +188,7 @@ function chart(data) {
             {
                 label: 'Attack Net under MESS',
                 data: attackCostObjectData,
-                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                backgroundColor: '#8B0000FF',
             }
         ]
     };
@@ -160,7 +199,7 @@ function chart(data) {
         options: {
             plugins: {
                 title: {
-                    text: 'Attack Net under MESS',
+                    text: 'Attack Accounting under MESS',
                     display: true,
                 },
                 legend: {
@@ -186,10 +225,11 @@ function chart(data) {
                 y: {
                     title: {
                         display: true,
-                        text: 'Net Cost + Expected Revenue',
+                        text: 'Net: Revenue - Expense',
                     },
                     // min: -10000000,
-                    max: 0,
+                    max: Math.max(...attackCostObjectData.map(v => v.y)),
+                    min: Math.min(...attackCostObjectData.map(v => v.y)),
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function (value, index, ticks) {
