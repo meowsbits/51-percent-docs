@@ -30,5 +30,3 @@ export const ECBP1100_Polynomial = (x) => {
 export const ECBP1100_Penalty = (x) => {
     return ECBP1100_Polynomial(x) / ecbp1100PolynomialVCurveFunctionDenominator;
 }
-
-console.log(ECBP1100_Penalty(60 * 60 * 2));
