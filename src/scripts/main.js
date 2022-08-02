@@ -17,9 +17,6 @@ const input_blockReward = document.getElementById('block-reward');
 input_blockReward.value = blockReward;
 input_blockReward.onchange = function () {
     blockReward = this.value;
-    document.querySelectorAll('.summary-row').forEach(row => {
-        row.remove();
-    })
     dataToUI();
 }
 
@@ -30,9 +27,6 @@ const input_usdETC = document.getElementById('usd-etc');
 input_usdETC.value = usdETC;
 input_usdETC.onchange = function () {
     usdETC = this.value;
-    document.querySelectorAll('.summary-row').forEach(row => {
-        row.remove();
-    })
     dataToUI();
 }
 
@@ -60,9 +54,6 @@ const input_marketHashrateRentalCost = document.getElementById('hashrate-rental-
 input_marketHashrateRentalCost.value = marketHashrateRentalCost;
 input_marketHashrateRentalCost.onchange = function () {
     marketHashrateRentalCost = this.value;
-    document.querySelectorAll('.summary-row').forEach(row => {
-        row.remove();
-    })
     dataToUI();
 }
 
@@ -216,6 +207,9 @@ function chart(data) {
 
 const dataToUI = () => {
     return buildData().then(data => {
+        document.querySelectorAll('.summary-row').forEach(row => {
+            row.remove();
+        })
         fillTable(data);
         chart(data);
     });
