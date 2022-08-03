@@ -1,11 +1,12 @@
 import {ECBP1100_Penalty} from './utils';
 import {ExchangeData} from "./data";
 import Chart from 'chart.js/auto';
-import moment from 'moment';
+import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
 
 var humanFormat = require("human-format");
 
 const summaryTable = document.querySelector('#summary-table');
+const minerTable = document.querySelector('#eth-miners');
 
 let blockReward = 2.56;
 const input_blockReward = document.getElementById('block-reward');
@@ -53,32 +54,6 @@ input_marketHashrateRentalCost.onchange = function () {
     marketHashrateRentalCost = this.value;
     dataToUI();
 }
-
-
-// https://etherscan.io/stat/miner?range=7&blocktype=blocks
-// Tue Aug  2 09:42:24 PDT 2022
-const empiricalMinerHashrateShares_ETH = [
-    {address: "0xea674fdde714fd979de3edf0f56aa9716b898ec8", name: "Ethermine", percentage: 28.2545},
-    {address: "0x829bd824b016326a401d083b33d092293333a830", name: "F2Pool Old", percentage: 13.9257},
-    {address: "0x1ad91ee08f21be3de0ba2ba6918e714da6b45836", name: "Hiveon Pool", percentage: 10.1252},
-    {address: "0x00192fb10df37c9fb26829eb2cc623cd1bf599e8", name: "2Miners: PPLNS", percentage: 6.7623},
-    {address: "0x7f101fe45e6649a6fb8f3f8b43ed03d353f2b90c", name: "Flexpool.io", percentage: 5.5144},
-    {address: "0x2daa35962a6d43eb54c48367b33d0b379c930e5e", name: "Poolin 2", percentage: 3.7195},
-    {address: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5", name: "Nanopool", percentage: 2.8200},
-    {address: "0xab3b229eb4bcff881275e7ea2f0fd24eeac8c83a", name: "Miner: 0xab3...83a", percentage: 2.6984},
-    {address: "0xc730b028da66ebb14f20e67c68dd809fbc49890d", name: "Ezil.me : Ezil Pool 4", percentage: 2.5080},
-    {address: "0xcd458d7f11023556cc9058f729831a038cb8df9c", name: "Poolin 4", percentage: 2.4371},
-    {address: "0x3ecef08d0e2dad803847e052249bb4f8bff2d5bb", name: "MiningPoolHub", percentage: 2.2568},
-    {address: "0x646db8ffc21e7ddc2b6327448dd9fa560df41087", name: "Miner: 0x646...087", percentage: 1.9084},
-    {address: "0xc365c3315cf926351ccaf13fa7d19c8c4058c8e1", name: "Binance Pool", percentage: 1.8212},
-    {address: "0xb7e390864a90b7b923c9f9310c6f98aafe43f707", name: "Miner: 0xb7e...707", percentage: 1.7990},
-    {address: "0x2a20380dca5bc24d052acfbf79ba23e988ad0050", name: "Poolin 3", percentage: 1.5153},
-    {address: "0x5b310960a7922092fdcb9295ece336012f9cf87e", name: "BTC.com Pool 2", percentage: 1.3978},
-    {address: "0x8f03f1a3f10c05e7cccf75c1fd10168e06659be7", name: "Miner: 0x8f0...be7", percentage: 1.3553},
-    {address: "0x03e75d7dd38cce2e20ffee35ec914c57780a8e29", name: "GPUMINE Pool 1", percentage: 1.3026},
-    {address: "0x8b4de256180cfec54c436a470af50f9ee2813dbb", name: "SBI Crypto Pool", percentage: 1.2540},
-    {address: "0x28846f1ec065eea239152213373bb58b1c9fc93b", name: "Miner: 0x288...93B", percentage: 0.8995},
-];
 
 function blockEmissionETC(hours) {
     return blocksPerHour * blockReward * hours;
@@ -252,8 +227,89 @@ function chart(data) {
     });
 }
 
+
+// https://etherscan.io/stat/miner?range=7&blocktype=blocks
+// Tue Aug  2 09:42:24 PDT 2022
+const empiricalMinerHashrateShares_ETH = [
+    {address: "0xea674fdde714fd979de3edf0f56aa9716b898ec8", name: "Ethermine", percentage: 28.2545},
+    {address: "0x829bd824b016326a401d083b33d092293333a830", name: "F2Pool Old", percentage: 13.9257},
+    {address: "0x1ad91ee08f21be3de0ba2ba6918e714da6b45836", name: "Hiveon Pool", percentage: 10.1252},
+    {address: "0x00192fb10df37c9fb26829eb2cc623cd1bf599e8", name: "2Miners: PPLNS", percentage: 6.7623},
+    {address: "0x7f101fe45e6649a6fb8f3f8b43ed03d353f2b90c", name: "Flexpool.io", percentage: 5.5144},
+    {address: "0x2daa35962a6d43eb54c48367b33d0b379c930e5e", name: "Poolin 2", percentage: 3.7195},
+    {address: "0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5", name: "Nanopool", percentage: 2.8200},
+    {address: "0xab3b229eb4bcff881275e7ea2f0fd24eeac8c83a", name: "Miner: 0xab3...83a", percentage: 2.6984},
+    {address: "0xc730b028da66ebb14f20e67c68dd809fbc49890d", name: "Ezil.me : Ezil Pool 4", percentage: 2.5080},
+    {address: "0xcd458d7f11023556cc9058f729831a038cb8df9c", name: "Poolin 4", percentage: 2.4371},
+    {address: "0x3ecef08d0e2dad803847e052249bb4f8bff2d5bb", name: "MiningPoolHub", percentage: 2.2568},
+    {address: "0x646db8ffc21e7ddc2b6327448dd9fa560df41087", name: "Miner: 0x646...087", percentage: 1.9084},
+    {address: "0xc365c3315cf926351ccaf13fa7d19c8c4058c8e1", name: "Binance Pool", percentage: 1.8212},
+    {address: "0xb7e390864a90b7b923c9f9310c6f98aafe43f707", name: "Miner: 0xb7e...707", percentage: 1.7990},
+    {address: "0x2a20380dca5bc24d052acfbf79ba23e988ad0050", name: "Poolin 3", percentage: 1.5153},
+    {address: "0x5b310960a7922092fdcb9295ece336012f9cf87e", name: "BTC.com Pool 2", percentage: 1.3978},
+    {address: "0x8f03f1a3f10c05e7cccf75c1fd10168e06659be7", name: "Miner: 0x8f0...be7", percentage: 1.3553},
+    {address: "0x03e75d7dd38cce2e20ffee35ec914c57780a8e29", name: "GPUMINE Pool 1", percentage: 1.3026},
+    {address: "0x8b4de256180cfec54c436a470af50f9ee2813dbb", name: "SBI Crypto Pool", percentage: 1.2540},
+    {address: "0x28846f1ec065eea239152213373bb58b1c9fc93b", name: "Miner: 0x288...93B", percentage: 0.8995},
+];
+
+const terahash = 1000000000000;
+function currentHashrate_TH(chain) {
+    let block = ETC_Latest_Block.result;
+    if (chain === 'eth') block = ETH_Latest_Block.result;
+
+    return parseInt(block.difficulty, 16) / 13 / terahash;
+}
+
+
+function hashrateEstimatesDataToUI() {
+    const hr_ETH = currentHashrate_TH('eth');
+    const hr_ETC = currentHashrate_TH('etc');
+    const hr_ETC_GlobalShare = (hr_ETC / (hr_ETH + hr_ETC) * 100);
+
+    document.getElementById('eth-hashrate-current').innerHTML = hr_ETH.toFixed(1) + 'TH/s';
+    document.getElementById('etc-hashrate-current').innerHTML = hr_ETC.toFixed(1) + 'TH/s';
+    document.getElementById('global-hashrate').innerHTML = (hr_ETH + hr_ETC).toFixed(1) + 'TH/s';
+    document.getElementById('etc-global-hashrate-share').innerHTML = hr_ETC_GlobalShare.toFixed(2) + '%';
+
+    function formatAttackPotentialColumn(miner_hr) {
+        let classname = "positive";
+        if (miner_hr > hr_ETC) classname = "negative";
+
+        return `<span class="number ${classname}">${miner_hr.toFixed(1)}TH/s (${(miner_hr / hr_ETC).toFixed(2)}x)</span>`;
+    }
+
+    for (let miner of empiricalMinerHashrateShares_ETH) {
+        const row = document.createElement('tr');
+        row.classList.add('miner-row');
+
+        const minerAddressCell = document.createElement('td');
+        minerAddressCell.style.maxWidth = '5rem';
+        minerAddressCell.style.overflow = 'hidden';
+        const minerCell = document.createElement('td');
+        const minerPercentageCell = document.createElement('td');
+        const minerHashrateCell = document.createElement('td');
+
+        minerAddressCell.innerHTML = miner.address;
+        minerCell.innerHTML = miner.name;
+        minerPercentageCell.innerHTML = miner.percentage.toFixed(2) + '%';
+
+        const minerTH = (miner.percentage / 100 * (hr_ETH));
+        minerHashrateCell.innerHTML = formatAttackPotentialColumn(minerTH);
+
+        row.appendChild(minerAddressCell);
+        row.appendChild(minerCell);
+        row.appendChild(minerPercentageCell);
+        row.appendChild(minerHashrateCell);
+
+        minerTable.appendChild(row);
+    }
+}
+
 const dataToUI = () => {
-    return buildData().then(data => {
+    hashrateEstimatesDataToUI();
+
+    buildData().then(data => {
         document.querySelectorAll('.summary-row').forEach(row => {
             row.remove();
         })
@@ -262,25 +318,14 @@ const dataToUI = () => {
     });
 }
 
-/*
-ethrpc --http-addr https://classic.rpc.etccore.in eth_blockNumber
-{"jsonrpc":"2.0","id":21603,"result":"0xeee8e4"}
+function init() {
 
- */
-fetch('https://classic.rpc.etccore.in', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'eth_blockNumber',
-        params: [],
-    })
-}).then(res => res.json()).then(data => {
-    console.log("eth_blockNumber", data);
-    const blockNumber = parseInt(data.result, 16);
+    console.log("ETC_latestBlock", ETC_Latest_Block);
+    console.log("ETH_latestBlock", ETH_Latest_Block);
+
+    // ETC
+    const blockNumber = parseInt(ETC_Latest_Block.result.number, 16);
+
     const monetaryPolicyStart = 5000000, monetaryPolicyEpoch = 5000000;
 
     const currentMonetaryPolicyEpoch = Math.ceil((blockNumber - monetaryPolicyStart) / monetaryPolicyEpoch);
@@ -290,15 +335,8 @@ fetch('https://classic.rpc.etccore.in', {
     input_blockReward.value = blockReward;
 
     return dataToUI();
+}
 
-}).catch(err => {
-    console.log(err);
-
-    // We always want to push the data to the UI.
-    // This fetch is only used to get the block number,
-    // other data is expected to be persisted with the repo.
-    // If the fetch failed, we still have sane defaults (at least for a year or two).
-    return dataToUI();
-});
+init();
 
 

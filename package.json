@@ -44,7 +44,6 @@
   ],
   "dependencies": {
     "chart.js": "^3.8.2",
-    "human-format": "^1.0.0",
-    "moment": "^2.29.4"
+    "human-format": "^1.0.0"
   }
 }

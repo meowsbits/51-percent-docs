@@ -29,12 +29,24 @@ jobs:
       - name: Fetch and interpolate the data
         env:
           NOMICS_API_KEY: ${{ secrets.NOMICS_API_KEY }}
+          RIVET_API_KEY: ${{ secrets.RIVET_API_KEY }}
         run: |
           mkdir -p data
           curl "https://api.nomics.com/v1/currencies/ticker?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1" > data/exchange_rates.json
           echo -n "export const ExchangeData =" > src/scripts/data.js
           cat data/exchange_rates.json >> src/scripts/data.js
           echo -n ";" >> src/scripts/data.js
+          
+          curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.etc.rpc.rivet.cloud > data/rivet_etc_latest_block.json
+          curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.eth.rpc.rivet.cloud > data/rivet_eth_latest_block.json
+          
+          echo -n "export const ETC_Latest_Block =" > src/scripts/chaindata.js
+          cat data/rivet_etc_latest_block.json >> src/scripts/chaindata.js
+          echo -n ";" >> src/scripts/chaindata.js
+          
+          echo -n "export const ETH_Latest_Block =" >> src/scripts/chaindata.js
+          cat data/rivet_eth_latest_block.json >> src/scripts/chaindata.js
+          echo -n ";" >> src/scripts/chaindata.js
 
       - run: yarn
       - run: yarn build

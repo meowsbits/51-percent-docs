@@ -70,12 +70,24 @@
             and a very important limitation for the attack strategy.
         </p>
 
-        <h4 id="etc-daggerhashimoto-etchash">The original mining algorithm DaggerHashimoto has become <code>etchash</code></h4>
-        <p>At block 11_700_000 (2020 November 28), Ethereum Classic implemented <a
+        <h3 id="etc-daggerhashimoto-etchash">
+            Mining Algorithm
+        </h3>
+        <p>
+            The original mining algorithm <code>DaggerHashimoto</code>, still in use today by Ethereum,
+            has been changed to <code>etchash</code> on Ethereum Classic.
+        </p>
+        <p>
+            At block 11_700_000 (2020 November 28), Ethereum Classic implemented <a
                 href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1099.md/">ECIP-1099</a>,
             extending the Hashimoto DAG epoch length by a factor of 2, and thus reducing the requirement for mining
-            hardware memory allocation, which had recently exceeded 4GB.</p>
-        <p>This change was and is expected to recover and increase hardware availability for the mining algorithm. It
+            hardware memory allocation, which had recently exceeded 4GB.
+        </p>
+        <p>
+            This change was and is expected to recover and increase hardware availability for the mining algorithm.
+        </p>
+
+        <p>It
             also had the side-effect of removing the Ethereum Classic mining protocol from defaults provided by
             on-demand hashrate marketplaces, notably <a href="https://www.nicehash.com/">Nicehash.com</a>.</p>
         <p>The hardware available for mining on ETC is now a <em>superset</em> of the hardware capable of mining ETH.
@@ -87,6 +99,33 @@
             </p>
         <p><a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a hardware cost/benefit analysis tool
             for ETC and <code>etchash</code>.</p>
+
+        <h3>Potential Hashrate Estimates</h3>
+
+        <p>
+            If we consider only the hashrate on Ethereum, which is applicable to Ethereum Classic,
+            we can estimate the entities in possession of sufficient hashrate to attack Ethereum Classic.
+        </p>
+
+        <p>
+            The current hashrate on Ethereum is <code id="eth-hashrate-current"></code>.
+            The current hashrate on Ethereum Classic is <code id="etc-hashrate-current"></code>.
+            So the current common hashrate potential is their sum: <code id="global-hashrate"></code>.
+            So Ethereum Classic represents <span id="etc-global-hashrate-share"></span>
+            of global, observable, ETH/ETC-compatible hashrate.
+        </p>
+        <p>
+            Given the top miner shares on Ethereum, we can estimate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
+        </p>
+
+        <table id="eth-miners">
+            <tr class="header">
+                <th>Address</th>
+                <th>Name</th>
+                <th>Share ETH (%)</th>
+                <th>~Hashrate (xETC)</th>
+            </tr>
+        </table>
 
         <h2 id="mess">MESS</h2>
         <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy originally proposed by
@@ -105,29 +144,34 @@
                  alt="ecbp1100-polynomial" style="max-width: 400px; display: inline-block;"/>
         </div>
 
+        <h5>Example 1 (1 hour)</h5>
         <p>Without MESS, an attack lasting 1 hour would theoretically cost 24_756 + 1 USD. With MESS, an attack lasting
             1 hour (=267 blocks) would theoretically cost <code>24_756 * 2.66 = 65_851</code> USD.</p>
         <p>Where <code>2.66</code> is derived as <code>ecbp1100Polynomial(60 * 60)/128</code>.</p>
         <p>Therefore, a 51-percent attack scheme lasting 1 hour would demand a payout (fraud value) of 65_851 - 24_756
             (recouped cost in block reward revenue) = 41_095 USD.</p>
-        <p>Another example:</p>
+
+        <h5>Example 2 (2 hours)</h5>
         <p>Without MESS, an attack lasting 2 hours would theoretically cost <code>24_756 * 2</code> = 49_152 + 1 USD.
             With MESS, an attack lasting 2 hours (=533 blocks) would theoretically cost <code>24_756 * 2 * 6.97 =
                 345_099</code> USD.</p>
         <p>Where <code>6.97</code> is derived as <code>ecbp1100Polynomial(3600 * 2)/128</code>.</p>
         <p>Therefore, a 51-percent attack scheme lasting 2 hours would demand a payout (fraud value) of 345_09 - 49_152
             (recouped cost in block reward revenue) = 295_587 USD.</p>
-        <p>Finally, another example:</p>
+
+        <h5>Example 3 (4 hours)</h5>
         <p>Without MESS, an attack lasting 4 hours would theoretically cost <code>24_756 * 4</code> = 99_024 + 1 USD.
             With MESS, an attack lasting 4 hours (=1066 blocks) would theoretically cost <code>24_756 * 4 * 19.25 =
                 1_906_212</code> USD.</p>
         <p>Where <code>19.25</code> is derived as <code>ecbp1100Polynomial(3600 * 4)/128</code>.</p>
         <p>Therefore, a 51-percent attack scheme lasting 4 hours (around 1100 blocks) would demand a payout (fraud
             value) of 1_906_212 - 99_024 (recouped cost in block reward revenue) = 1_807_188 USD.</p>
-        <p>Please note that these estimates are rough estimates. Factors not taken into account include but are not
+
+        <h5>Notes</h5>
+        <p>These estimates are rough. Factors not taken into account include but are not
             limited to difficulty adjustment rates, potentially variable hashrate availability, nor any “luck” margin
             for the miner’s target total difficulty,</p>
-        <p>The MESS penalty multiplier for Total Difficulty maxes out at 7 hours at a value of 31x.</p>
+        <p>The MESS penalty maxes out at 7 hours at a value of 31x.</p>
 
         <h3 id="mess-vulnerabilities">MESS Vulnerabilities</h3>
         <p>Because the MESS protocol induces nodes to act decisively on an evaluation of a subjective data point (local
@@ -184,16 +228,6 @@
             <li>Private or obscure hashrate marketplaces</li>
         </ul>
         </p>
-
-        <h2 id="current-statistics">Current Statistics</h2>
-        <ul>
-            <li>Exchange rate: 1 ETC = 0.021 ETH</li>
-            <li>Hash rate: 25 TH/s ETC : 929 TH/s ETH = 0.026</li>
-            <li>Hash cost: ETC = ? : ETH = 13.9 ETH/TH/24h</li>
-            <li>Block production rate: ETC ~ ETH = ~13.5 seconds/block (ETC is slightly faster because of greater
-                Difficulty volatility)
-            </li>
-        </ul>
 
     </main>
     <footer>
