@@ -1,4 +1,7 @@
 node_modules/
 .DS_Store
 yarn-error.log
+public/assets/scripts/bundle.js
+public/assets/scripts/bundle.js.LICENSE.txt
+public/assets/styles/main.css
 
