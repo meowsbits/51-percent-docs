@@ -51,7 +51,6 @@ Webpack will watch for changes in the `./src` directory and output the bundled a
 
 Output dir: `./public`
 
-```shell
 
 ```shell
 yarn build
