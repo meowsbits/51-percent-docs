@@ -5,10 +5,7 @@ name: Data Getter
 # Controls when the workflow will run
 on:
   schedule:
-    - cron: '0 22 * * *'
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
-    branches: [ "gh-pages" ]
+    - cron: '4 2 * * *'
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,10 +36,8 @@ jobs:
           cat data/exchange_rates.json >> src/scripts/data.js
           echo -n ";" >> src/scripts/data.js
 
-      - name: Run yarn commands
-        run: |
-          yarn
-          yarn gh-pages
+      - run: yarn
+      - run: yarn build
 
       - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
         with:
@@ -83,7 +78,7 @@ jobs:
 
           # The message for the commit.
           # Default: 'Commit from GitHub Actions (name of the workflow)'
-          message: 'auto-commited exchange rate data'
+          message: 'auto-committed exchange rate data'
 
           # If this input is set, the action will push the commit to a new branch with this name.
           # Default: ''
@@ -115,3 +110,7 @@ jobs:
           # Arguments for the git push --tags command (any additional argument will be added after --tags)
           # Default: ''
 #           tag_push: '--force'
+
+      - uses: actions/upload-pages-artifact@main
+        with:
+          path: public

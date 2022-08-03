@@ -1,0 +1,25 @@
+name: Publish to Github Pages
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: v14.17.2
+
+      - run: yarn
+      - run: yarn build
+
+      - uses: actions/upload-pages-artifact@main
+        with:
+          path: public
+
