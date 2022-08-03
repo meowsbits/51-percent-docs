@@ -87,8 +87,8 @@
             This change was and is expected to recover and increase hardware availability for the mining algorithm.
         </p>
 
-        <p>It
-            also had the side-effect of removing the Ethereum Classic mining protocol from defaults provided by
+        <p>
+            It also had the side-effect of removing the Ethereum Classic mining protocol from defaults provided by
             on-demand hashrate marketplaces, notably <a href="https://www.nicehash.com/">Nicehash.com</a>.</p>
         <p>The hardware available for mining on ETC is now a <em>superset</em> of the hardware capable of mining ETH.
             This means that while the current hashrate on ETH must be considered to be representative of potentially
@@ -110,12 +110,13 @@
         <p>
             The current hashrate on Ethereum is <code id="eth-hashrate-current"></code>.
             The current hashrate on Ethereum Classic is <code id="etc-hashrate-current"></code>.
-            So the current common hashrate potential is their sum: <code id="global-hashrate"></code>.
+            So the current applicable global hashrate is their sum: <code id="global-hashrate"></code>.
             So Ethereum Classic represents <span id="etc-global-hashrate-share"></span>
             of global, observable, ETH/ETC-compatible hashrate.
         </p>
         <p>
-            Given the top miner shares on Ethereum, we can estimate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
+            Given the <a href="https://etherscan.io/stat/miner?range=7&blocktype=blocks">top miner shares on Ethereum</a>,
+            we can annotate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
         </p>
 
         <table id="eth-miners">
