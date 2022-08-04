@@ -92,12 +92,14 @@
             on-demand hashrate marketplaces, notably <a href="https://www.nicehash.com/">Nicehash.com</a>.</p>
         <p>The hardware available for mining on ETC is now a <em>superset</em> of the hardware capable of mining ETH.
             This means that while the current hashrate on ETH must be considered to be representative of potentially
-            applicable hardware to ETC, it is (probably) not solely representative of the universal hardware potential.</p>
+            applicable hardware to ETC, it is (probably) not solely representative of the universal hardware potential.
+        </p>
         <p>The <code>etchash</code> algorithm is supported by various mining software; including but not limited to
             <code>PhoenixMiner</code>, <code>T-Rex</code>, <code>Gminer</code>, and <code>lolMiner</code>.<sup><a
                     href="https://2miners.com/blog/how-to-mine-ethereum-classic-etc-mining-and-profitability">2miners</a></sup>
-            </p>
-        <p><a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a hardware cost/benefit analysis tool
+        </p>
+        <p><a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a hardware cost/benefit
+            analysis tool
             for ETC and <code>etchash</code>.</p>
 
         <h3>Potential Hashrate Estimates</h3>
@@ -115,7 +117,8 @@
             of global, observable, ETH/ETC-compatible hashrate.
         </p>
         <p>
-            Given the <a href="https://etherscan.io/stat/miner?range=7&blocktype=blocks">top miner shares on Ethereum</a>,
+            Given the <a href="https://etherscan.io/stat/miner?range=7&blocktype=blocks">top miner shares on
+            Ethereum</a>,
             we can annotate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
         </p>
 
@@ -129,6 +132,8 @@
         </table>
 
         <h2 id="mess">MESS</h2>
+
+
         <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy originally proposed by
             Vitalik Buterin and modified (slightly) by Isaac Ardis. It specification can be found at <a
                     href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
@@ -139,11 +144,25 @@
             incumbent chain, at a rate (pseudo-exponentially) proportional to the length of the competitive chain
             segment.</p>
 
-        <h3 id="mess-effects">MESS Effects</h3>
+        <p>
+        <blockquote>This all seems reasonable! <sup><a
+                href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">@vbuterin</a></sup>
+        </blockquote>
+        </p>
+
+        <h3 id="mess-effects">MESS Protocol</h3>
+
+        <p>
+            The "penalty" curve implemented by MESS is a function of the length (as timestamp difference) of the incumbent competitive chain segment. This curve is graphed below:
+        </p>
         <div class="" style="text-align: center;">
             <img src="https://user-images.githubusercontent.com/45600330/181563591-38d25db3-8e6f-40fc-8e0d-2b3f9d0919ea.png"
                  alt="ecbp1100-polynomial" style="max-width: 400px; display: inline-block;"/>
         </div>
+
+        <p>
+            This curve expresses a unitless multiple imposed on the competing chain segment Total Difficulty (<code>TD</code>). It is defined as a polynomial with a minimum value of 1 (<code>f(0)=1</code>), and a maximum value of 31 (<code>f(25132)=31</code>).
+        </p>
 
         <h5>Example 1 (1 hour)</h5>
         <p>Without MESS, an attack lasting 1 hour would theoretically cost 24_756 + 1 USD. With MESS, an attack lasting
@@ -172,7 +191,48 @@
         <p>These estimates are rough. Factors not taken into account include but are not
             limited to difficulty adjustment rates, potentially variable hashrate availability, nor any “luck” margin
             for the miner’s target total difficulty,</p>
-        <p>The MESS penalty maxes out at 7 hours at a value of 31x.</p>
+        <p>
+            The MESS penalty maxes out at 7 hours at a value of 31x.
+        <blockquote>
+            Having a cap at 32x or some value in that ballpark seems totally reasonable; you're right that there's no
+            need to have the ratio keep increasing forever.
+            <sup><a href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">
+                @vbuterin
+            </a></sup>
+        </blockquote>
+        </p>
+
+        <h3>MESS Considerations</h3>
+
+        <p>
+        <blockquote>
+            Your new solution improves the protection but still allows a different selfish mining attack. It requires
+            more hashrate and very high network connectivity.
+            <br><br>
+            This is the attack:
+            <br><br>
+            We assume the attacker has two times (plus epsilon) the honest hashrate. Let's assume that the victim is
+            waiting for C confirmations. So the attacker first starts mining a public chain A with 1-second intervals
+            and with a hashrate that exceeds the honest hashrate. But he keeps mining his blocks in private. If the
+            honest miners create a block on top of A, then the attacker releases immediately one of his private blocks
+            so that nodes see the attacker block before the honest block, and therefore all the blocks in fork A will be
+            generated by the attacker, and always the timestamp of the best block in A will be in the past.
+            This is a 51% attack combined by a selfish-mining attack.
+            <br><br>
+            At the same time the attacker is mining a fork B with more hashrate than A. This fork has normal timestamps
+            (or past timestamps, it doesn't matter). When the fork A is C blocks in length (and the victim has already
+            confirmed the double-spent transaction) he leaves fork A and reveals fork B. Nodes will apply a very low
+            penalty on B because the best block in A has a timestamp that is 10 times closer to the common ancestor than
+            what is expected.
+            <br><br>
+            While this attack requires much more resources (2X the hashrate and higher control over the network), it's
+            still possible.
+            <br><br>
+            My proposal of the availability rule would not accept fork A as valid in the first place, and therefore the
+            double-spend transaction will never be confirmed in fork A.
+            <sup><a href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-699152317">@SergioDemianLerner</a></sup>
+        </blockquote>
+        </p>
 
         <h3 id="mess-vulnerabilities">MESS Vulnerabilities</h3>
         <p>Because the MESS protocol induces nodes to act decisively on an evaluation of a subjective data point (local
@@ -231,7 +291,7 @@
         </p>
 
     </main>
-        <hr>
+    <hr>
     <footer>
         Website source:&nbsp;<a href="https://github.com/meowsbits/51-percent-docs">https://github.com/meowsbits/51-percent-docs</a>
     </footer>

@@ -176,7 +176,7 @@ function chart(data) {
         options: {
             plugins: {
                 title: {
-                    text: 'Attack Accounting under MESS',
+                    text: 'Attack Cost Accounting under MESS',
                     display: true,
                 },
                 legend: {

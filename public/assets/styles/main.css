@@ -25,23 +25,6 @@ h5 {
   margin-top: 1rem;
   padding: 0; }
 
-code {
-  font-family: monospace;
-  background-color: #eee;
-  color: #111; }
-
-td {
-  border-top: 1px solid gray;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem; }
-
-th {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem; }
-
-tr.header {
-  text-align: left; }
-
 .wrapper {
   min-height: 100vh;
   display: grid;
@@ -66,4 +49,35 @@ span.number.positive {
 
 span.number.negative {
   color: darkred; }
+
+blockquote {
+  border-left: 4px solid #ddd;
+  background-color: #f5f4fd;
+  border-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.8rem 1rem 0.8rem 1rem;
+  margin-left: 1rem;
+  margin-bottom: 1rem; }
+
+code {
+  font-family: monospace;
+  background-color: #fbeef6;
+  color: #3a0000;
+  padding: 0.2rem 0.3rem;
+  border-radius: 0.2rem; }
+
+td {
+  border-top: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem; }
+
+th {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem; }
+
+tr.header {
+  text-align: left; }
 
