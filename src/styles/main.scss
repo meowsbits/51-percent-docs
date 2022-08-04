@@ -1,5 +1,12 @@
 @import 'reset.scss';
+
+
 @import 'prismjs/themes/prism.css';
+
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+  //background: none !important;
+  background: #f5f4fd !important;
+}
 
 .wrapper {
   min-height: 100vh;
@@ -37,7 +44,11 @@
   }
 
   footer {
-    //height: 50px;
+    border-top: 1px solid #ccc;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    min-height: 50px;
     display: flex;
     justify-content: flex-start;
   }
@@ -53,7 +64,7 @@ span.number {
 }
 
 blockquote {
-  border-left: 4px solid #ddd;
+  border-left: 4px solid darken(#f5f4fd, 10);
   background-color: #f5f4fd;
   border-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
@@ -94,4 +105,9 @@ th {
 
 tr.header {
   text-align: left;
+}
+
+.modest {
+  font-size: small;
+  color: lighten(#222, 10)
 }

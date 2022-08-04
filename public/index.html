@@ -53,6 +53,13 @@
             </tr>
         </table>
 
+        <p class="modest">
+            These estimates are rough. Factors not taken into account include but are not
+            limited to difficulty adjustment rates, potentially variable hashrate availability, nor any “luck” margin
+            for the miner’s target total difficulty.
+        </p>
+
+
         <h2 id="what-a-51-percent-attack-is">What a 51-percent attack is</h2>
         <p>A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
             renegging on their side of some transaction after receiving a counterparty’s corresponding payment.</p>
@@ -122,7 +129,7 @@
             we can annotate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
         </p>
 
-        <table id="eth-miners">
+        <table id="eth-miners" style="width: 100%;">
             <tr class="header">
                 <th>Address</th>
                 <th>Name</th>
@@ -134,21 +141,19 @@
         <h2 id="mess">MESS</h2>
 
 
-        <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy originally proposed by
-            Vitalik Buterin and modified (slightly) by Isaac Ardis. It specification can be found at <a
+        <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a href="https://blog.ethereum.org/2014/11/25/proof-stake-learned-love-weak-subjectivity/">originally proposed by
+            Vitalik Buterin</a> and modified (slightly) by Isaac Ardis. Its specification can be found at <a
                     href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
         </p>
-        <p>It was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
-            August 2020 worth around 5 million USD. At this time, the hashrate on ETC was around 5 TH/s.</p>
+        <p>MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
+            August 2020 worth around 5 million USD. At this time, the hashrate on ETC was around 5 Th/s.</p>
         <p>MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
-            incumbent chain, at a rate (pseudo-exponentially) proportional to the length of the competitive chain
+            incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the competitive chain
             segment.</p>
 
-        <p>
         <blockquote>This all seems reasonable! <sup><a
                 href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">@vbuterin</a></sup>
         </blockquote>
-        </p>
 
         <h3 id="mess-effects">MESS Protocol</h3>
 
@@ -165,7 +170,16 @@
             This curve expresses a unitless multiple imposed as a comparative demand on the competing chain segment
             Total Difficulty (TD). It is defined as a polynomial with a minimum value of 1
             (<code>f(0)=1</code>), and a maximum value of 31 (<code>f(25132)=31</code>).
-            This polynomial is defined as follows, with <code>x</code> being the timestamp difference between a
+
+        <blockquote>
+            Having a cap at 32x or some value in that ballpark seems totally reasonable; you're right that there's no
+            need to have the ratio keep increasing forever.
+            <sup><a href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">
+                @vbuterin
+            </a></sup>
+        </blockquote>
+
+            The polynomial is defined as follows, with <code>x</code> being the timestamp difference between a
             local head and the common ancestor (fork block).
         <pre><code class="prism language-js">const ecbp1100PolynomialVCurveFunctionDenominator = 128;
 const ecbp1100PolynomialVXCap = 25132;
@@ -206,21 +220,6 @@ export const ECBP1100_Penalty = (x) => {
         // it has exceeded the TD demand imposed under MESS.
         return true;
 }</code></pre>
-        </p>
-
-        <h5>Notes</h5>
-        <p>These estimates are rough. Factors not taken into account include but are not
-            limited to difficulty adjustment rates, potentially variable hashrate availability, nor any “luck” margin
-            for the miner’s target total difficulty,</p>
-        <p>
-            The MESS penalty maxes out at 7 hours at a value of 31x.
-        <blockquote>
-            Having a cap at 32x or some value in that ballpark seems totally reasonable; you're right that there's no
-            need to have the ratio keep increasing forever.
-            <sup><a href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">
-                @vbuterin
-            </a></sup>
-        </blockquote>
         </p>
 
         <h3>MESS Rationale</h3>
@@ -299,12 +298,16 @@ export const ECBP1100_Penalty = (x) => {
             </li>
             <li><span class="q">If the honest miners create a block on top of A, then the attacker releases immediately one of his
                 private blocks so that nodes see the attacker block before the honest block, and therefore all the
-                blocks in fork A will be generated by the attacker.</span> Here, the commenter is confused about how
-                "releasing blocks" from the private chain works. If indeed the attacker convinces the public network
-                that their private chain is canonical, allowing him to mine all the blocks on the public chain, then it
-                is obvious that the private chain is no longer private, and in fact has become public and canonical.
+                blocks in fork A will be generated by the attacker.</span>
+                Here, the attacker underestimates the cost of producing blocks sufficient to suppress those of the rest of the network.
+                If the attacker has <code>1*publicHashrate</code> applied to this purpose in competition with the honest miners, together themselves representing <code>1*publicHashrate</code>,
+                the attacker's hashrate will only be able to produce a winning block 50% of the time relative to the honest public,
+                and thus should be expected to be unable to provide a replacement block at least occasionally.
+                If the attacker is unable to provide a replacement block <i>once</i>, the honest miners will
+                mine a canonical block with a current timestamp, unraveling the strategy entirely.
             </li>
-            <li>Generally, the feature where <span class="q">[the attacker] releases [...] one of his private blocks so that nodes see the attacker block before the honest block</span> would be practically extraordinarily difficult to implement, required a comprehensive view and control of the global, decentralized, permissionless network. An attack of this variety and magnitude would effectively become a network-wide <a href="https://en.wikipedia.org/wiki/Sybil_attack">Sybil attack</a>.
+            <li>Generally, the feature where <span class="q">[the attacker] releases [...] one of his private blocks so that nodes see the attacker block before the honest block</span> would be practically extraordinarily difficult to implement.
+                It would require a comprehensive view and control of the global, decentralized, permissionless network. An attack of this variety and magnitude would effectively become a network-wide <a href="https://en.wikipedia.org/wiki/Sybil_attack">Sybil attack</a>.
             </li>
         </ul>
         </p>
@@ -324,7 +327,8 @@ export const ECBP1100_Penalty = (x) => {
             victims, the vulnerability resulting from the mechanics of the MESS protocol is nearer in spirit to
             terrorism (or a controlled market short) since bifurcating the network would likely destroy its value.</p>
 
-        <h2 id="derivation-of-cost-values">Derivation of Cost Values</h2>
+        <h2>Appendix</h2>
+        <h3 id="derivation-of-cost-values">Derivation of Cost Values</h3>
         <p>Since marketplace prices for ETC-compatible have become murky with the omission of <code>etchash</code> from
             popular on-demand hashrate marketplaces, we must assume the task of building an estimate for ETC-compatible
             hashrate cost. To do so, we build from a general economic intuition that the cost of hashrate should be
@@ -355,20 +359,9 @@ export const ECBP1100_Penalty = (x) => {
         <p>If we assume that the revenue should roughly match the production cost in ETC as it seems to in ETH then we
             could expect a mining cost of 16384 ETC * 36 USD/ETC = 589_824 USD / day, or 24_576 USD / hr.</p>
 
-        <h4 id="rationale-limits">Rationale Limits</h4>
-        <p>The accuracy of the estimate derived above is limited by a lack of knowledge about
-        <ul>
-            <li>Universal compatible hardware availability (increased theoretically by ECIP-1099, but “in dark
-                garages”)
-            </li>
-            <li>Private or obscure hashrate marketplaces</li>
-        </ul>
-        </p>
-
     </main>
-    <hr>
     <footer>
-        Website source:&nbsp;<a href="https://github.com/meowsbits/51-percent-docs">https://github.com/meowsbits/51-percent-docs</a>
+        <strong>This website's source:</strong>&nbsp;<a href="https://github.com/meowsbits/51-percent-docs">https://github.com/meowsbits/51-percent-docs</a>
     </footer>
 </div>
 <script src="./assets/scripts/bundle.js"></script>

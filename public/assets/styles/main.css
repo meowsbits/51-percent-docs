@@ -141,8 +141,11 @@ h3,
 h4,
 h5 {
   margin-bottom: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
   padding: 0; }
+
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+  background: #f5f4fd !important; }
 
 .wrapper {
   min-height: 100vh;
@@ -160,6 +163,11 @@ h5 {
     .wrapper header h1 {
       font-size: 1.5rem; }
   .wrapper footer {
+    border-top: 1px solid #ccc;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    min-height: 50px;
     display: flex;
     justify-content: flex-start; }
 
@@ -170,7 +178,7 @@ span.number.negative {
   color: darkred; }
 
 blockquote {
-  border-left: 4px solid #ddd;
+  border-left: 4px solid #cec9f5;
   background-color: #f5f4fd;
   border-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
@@ -204,4 +212,8 @@ th {
 
 tr.header {
   text-align: left; }
+
+.modest {
+  font-size: small;
+  color: #3c3c3c; }
 
