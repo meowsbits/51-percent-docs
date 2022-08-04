@@ -153,7 +153,8 @@
         <h3 id="mess-effects">MESS Protocol</h3>
 
         <p>
-            The "penalty" curve implemented by MESS is a function of the length (as timestamp difference) of the incumbent competitive chain segment. This curve is graphed below:
+            The "penalty" curve implemented by MESS is a function of the length (as timestamp difference) of the
+            incumbent competitive chain segment. This curve is graphed below:
         </p>
         <div class="" style="text-align: center;">
             <img src="https://user-images.githubusercontent.com/45600330/181563591-38d25db3-8e6f-40fc-8e0d-2b3f9d0919ea.png"
@@ -161,7 +162,50 @@
         </div>
 
         <p>
-            This curve expresses a unitless multiple imposed on the competing chain segment Total Difficulty (<code>TD</code>). It is defined as a polynomial with a minimum value of 1 (<code>f(0)=1</code>), and a maximum value of 31 (<code>f(25132)=31</code>).
+            This curve expresses a unitless multiple imposed as a comparative demand on the competing chain segment
+            Total Difficulty (TD). It is defined as a polynomial with a minimum value of 1
+            (<code>f(0)=1</code>), and a maximum value of 31 (<code>f(25132)=31</code>).
+            This polynomial is defined as follows, with <code>x</code> being the timestamp difference between a
+            local head and the common ancestor (fork block).
+        <pre><code class="prism language-js">const ecbp1100PolynomialVCurveFunctionDenominator = 128;
+const ecbp1100PolynomialVXCap = 25132;
+const ecbp1100PolynomialVHeight = ecbp1100PolynomialVCurveFunctionDenominator * 15 * 2;
+
+export const ECBP1100_Polynomial = (x) => {
+    if (x > ecbp1100PolynomialVXCap) x = ecbp1100PolynomialVXCap;
+
+    let xa = 3 * (x ** 2);
+    let xb = (2 * (x ** 3)) / ecbp1100PolynomialVXCap;
+    let out = xa - xb;
+
+    out = out * ecbp1100PolynomialVHeight;
+
+    const xcap2 = ecbp1100PolynomialVXCap ** 2;
+    out = out / xcap2;
+
+    out = out + ecbp1100PolynomialVCurveFunctionDenominator;
+
+    return out;
+};
+
+export const ECBP1100_Penalty = (x) => {
+    return ECBP1100_Polynomial(x) / ecbp1100PolynomialVCurveFunctionDenominator;
+}</code></pre>
+        <br>
+        This function is then implemented in client canon-arbitration rules as:
+        <pre><code class="prism language-js">function isProposedCanonical(original, proposed, commonAncestor) {
+        // Derive the MESS penalty.
+        const messPenalty = ECBP1100_Penalty(original.timestamp - commonAncestor.timestamp);
+
+        // Apply the penalty condition.
+        if (messPenalty /* [1.0-31] */ * original.TD >= proposed.TD) {
+            return false;
+        }
+
+        // Reaching here, the proposed segment should become canonical;
+        // it has exceeded the TD demand imposed under MESS.
+        return true;
+}</code></pre>
         </p>
 
         <h5>Notes</h5>
@@ -179,8 +223,39 @@
         </blockquote>
         </p>
 
-        <h3>MESS Considerations</h3>
+        <h3>MESS Rationale</h3>
 
+        <h4>Alternative Strategies</h4>
+
+        Given a low hashrate relative to global comparable and applicable hashrate,
+        Ethereum Classic considered several strategies to mitigate the risk of lower-than-desirable
+        chain finality expectations.
+
+        Among the strategies considered were:
+
+        <ul>
+            <li>Several <strong><a
+                    href="https://github.com/ethereumclassic/ECIPs/blob/7c596137e88038fccc293f42a2a3d01c54c27c35/_specs/ecip-1097.md">checkpointing
+                protocols</a></strong>, which depended on the assertion of an authority entity, implying the compromise
+                of the core principle of decentralized and permissionless consensus.
+            </li>
+            <li>A <strong><a href="https://veriblock.org/">proof-of-proof protocol</a></strong> which delegated
+                consensus to a third-party authority entity (ie. Bitcoin), which was not a participant in the original
+                consensus protocol. Not only did this "export" trust(lessness) to a 3rd party, but would have required a
+                burdensome amount of effort to implement satisfactorily.
+            </li>
+            <li>A <strong>peer-to-peer <a
+                    href="https://github.com/ethereumclassic/ECIPs/blob/7d259a0f07c62604ab0bb75b1baeb1d00b32a687/_specs/ecip-1106.md">endorsement
+                scheme</a></strong> intended to materialize practical heuristics about chain segment preference (ie.
+                following established and human-trusted miners), but again, these compromised the rationale of the
+                network's foundational principles.
+            </li>
+        </ul>
+
+        Ultimately, <strong>MESS</strong> was selected for its simplicity, robustness, and closeness to core principles.
+
+        <h4>MESS Discussion</h4>
+        One participant in the discussion of MESS raised a concern as follows:
         <p>
         <blockquote>
             Your new solution improves the protection but still allows a different selfish mining attack. It requires
@@ -211,7 +286,30 @@
         </blockquote>
         </p>
 
-        <h3 id="mess-vulnerabilities">MESS Vulnerabilities</h3>
+        <p>
+            A close look at the reasoning here discovers critical issues with the argument, and shows that even in spite of them, the practical demands for a successful attack are very great.
+
+        <ul>
+            <li>If <span class="q">the attacker has two times the public hashrate</span>, and must mine the public chain as well as a
+                competitive chain simultaneously, it stands to reason that their assumed hashrate will be insufficient.
+                If the attacker spends half of their available hashrate (<code>(2*publicHashrate+e)/2</code>) mining the
+                public chain, the resulting hashrate on the public chain will be <code>2*publicHashrate</code>, while
+                the attacker will have only <code>1*public hashrate</code> to spend building the private competing
+                segment.
+            </li>
+            <li><span class="q">If the honest miners create a block on top of A, then the attacker releases immediately one of his
+                private blocks so that nodes see the attacker block before the honest block, and therefore all the
+                blocks in fork A will be generated by the attacker.</span> Here, the commenter is confused about how
+                "releasing blocks" from the private chain works. If indeed the attacker convinces the public network
+                that their private chain is canonical, allowing him to mine all the blocks on the public chain, then it
+                is obvious that the private chain is no longer private, and in fact has become public and canonical.
+            </li>
+            <li>Generally, the feature where <span class="q">[the attacker] releases [...] one of his private blocks so that nodes see the attacker block before the honest block</span> would be practically extraordinarily difficult to implement, required a comprehensive view and control of the global, decentralized, permissionless network. An attack of this variety and magnitude would effectively become a network-wide <a href="https://en.wikipedia.org/wiki/Sybil_attack">Sybil attack</a>.
+            </li>
+        </ul>
+        </p>
+
+        <h3 id="mess-vulnerabilities">MESS Known Vulnerabilities</h3>
         <p>Because the MESS protocol induces nodes to act decisively on an evaluation of a subjective data point (local
             head), network consensus is vulnerable to bifurcation under circumstances which are expected to be rare, or
             difficult to achieve (from an attacker’s persepctive: <em>costly</em>).</p>

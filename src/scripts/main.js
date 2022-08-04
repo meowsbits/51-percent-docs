@@ -2,6 +2,7 @@ import {ECBP1100_Penalty} from './utils';
 import {ExchangeData} from "./data";
 import Chart from 'chart.js/auto';
 import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
+import Prism from 'prismjs';
 
 var humanFormat = require("human-format");
 
@@ -333,6 +334,14 @@ function init() {
     blockReward = originalReward * Math.pow(0.8, currentMonetaryPolicyEpoch);
     blockReward = Math.round(blockReward * 100) / 100;
     input_blockReward.value = blockReward;
+
+    // Syntax highlighting
+    // Prism.highlightAll();
+    const codeBlocks = document.querySelectorAll('pre code.prism');
+    for (let i = 0; i < codeBlocks.length; i++) {
+        console.log("prism code block");
+        Prism.highlightElement(codeBlocks[i]);
+    }
 
     return dataToUI();
 }
