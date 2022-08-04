@@ -164,29 +164,6 @@
             This curve expresses a unitless multiple imposed on the competing chain segment Total Difficulty (<code>TD</code>). It is defined as a polynomial with a minimum value of 1 (<code>f(0)=1</code>), and a maximum value of 31 (<code>f(25132)=31</code>).
         </p>
 
-        <h5>Example 1 (1 hour)</h5>
-        <p>Without MESS, an attack lasting 1 hour would theoretically cost 24_756 + 1 USD. With MESS, an attack lasting
-            1 hour (=267 blocks) would theoretically cost <code>24_756 * 2.66 = 65_851</code> USD.</p>
-        <p>Where <code>2.66</code> is derived as <code>ecbp1100Polynomial(60 * 60)/128</code>.</p>
-        <p>Therefore, a 51-percent attack scheme lasting 1 hour would demand a payout (fraud value) of 65_851 - 24_756
-            (recouped cost in block reward revenue) = 41_095 USD.</p>
-
-        <h5>Example 2 (2 hours)</h5>
-        <p>Without MESS, an attack lasting 2 hours would theoretically cost <code>24_756 * 2</code> = 49_152 + 1 USD.
-            With MESS, an attack lasting 2 hours (=533 blocks) would theoretically cost <code>24_756 * 2 * 6.97 =
-                345_099</code> USD.</p>
-        <p>Where <code>6.97</code> is derived as <code>ecbp1100Polynomial(3600 * 2)/128</code>.</p>
-        <p>Therefore, a 51-percent attack scheme lasting 2 hours would demand a payout (fraud value) of 345_09 - 49_152
-            (recouped cost in block reward revenue) = 295_587 USD.</p>
-
-        <h5>Example 3 (4 hours)</h5>
-        <p>Without MESS, an attack lasting 4 hours would theoretically cost <code>24_756 * 4</code> = 99_024 + 1 USD.
-            With MESS, an attack lasting 4 hours (=1066 blocks) would theoretically cost <code>24_756 * 4 * 19.25 =
-                1_906_212</code> USD.</p>
-        <p>Where <code>19.25</code> is derived as <code>ecbp1100Polynomial(3600 * 4)/128</code>.</p>
-        <p>Therefore, a 51-percent attack scheme lasting 4 hours (around 1100 blocks) would demand a payout (fraud
-            value) of 1_906_212 - 99_024 (recouped cost in block reward revenue) = 1_807_188 USD.</p>
-
         <h5>Notes</h5>
         <p>These estimates are rough. Factors not taken into account include but are not
             limited to difficulty adjustment rates, potentially variable hashrate availability, nor any “luck” margin
