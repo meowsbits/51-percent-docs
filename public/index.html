@@ -79,7 +79,7 @@
         <p>History is rewritten, and the attacker has received something for nothing, less the cost of carrying out the
             scheme.</p>
 
-        <h2>Hardware Availability</h2>
+        <h2>Hardware Availability (and Cost)</h2>
 
         <p>
             While a theoretical cost can be derived for arbitrary hashrates,
@@ -135,7 +135,7 @@
 
         <p>
             If we consider only the hashrate on Ethereum, which is applicable to Ethereum Classic,
-            we can estimate the entities in possession of sufficient hashrate to attack Ethereum Classic.
+            we can identify the entities in possession of sufficient hashrate to attack Ethereum Classic.
         </p>
 
         <p>
@@ -148,7 +148,7 @@
         <p>
             Given the <a href="https://etherscan.io/stat/miner?range=7&blocktype=blocks">top miner shares on
             Ethereum</a>,
-            we can annotate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
+            we annotate those miners on Ethereum whose hashrate is sufficient to attack Ethereum Classic.
         </p>
 
         <table id="eth-miners" style="width: 100%;">
@@ -163,15 +163,21 @@
         <h2 id="mess">MESS</h2>
 
 
-        <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a
+        <p>
+            MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a
                 href="https://blog.ethereum.org/2014/11/25/proof-stake-learned-love-weak-subjectivity/">originally
             proposed by
-            Vitalik Buterin</a> and modified (slightly) by Isaac Ardis. Its specification can be found at <a
+            Vitalik Buterin</a> and modified (slightly) by me, Isaac Ardis. Its specification can be found at <a
                 href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
         </p>
-        <p>MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
-            August 2020 worth around 5 million USD. At this time, the hashrate on ETC was around 5 Th/s.</p>
-        <p>MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
+        <p>
+            MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
+            early August 2020 worth around 5 million USD.
+            At this time, the hashrate on ETC was around 5 Th/s, and the exchange rate was around $7 USD/ETC.
+            The attacker's hashrate was apparently acquired via Nicehash.com.
+        </p>
+        <p>
+            MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
             incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the
             competitive chain
             segment.</p>
@@ -253,7 +259,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         <h4>Alternative Strategies</h4>
 
         <p>
-            Given the difficult and urgent problem of increasing finality expectations without increasing hashrate or exchangerate,
+            Given the difficult and urgent problem of increasing finality expectations without increasing hash rate or exchange rate,
             and without compromising the network's <i>raison d'etre</i>, several strategies were considered.
 
             Among these strategies were:
@@ -354,7 +360,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
                 mine a canonical block with a current timestamp, unraveling the strategy entirely.
             </li>
             <li>Generally, the feature where <span class="q">[the attacker] releases [...] one of his private blocks so that nodes see the attacker block before the honest block</span>
-                would be practically extraordinarily difficult to implement.
+                would be practically extraordinarily difficult to achieve.
                 It would require a comprehensive view and control of the global, decentralized, permissionless network.
                 An attack of this variety and magnitude would effectively become a network-wide <a
                         href="https://en.wikipedia.org/wiki/Sybil_attack">Sybil attack</a>,
