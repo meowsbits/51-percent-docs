@@ -33,7 +33,7 @@
 
 
         <input type="number" name="block-time" id="block-time" disabled value="13.5">
-        <label for="block-time">Block Time</label>
+        <label for="block-time">Block Time (Seconds)</label>
         <br>
         <input type="number" name="block-reward" id="block-reward">
         <label for="block-reward">Block Reward (ETC)</label>
@@ -65,11 +65,10 @@
         </table>
 
         <p class="modest">
-            These estimates are rough. Factors not taken into account include but are not
-            limited to difficulty adjustment rates, potentially variable hashrate availability, nor any “luck” margin
-            for the miner’s target total difficulty.
+            These estimates are rough. Factors not taken into account include, but are not
+            limited to: difficulty adjustment rates, potentially variable hashrate availability (and/or/= cost),
+            nor any “luck” margin for the miner’s target total difficulty.
         </p>
-
 
         <h2 id="what-a-51-percent-attack-is">What a 51-percent attack is</h2>
         <p>A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
@@ -211,29 +210,30 @@
 const ecbp1100PolynomialVXCap = 25132;
 const ecbp1100PolynomialVHeight = ecbp1100PolynomialVCurveFunctionDenominator * 15 * 2;
 
-export const ECBP1100_Polynomial = (x) => {
+/**
+ * @param {number} x - Timestamp difference between local head and common ancestor (fork block)
+ * @return {number} - The polynomial value at x
+ */
+function ECBP1100_Penalty(x) {
     if (x > ecbp1100PolynomialVXCap) x = ecbp1100PolynomialVXCap;
-
     let xa = 3 * (x ** 2);
     let xb = (2 * (x ** 3)) / ecbp1100PolynomialVXCap;
-    let out = xa - xb;
-
-    out = out * ecbp1100PolynomialVHeight;
-
-    const xcap2 = ecbp1100PolynomialVXCap ** 2;
-    out = out / xcap2;
-
-    out = out + ecbp1100PolynomialVCurveFunctionDenominator;
-
-    return out;
-};
-
-export const ECBP1100_Penalty = (x) => {
-    return ECBP1100_Polynomial(x) / ecbp1100PolynomialVCurveFunctionDenominator;
-}</code></pre>
+    let y = xa - xb;
+    y = y * ecbp1100PolynomialVHeight;
+    y = y / ecbp1100PolynomialVXCap ** 2;
+    y = y + ecbp1100PolynomialVCurveFunctionDenominator;
+    y = y / ecbp1100PolynomialVCurveFunctionDenominator;
+    return y;
+};</code></pre>
         <br>
         This function is then implemented in client canon-arbitration rules as:
-        <pre><code class="prism language-js">function isProposedCanonical(original, proposed, commonAncestor) {
+        <pre><code class="prism language-js">/**
+ * @param {Block} original - The original (and current) canonical block
+ * @param {Block} proposed - The proposed block, displacing the original's canon status
+ * @param {Block} commonAncestor - The block these forks (original v. proposed) diverged at
+ * @return {bool} - Whether the proposed block should become canonical instead of the original block
+ */
+function isProposedCanonical(original, proposed, commonAncestor) {
         // Derive the MESS penalty.
         const messPenalty = ECBP1100_Penalty(original.timestamp - commonAncestor.timestamp);
 

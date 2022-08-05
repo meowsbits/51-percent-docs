@@ -60,7 +60,7 @@ function blockEmissionETC(hours) {
     return blocksPerHour * blockReward * hours;
 }
 
-const attackDurationVals = [5, 10, 15, 30, 60, 90, 120,
+const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
     60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8,
     60 * 16, 60 * 24 - 1];
 
@@ -145,7 +145,7 @@ function fillTable(data) {
 const ctx = document.getElementById('myChart').getContext('2d');
 let myChart = new Chart(ctx, {});
 
-function chart(data) {
+function summaryChart(data) {
     let attackCostObjectData = data.rows.map(v => {
         return {x: v.duration, y: v.revenue + v.penalizedCost};
     });
@@ -183,10 +183,8 @@ function chart(data) {
                 }
             },
             layout: {
-                padding: {
-                    top: 23,
-                    bototm: 23,
-                },
+                padding: 10,
+                autoPadding: true,
             },
             scales: {
                 x: {
@@ -195,7 +193,7 @@ function chart(data) {
                         text: 'Attack Duration',
                     },
                     min: 0,
-                    max: Math.max(...attackCostObjectData.map(v => v.x)),
+                    max: Math.max(...attackCostObjectData.map(v => v.x)) * 1.03,
                     type: 'linear',
                     ticks: {
                         callback: function(value, index, values) {
@@ -210,7 +208,7 @@ function chart(data) {
                     },
                     // min: -10000000,
                     max: Math.max(...attackCostObjectData.map(v => v.y)),
-                    min: Math.min(...attackCostObjectData.map(v => v.y)),
+                    min: Math.min(...attackCostObjectData.map(v => v.y)) * 1.03,
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function (value, index, ticks) {
@@ -225,7 +223,6 @@ function chart(data) {
         }
     });
 }
-
 
 // https://etherscan.io/stat/miner?range=7&blocktype=blocks
 // Tue Aug  2 09:42:24 PDT 2022
@@ -313,7 +310,7 @@ const dataToUI = () => {
             row.remove();
         })
         fillTable(data);
-        chart(data);
+        summaryChart(data);
     });
 }
 
