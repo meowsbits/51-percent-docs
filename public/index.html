@@ -15,28 +15,39 @@
     <header>
         <h1>Risk Evaluation of 51-Percent Attacks on Ethereum Classic</h1>
 
-        <p>This document provides an analysis of the context and estimates of risk of finality fraud (51-percent
+        <p>This document provides an analysis of the context and estimates of risk of Proof of Work finality fraud
+            (51-percent
             attacks) on Ethereum Classic (ETC).</p>
     </header>
     <main>
 
         <h1>Summary</h1>
 
-        <p>The following chart and table provide rough estimates for expected attack costs and revenues.
-            Current hashrate is not used in calculating the table's values.
+        <p>
+            The following chart and table provide rough estimates for expected attack costs and revenues.
+            Estimates are derived from the configurable values below, along with a constant block time.
+            Hashrate is not used in calculating the table's values.
             The <code>Net with MESS (USD)</code> column can be understood as a minimum payout
             from fraud that the attacker would need to break even given the cost of the attack.
         </p>
 
 
+        <input type="number" name="block-time" id="block-time" disabled value="13.5">
+        <label for="block-time">Block Time</label>
+        <br>
         <input type="number" name="block-reward" id="block-reward">
         <label for="block-reward">Block Reward (ETC)</label>
         <br>
         <input type="number" name="usd-etc" id="usd-etc">
-        <label for="usd-etc">USD : ETC</label>
+        <label for="usd-etc">USD/ETC</label>
         <br>
         <input type="number" name="hashrate-rental-cost" id="hashrate-rental-cost">
         <label for="hashrate-rental-cost">Hashrate Rental Cost</label>
+        <!--        Hashrate Rental Cost is the cost of RENTING a GPU for the attacker to mine on.-->
+        <!--        For example, if a car costs $10_000 new and $1_000 / year to keep, and lasts for 10 years,-->
+        <!--        the overall cost of the car is $10_000 + $1_000 * 10 = $20_000, or $2_000 / year.-->
+        <!--        This car might then be rented out (by the owner) for $2_000 * C / year, where C-->
+        <!--        is analogous to the Hashrate Rental Cost defined above.-->
 
         <canvas id="myChart" width="400" height="200"></canvas>
 
@@ -76,38 +87,50 @@
             actual hardware resource availability is both extremely difficult to estimate,
             and a very important limitation for the attack strategy.
         </p>
+        <p class="modest">
+            See <a href="https://blog.coinbase.com/how-coinbase-views-proof-of-work-security-f4ba1a139da0">
+            Coinbase's <i>How Coinbase views proof of work security</i></a> for an introduction to general Proof of Work
+            security considerations.
+        </p>
 
         <h3 id="etc-daggerhashimoto-etchash">
             Mining Algorithm
         </h3>
         <p>
-            The original mining algorithm <code>DaggerHashimoto</code>, still in use today by Ethereum,
+            The original mining algorithm <i>Dagger-Hashimoto</i> (aka <code>ethash</code>), still in use today by
+            Ethereum,
             has been changed to <code>etchash</code> on Ethereum Classic.
         </p>
         <p>
             At block 11_700_000 (2020 November 28), Ethereum Classic implemented <a
                 href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1099.md/">ECIP-1099</a>,
-            extending the Hashimoto DAG epoch length by a factor of 2, and thus reducing the requirement for mining
+            extending the Hashimoto DAG epoch length by a factor of 2, and thus lowering the requirement for mining
             hardware memory allocation, which had recently exceeded 4GB.
         </p>
         <p>
             This change was and is expected to recover and increase hardware availability for the mining algorithm.
+            Greater hardware availability should lead to greater network hashrate.
+            <!--            Although not necessarily linearly across the competing hashrate markets.-->
         </p>
-
         <p>
             It also had the side-effect of removing the Ethereum Classic mining protocol from defaults provided by
-            on-demand hashrate marketplaces, notably <a href="https://www.nicehash.com/">Nicehash.com</a>.</p>
-        <p>The hardware available for mining on ETC is now a <em>superset</em> of the hardware capable of mining ETH.
-            This means that while the current hashrate on ETH must be considered to be representative of potentially
-            applicable hardware to ETC, it is (probably) not solely representative of the universal hardware potential.
+            on-demand hashrate marketplaces, notably <a href="https://www.nicehash.com/">Nicehash.com</a>.
         </p>
-        <p>The <code>etchash</code> algorithm is supported by various mining software; including but not limited to
+        <p>
+            The hardware available for mining on ETC is now a <em>superset</em> of the hardware capable of mining ETH.
+            This means that the current hashrate on ETH should be considered as a representative minimum of potentially
+            applicable hardware to ETC.
+        </p>
+        <p>
+            The <code>etchash</code> algorithm is supported by various mining software; including but not limited to
             <code>PhoenixMiner</code>, <code>T-Rex</code>, <code>Gminer</code>, and <code>lolMiner</code>.<sup><a
-                    href="https://2miners.com/blog/how-to-mine-ethereum-classic-etc-mining-and-profitability">2miners</a></sup>
+                href="https://2miners.com/blog/how-to-mine-ethereum-classic-etc-mining-and-profitability">2miners</a></sup>
         </p>
-        <p><a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a hardware cost/benefit
+        <p>
+            <a href="https://whattomine.com/coins/162-etc-etchash">WhatToMine</a> provides a hardware cost/benefit
             analysis tool
-            for ETC and <code>etchash</code>.</p>
+            for ETC and <code>etchash</code>.
+        </p>
 
         <h3>Potential Hashrate Estimates</h3>
 
@@ -141,14 +164,17 @@
         <h2 id="mess">MESS</h2>
 
 
-        <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a href="https://blog.ethereum.org/2014/11/25/proof-stake-learned-love-weak-subjectivity/">originally proposed by
+        <p>MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a
+                href="https://blog.ethereum.org/2014/11/25/proof-stake-learned-love-weak-subjectivity/">originally
+            proposed by
             Vitalik Buterin</a> and modified (slightly) by Isaac Ardis. Its specification can be found at <a
-                    href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
+                href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
         </p>
         <p>MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
             August 2020 worth around 5 million USD. At this time, the hashrate on ETC was around 5 Th/s.</p>
         <p>MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
-            incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the competitive chain
+            incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the
+            competitive chain
             segment.</p>
 
         <blockquote>This all seems reasonable! <sup><a
@@ -179,8 +205,8 @@
             </a></sup>
         </blockquote>
 
-            The polynomial is defined as follows, with <code>x</code> being the timestamp difference between a
-            local head and the common ancestor (fork block).
+        The polynomial is defined as follows, with <code>x</code> being the timestamp difference between a
+        local head and the common ancestor (fork block).
         <pre><code class="prism language-js">const ecbp1100PolynomialVCurveFunctionDenominator = 128;
 const ecbp1100PolynomialVXCap = 25132;
 const ecbp1100PolynomialVHeight = ecbp1100PolynomialVCurveFunctionDenominator * 15 * 2;
@@ -226,34 +252,53 @@ export const ECBP1100_Penalty = (x) => {
 
         <h4>Alternative Strategies</h4>
 
-        Given a low hashrate relative to global comparable and applicable hashrate,
-        Ethereum Classic considered several strategies to mitigate the risk of lower-than-desirable
-        chain finality expectations.
+        <p>
+            Given the difficult and urgent problem of increasing finality expectations without increasing hashrate or exchangerate,
+            and without compromising the network's <i>raison d'etre</i>, several strategies were considered.
 
-        Among the strategies considered were:
-
+            Among these strategies were:
         <ul>
-            <li>Several <strong><a
+            <li>
+                Several <strong><a
                     href="https://github.com/ethereumclassic/ECIPs/blob/7c596137e88038fccc293f42a2a3d01c54c27c35/_specs/ecip-1097.md">checkpointing
-                protocols</a></strong>, which depended on the assertion of an authority entity, implying the compromise
-                of the core principle of decentralized and permissionless consensus.
+                protocols</a></strong>,
+                which depended on the assertion of an authority entity,
+                compromising of the core principle of decentralized and permissionless consensus,
+                and necessitating the intractable problem of to whom to the authoritative trust would be assigned.
             </li>
-            <li>A <strong><a href="https://veriblock.org/">proof-of-proof protocol</a></strong> which delegated
+            <li>
+                A <strong><a href="https://veriblock.org/">proof-of-proof protocol</a></strong> which delegated
                 consensus to a third-party authority entity (ie. Bitcoin), which was not a participant in the original
                 consensus protocol. Not only did this "export" trust(lessness) to a 3rd party, but would have required a
                 burdensome amount of effort to implement satisfactorily.
             </li>
-            <li>A <strong>peer-to-peer <a
+            <li>
+                A <strong>peer-to-peer <a
                     href="https://github.com/ethereumclassic/ECIPs/blob/7d259a0f07c62604ab0bb75b1baeb1d00b32a687/_specs/ecip-1106.md">endorsement
                 scheme</a></strong> intended to materialize practical heuristics about chain segment preference (ie.
                 following established and human-trusted miners), but again, these compromised the rationale of the
                 network's foundational principles.
             </li>
+            <li>
+                <strong><a href="https://github.com/ethereumclassic/ECIPs/issues/327">PirlGuard</a></strong>, a subjective scoring strategy, which was evaluated to present unacceptable critical attack vectors.</li>
+            <li>
+                A <strong><a href="https://github.com/ethereumclassic/ECIPs/blob/381fc5e9f3ae48a0c953227440136308cad221f0/_specs/ecip-1017.md">monetary policy</a></strong> adjustment that would increase the rate of inflation in the short term,
+                and decrease it in the long(er) term, while keeping the overall anticipated supply constant.
+                This would have been expected to increase the incentive to mine during the period of paucity,
+                but would have compromised the promises implicit in the design and purpose of the policy.
+            </li>
+            <li>
+                Do <strong>nothing</strong>. A valid argument can claim that the issue lies with the risk management practices
+                of the defrauded consumer, not the network; a too-short confirmation delay relative to the transaction value.
+                This option was impossible due to constraints and pressure from the community.
+                Network finality is associated with network utility.
+            </li>
         </ul>
-
         Ultimately, <strong>MESS</strong> was selected for its simplicity, robustness, and closeness to core principles.
+        </p>
 
         <h4>MESS Discussion</h4>
+        <h5>Concern: Timestamp Manipulation + Network-wide Sybil Attack</h5>
         One participant in the discussion of MESS raised a concern as follows:
         <p>
         <blockquote>
@@ -286,28 +331,34 @@ export const ECBP1100_Penalty = (x) => {
         </p>
 
         <p>
-            A close look at the reasoning here discovers critical issues with the argument, and shows that even in spite of them, the practical demands for a successful attack are very great.
-
+            A close look at the reasoning here discovers a few critical issues with the argument.
         <ul>
-            <li>If <span class="q">the attacker has two times the public hashrate</span>, and must mine the public chain as well as a
-                competitive chain simultaneously, it stands to reason that their assumed hashrate will be insufficient.
-                If the attacker spends half of their available hashrate (<code>(2*publicHashrate+e)/2</code>) mining the
-                public chain, the resulting hashrate on the public chain will be <code>2*publicHashrate</code>, while
-                the attacker will have only <code>1*public hashrate</code> to spend building the private competing
+            <li>If <span class="q">the attacker has two times the public hashrate (plus epsilon)</span> (<code>(2*publicHashrate+e)/2</code>),
+                and must mine the public chain as well as a competitive chain simultaneously,
+                it stands to reason that their assumed hashrate will be insufficient.
+                If the attacker spends half of their available hashrate (<code>1*publicHashrate+e</code>) mining the public chain,
+                the resulting hashrate on the public chain will be <code>2*publicHashrate</code>,
+                while the attacker will have only <code>1*public hashrate</code> to spend building the private competing
                 segment.
             </li>
             <li><span class="q">If the honest miners create a block on top of A, then the attacker releases immediately one of his
                 private blocks so that nodes see the attacker block before the honest block, and therefore all the
                 blocks in fork A will be generated by the attacker.</span>
-                Here, the attacker underestimates the cost of producing blocks sufficient to suppress those of the rest of the network.
-                If the attacker has <code>1*publicHashrate</code> applied to this purpose in competition with the honest miners, together themselves representing <code>1*publicHashrate</code>,
-                the attacker's hashrate will only be able to produce a winning block 50% of the time relative to the honest public,
-                and thus should be expected to be unable to provide a replacement block at least occasionally.
-                If the attacker is unable to provide a replacement block <i>once</i>, the honest miners will
+                Here, the attacker (or the author) underestimates the cost of producing blocks sufficient to suppress those of the rest of the network.
+                If the attacker has <code>1*publicHashrate</code> applied to this purpose in competition with the honest miners,
+                together themselves representing <code>1*publicHashrate</code>,
+                the attacker's hashrate will only be able to produce a winning block 50% of the time relative to the honest public.
+                With that understanding, obviously the expectation for the attacker's success approaches zero,
+                since perfect success can be quantified as a sequential <code>n</code> trials with <code>P(n)=0.5**n</code>
+                If the attacker is unable to provide a replacement block only <i>once</i>, the honest miners will
                 mine a canonical block with a current timestamp, unraveling the strategy entirely.
             </li>
-            <li>Generally, the feature where <span class="q">[the attacker] releases [...] one of his private blocks so that nodes see the attacker block before the honest block</span> would be practically extraordinarily difficult to implement.
-                It would require a comprehensive view and control of the global, decentralized, permissionless network. An attack of this variety and magnitude would effectively become a network-wide <a href="https://en.wikipedia.org/wiki/Sybil_attack">Sybil attack</a>.
+            <li>Generally, the feature where <span class="q">[the attacker] releases [...] one of his private blocks so that nodes see the attacker block before the honest block</span>
+                would be practically extraordinarily difficult to implement.
+                It would require a comprehensive view and control of the global, decentralized, permissionless network.
+                An attack of this variety and magnitude would effectively become a network-wide <a
+                        href="https://en.wikipedia.org/wiki/Sybil_attack">Sybil attack</a>,
+                a circumstance no blockchain, real or theoretical, would be equipped to handle.
             </li>
         </ul>
         </p>
@@ -330,7 +381,7 @@ export const ECBP1100_Penalty = (x) => {
         <h2>Appendix</h2>
         <h3 id="derivation-of-cost-values">Derivation of Cost Values</h3>
         <p>Since marketplace prices for ETC-compatible have become murky with the omission of <code>etchash</code> from
-            popular on-demand hashrate marketplaces, we must assume the task of building an estimate for ETC-compatible
+            popular on-demand hashrate marketplaces, we must assume the task of building a usable estimate for ETC-compatible
             hashrate cost. To do so, we build from a general economic intuition that the cost of hashrate should be
             slightly (or somewhat) less than the revenue it earns. If the costs exceeded the revenue, miners would not
             be incentived to commit work to the chain. If the revenue dramatically exceeded the costs, hashrate would

@@ -95,7 +95,7 @@ function formatDuration(durationMinutes) {
 }
 
 function fillTable(data) {
-
+    console.log("Summary Table data", data);
     function formatNumber(num) {
         let classList = "positive";
         if (+num < 0) {
@@ -146,8 +146,6 @@ const ctx = document.getElementById('myChart').getContext('2d');
 let myChart = new Chart(ctx, {});
 
 function chart(data) {
-    console.log("chart data", data);
-
     let attackCostObjectData = data.rows.map(v => {
         return {x: v.duration, y: v.revenue + v.penalizedCost};
     });
@@ -155,7 +153,7 @@ function chart(data) {
     // Filter to show only first 8 hours. The rest is too much.
     attackCostObjectData = attackCostObjectData.filter(v => v.x < 60*8);
 
-    console.log("line data", attackCostObjectData);
+    console.log("Summary Chart data", data);
 
     // We have to destroy the chart if we want to repaint it,
     // which we always do, since the chart variable is initialized globally.
@@ -339,7 +337,6 @@ function init() {
     // Prism.highlightAll();
     const codeBlocks = document.querySelectorAll('pre code.prism');
     for (let i = 0; i < codeBlocks.length; i++) {
-        console.log("prism code block");
         Prism.highlightElement(codeBlocks[i]);
     }
 
