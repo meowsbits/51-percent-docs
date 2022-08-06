@@ -21,12 +21,12 @@
     </header>
     <main>
 
-        <h1>Summary</h1>
+        <h2>Summary</h2>
 
         <p>
-            The following chart and table provide rough estimates for expected attack costs and revenues.
+            The following chart and table provide rough estimates for current expected attack costs and revenues.
             Estimates are derived from the configurable values below, along with a constant block time.
-            Hashrate is not used in calculating the table's values.
+            Hashrate is not required in calculating the table's values.
             The <code>Net with MESS (USD)</code> column can be understood as a minimum payout
             from fraud that the attacker would need to break even given the cost of the attack.
         </p>
@@ -70,20 +70,7 @@
             nor any “luck” margin for the miner’s target total difficulty.
         </p>
 
-        <h2 id="what-a-51-percent-attack-is">What a 51-percent attack is</h2>
-
-        <p>
-            A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
-            renegging on their side of some transaction after receiving a counterparty’s corresponding payment.</p>
-        <p>
-            They do this by secretly mining a chain which critically omits the depositing transaction to the
-            counterparty. Once the attacker receives the victim’s side of the exchange (which was predicated on the
-            attacker’s deposit), the attacker publishes their chain, invalidating their end of the bargain.</p>
-        <p>
-            History is rewritten, and the attacker has received something for nothing, less the cost of carrying out the
-            scheme.</p>
-
-        <h2>History of 51-percent attacks on ETC</h2>
+        <h2>History</h2>
 
         <p>
             In August 2020 a series of three 51-percent attacks were published on the Ethereum Classic network.
@@ -93,7 +80,9 @@
                 <th>Date</th>
                 <th>Start Block</th>
                 <th>Blocks Reorged</th>
-                <th>ETC Hashrate</th>
+                <th>Timespan</th>
+                <th>USD/ETC</th>
+                <th>Th/s</th>
                 <th>Attacker Address</th>
                 <th>Fraud Value</th>
                 <th>Victim</th>
@@ -104,7 +93,9 @@
                 <td>2020/08/01</td>
                 <td>10_904_146</td>
                 <td>3_594</td>
-                <td>4.9Th/s</td>
+                <td>12:12</td>
+                <td>$7.81</td>
+                <td>4.9</td>
                 <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
                     0x75d1e5477f1fdaad6e0e3d433ab69b08c482f14e
                 </td>
@@ -120,7 +111,6 @@
                         <li>
                             <a href="https://www.okx.com/academy/en/okex-responds-to-ethereum-classic-51-attacks-reveals-its-hot-wallet-system-incident-report">OKX Incident Report</a></li>
                     </ul>
-
                 </td>
             </tr>
 
@@ -128,7 +118,9 @@
                 <td>2020/08/05</td>
                 <td>10_935_622</td> <!-- 10940068 -->
                 <td>4_446</td> <!-- 4236 per BitQuery, 15h06m-->
-                <td>1.3Th/s</td>
+                <td>15:37</td>
+                <td>$7.23</td>
+                <td>1.3</td>
                 <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
                     0x3936968A445B723fdd0C0407efFfcaECb07cab19
                 </td>
@@ -149,8 +141,10 @@
                 <td>2020/08/29</td>
                 <td>11_090_590</td>
                 <td>7_278</td>
+                <td>26:20</td>
+                <td>$6.53</td>
                 <!-- 11097868=actual highest block, 11097869..11098871=latest 'spotty' mining chapter (1002 blocks) -->
-                <td>3.2Th/s</td>
+                <td>3.2</td>
                 <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
                     0x17d1B181C72Be2d3a3212e7725F31F13F7929Ce2
                 </td>
@@ -167,13 +161,31 @@
         </table>
 
         <p class="modest">
-            In the first of these reorganizations, a bug in the Parity client caused a network split.
+            In the first of these reorganizations, a bug in the Parity client caused a small network split.
             The client was unable to handle the large reorganization correctly because of insufficient data pruning
-            rules.
+            rules. The Parity client represented a small minority of nodes at the time.
+        </p>
+        <p class="modest">
+            In apparently all three attacks, Nicehash.com was used to provide the hashrate necessary to mine the attack. Nicehash has since issued a<a
+                href="https://www.nicehash.com/blog/post/official-response-regarding-the-latest-51-attack-allegations"> statement</a> noting that they do not endorse such behavior.
         </p>
         </p>
 
-        <h2>Hardware Availability (and Cost)</h2>
+        <h2>Analysis</h2>
+        <h3 id="what-a-51-percent-attack-is">What a 51-percent attack is</h3>
+
+        <p>
+            A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
+            renegging on their side of some transaction after receiving a counterparty’s corresponding payment.</p>
+        <p>
+            They do this by secretly mining a chain which critically omits the depositing transaction to the
+            counterparty. Once the attacker receives the victim’s side of the exchange (which was predicated on the
+            attacker’s deposit), the attacker publishes their chain, invalidating their end of the bargain.</p>
+        <p>
+            History is rewritten, and the attacker has received something for nothing, less the cost of carrying out the
+            scheme.</p>
+
+        <h3>Hardware Availability (and Cost)</h3>
 
         <p>
             While a theoretical cost can be derived for arbitrary hashrates,
@@ -186,9 +198,9 @@
             security considerations with regard to hardware.
         </p>
 
-        <h3 id="etc-daggerhashimoto-etchash">
+        <h4 id="etc-daggerhashimoto-etchash">
             Mining Algorithm
-        </h3>
+        </h4>
         <p>
             The original mining algorithm <i>Dagger-Hashimoto</i> (aka <code>ethash</code>), still in use today by
             Ethereum,
@@ -254,7 +266,7 @@
             </tr>
         </table>
 
-        <h2 id="mess">MESS</h2>
+        <h3 id="mess">MESS</h3>
 
 
         <p>
@@ -273,14 +285,15 @@
         <p>
             MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
             incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the
-            competitive chain
-            segment.</p>
+            competitive chain segment.
+            With an increased cost of producing a competitive chain, finality expectations for the honest public network rise.
+        </p>
 
         <blockquote>This all seems reasonable! <sup><a
                 href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">@vbuterin</a></sup>
         </blockquote>
 
-        <h3 id="mess-effects">MESS Protocol</h3>
+        <h4 id="mess-effects">MESS Protocol</h4>
 
         <p>
             The "penalty" curve implemented by MESS is a function of the length (as timestamp difference) of the
@@ -348,9 +361,9 @@ function isProposedCanonical(original, proposed, commonAncestor) {
 }</code></pre>
         </p>
 
-        <h3>MESS Rationale</h3>
+        <h4>MESS Rationale</h4>
 
-        <h4>Alternative Strategies</h4>
+        <h5>Alternative Strategies</h5>
 
         <p>
             Given the difficult and urgent problem of increasing finality expectations without increasing hash rate or
@@ -477,7 +490,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         </ul>
         </p>
 
-        <h3 id="mess-vulnerabilities">MESS Known Vulnerabilities</h3>
+        <h4 id="mess-vulnerabilities">MESS Known Vulnerabilities</h4>
         <p>Because the MESS protocol induces nodes to act decisively on an evaluation of a subjective data point (local
             head), network consensus is vulnerable to bifurcation under circumstances which are expected to be rare, or
             difficult to achieve (from an attacker’s persepctive: <em>costly</em>).</p>

@@ -61,8 +61,8 @@ function blockEmissionETC(hours) {
 }
 
 const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
-    60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8,
-    60 * 16, 60 * 24 - 1];
+    60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60*12,
+    60 * 16, 60 * 24, 60*32];
 
 function buildData() {
     let data = {
@@ -91,7 +91,11 @@ function buildData() {
 }
 
 function formatDuration(durationMinutes) {
-    return `${new Date(durationMinutes * 60 * 1000).toISOString().substring(11, 16)}`;
+    const days = Math.floor(durationMinutes / 60 / 24);
+    const f = new Date(durationMinutes * 60 * 1000).toISOString();
+    let hh = f.substring(11, 13);
+    if (days > 0) hh = +hh + (days * 24);
+    return `${hh}:${f.substring(14, 16)}`;
 }
 
 function fillTable(data) {
@@ -151,7 +155,7 @@ function summaryChart(data) {
     });
 
     // Filter to show only first 8 hours. The rest is too much.
-    attackCostObjectData = attackCostObjectData.filter(v => v.x < 60*8);
+    // attackCostObjectData = attackCostObjectData.filter(v => v.x < 60*8);
 
     console.log("Summary Chart data", data);
 
@@ -162,9 +166,10 @@ function summaryChart(data) {
     let chartData = {
         datasets: [
             {
-                label: 'Attack Net under MESS',
+                label: 'Attack Cost under MESS',
                 data: attackCostObjectData,
                 backgroundColor: '#8B0000FF',
+                clip: 5,
             }
         ]
     };
