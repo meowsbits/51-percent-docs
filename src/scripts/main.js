@@ -6,6 +6,9 @@ import Prism from 'prismjs';
 
 var humanFormat = require("human-format");
 
+// Summary Table
+// -------------------------------------------------------------------------------
+
 const summaryTable = document.querySelector('#summary-table');
 const minerTable = document.querySelector('#eth-miners');
 
@@ -61,8 +64,25 @@ function blockEmissionETC(hours) {
 }
 
 const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
-    60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60*12,
-    60 * 16, 60 * 24, 60*32];
+    60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 12,
+    60 * 16, 60 * 24, 60 * 32];
+
+function buildDataObject(durationMinutes) {
+    const basisV = blockEmissionETC(durationMinutes / 60) * usdETC;
+    const costV = -1 * (basisV * marketHashrateRentalCost);
+    const revenueV = basisV;
+    const penalizedCostV = costV * ECBP1100_Penalty(durationMinutes * 60);
+
+    let obj = {
+        duration: durationMinutes, // minutes
+        blocks: durationMinutes / 60 * blocksPerHour,
+        cost: costV,
+        revenue: revenueV,
+        penalty: ECBP1100_Penalty(durationMinutes * 60),
+        penalizedCost: penalizedCostV,
+    }
+    return obj;
+}
 
 function buildData() {
     let data = {
@@ -71,19 +91,7 @@ function buildData() {
 
     // Build Rows for table.
     for (let v of attackDurationVals) {
-        const basisV = blockEmissionETC(v / 60) * usdETC;
-        const costV = -1 * (basisV * marketHashrateRentalCost);
-        const revenueV = basisV;
-        const penalizedCostV = costV * ECBP1100_Penalty(v * 60);
-
-        let obj = {
-            duration: v, // minutes
-            blocks: v / 60 * blocksPerHour,
-            cost: costV,
-            revenue: revenueV,
-            penalty: ECBP1100_Penalty(v * 60),
-            penalizedCost: penalizedCostV,
-        }
+        const obj = buildDataObject(v);
         data.rows.push(obj);
     }
 
@@ -93,58 +101,153 @@ function buildData() {
 function formatDuration(durationMinutes) {
     const days = Math.floor(durationMinutes / 60 / 24);
     const f = new Date(durationMinutes * 60 * 1000).toISOString();
-    let hh = f.substring(11, 13);
+    let hh = +f.substring(11, 13);
     if (days > 0) hh = +hh + (days * 24);
-    return `${hh}:${f.substring(14, 16)}`;
+    return `${hh}h ${+f.substring(14, 16)}m`;
+}
+
+function formatRowNumber(num) {
+    let classList = "positive";
+    if (+num < 0) {
+        classList = "negative";
+    }
+    let content = Math.abs(num);
+    content = humanFormat(content).replace(/\ /g, '');
+    return `<span class='number ${classList}'>${content}</span>`;
+}
+
+function buildRowEl(r) {
+    const row = document.createElement('tr');
+    row.classList.add('summary-row');
+
+    const duration = document.createElement('td');
+    const blocks = document.createElement('td');
+    const cost = document.createElement('td');
+    const revenue = document.createElement('td');
+    const net = document.createElement('td');
+    const messPenalty = document.createElement('td');
+    const penalizedCost = document.createElement('td');
+    const penalizedNet = document.createElement('td');
+
+
+    duration.innerHTML = `${formatDuration(r.duration)}`;
+    blocks.innerHTML = `${Math.round(r.blocks)}`;
+    cost.innerHTML = formatRowNumber(r.cost.toFixed(0));
+    revenue.innerHTML = formatRowNumber(r.revenue.toFixed(0));
+    net.innerHTML = formatRowNumber((r.revenue + r.cost).toFixed(0));
+    messPenalty.innerHTML = r.penalty.toFixed(2);
+    penalizedCost.innerHTML = formatRowNumber(r.penalizedCost.toFixed(0));
+    penalizedNet.innerHTML = formatRowNumber((r.revenue + r.penalizedCost).toFixed(0));
+
+    row.appendChild(duration);
+    row.appendChild(blocks);
+    row.appendChild(cost);
+    row.appendChild(revenue);
+    row.appendChild(net);
+    row.appendChild(messPenalty);
+    row.appendChild(penalizedCost);
+    row.appendChild(penalizedNet);
+
+    return row;
 }
 
 function fillTable(data) {
     console.log("Summary Table data", data);
-    function formatNumber(num) {
-        let classList = "positive";
-        if (+num < 0) {
-            classList = "negative";
-        }
-        let content = Math.abs(num);
-        content = humanFormat(content).replace(/\ /g, '');
-        return `<span class='number ${classList}'>${content}</span>`;
-    }
 
     for (let r of data.rows) {
-        const row = document.createElement('tr');
-        row.classList.add('summary-row');
-
-        const duration = document.createElement('td');
-        const blocks = document.createElement('td');
-        const cost = document.createElement('td');
-        const revenue = document.createElement('td');
-        const net = document.createElement('td');
-        const messPenalty = document.createElement('td');
-        const penalizedCost = document.createElement('td');
-        const penalizedNet = document.createElement('td');
-
-
-        duration.innerHTML = `${formatDuration(r.duration)}`;
-        blocks.innerHTML = `${Math.round(r.blocks)}`;
-        cost.innerHTML = formatNumber(r.cost.toFixed(0));
-        revenue.innerHTML = formatNumber(r.revenue.toFixed(0));
-        net.innerHTML = formatNumber((r.revenue + r.cost).toFixed(0));
-        messPenalty.innerHTML = r.penalty.toFixed(2);
-        penalizedCost.innerHTML = formatNumber(r.penalizedCost.toFixed(0));
-        penalizedNet.innerHTML = formatNumber((r.revenue + r.penalizedCost).toFixed(0));
-
-        row.appendChild(duration);
-        row.appendChild(blocks);
-        row.appendChild(cost);
-        row.appendChild(revenue);
-        row.appendChild(net);
-        row.appendChild(messPenalty);
-        row.appendChild(penalizedCost);
-        row.appendChild(penalizedNet);
-
+        const row = buildRowEl(r);
         summaryTable.appendChild(row);
     }
 }
+
+// Confirmation Delay Estimator Tool
+// -------------------------------------------------------------------------------
+
+// getDurationForPenalizedCost returns the duration in minutes that are equivalent
+// to the given penalized cost.
+// This is: How long to wait for a transaction of X ETC value.
+// FIXME(hard):
+// The logic is trial-and-error.
+// It is not guaranteed to work.
+// It is not guaranteed to be correct.
+// It is not guaranteed to be fast.
+/*
+ returns: duration in minutes
+ */
+function getDurationForPenalizedCost(penalizedCost_USD) {
+    console.log("penalizedCost_USD", penalizedCost_USD);
+    const durationMin = 1; // 1 minute
+    const durationMax = 60 * 24 * 30 * 2; // 2 months
+    let duration = durationMax / 2; // middle of range
+
+    // Define upper and lower bounds for the acceptable return value,
+    // since we're just guesstimating here.
+    const margin = 0.01;
+    const lower = penalizedCost_USD, upper = penalizedCost_USD * (1 + margin);
+
+    let count = 0; // Escape hatch.
+    let delta = durationMax / 2 / 2;
+    for (; true;) {
+
+        // Exit if we've exceeded the escape hatch.
+        count++;
+        if (count > 1000) break;
+
+        if (duration + delta > durationMax) {
+            break;
+        }
+        if (duration - delta < durationMin) {
+            break;
+        }
+
+        const obj = buildDataObject(duration);
+        const net = Math.abs(obj.penalizedCost + obj.revenue);
+
+        if (net >= lower && net <= upper) {
+            break;
+        }
+
+        if (net > upper) {
+            duration -= delta;
+        } else {
+            duration += delta;
+        }
+        delta /= 2;
+    }
+
+    return duration;
+}
+
+const input_confirmationTool_USD = document.getElementById('confirmation-tool-usd');
+const input_confirmationTool_ETC = document.getElementById('confirmation-tool-etc');
+
+const output_confirmationToolTime = document.getElementById('confirmation-tool-output-time');
+const output_confirmationToolBlocks = document.getElementById('confirmation-tool-output-blocks');
+const output_confirmationToolTable = document.getElementById('confirmation-tool-output-table');
+
+input_confirmationTool_USD.onchange = function () {
+    input_confirmationTool_ETC.value = (input_confirmationTool_USD.value / usdETC).toFixed(3);
+
+    const out = getDurationForPenalizedCost(this.value);
+
+    output_confirmationToolTime.innerText = formatDuration(out);
+    output_confirmationToolBlocks.innerText = (out / 60 * blocksPerHour).toFixed(0);
+
+    output_confirmationToolTable.innerHTML = "";
+    const row = buildRowEl(buildDataObject(out));
+    row.style.width = "100%";
+    row.classList.remove('summary-row');
+    output_confirmationToolTable.appendChild(row);
+};
+
+input_confirmationTool_ETC.onchange = function () {
+    input_confirmationTool_USD.value = (this.value * usdETC).toFixed(2);
+    input_confirmationTool_USD.onchange();
+};
+
+
+// Summary Chart
+// -------------------------------------------------------------------------------
 
 const ctx = document.getElementById('myChart').getContext('2d');
 let myChart = new Chart(ctx, {});
@@ -201,7 +304,7 @@ function summaryChart(data) {
                     max: Math.max(...attackCostObjectData.map(v => v.x)) * 1.03,
                     type: 'linear',
                     ticks: {
-                        callback: function(value, index, values) {
+                        callback: function (value, index, values) {
                             return formatDuration(value);
                         }
                     }
@@ -229,6 +332,9 @@ function summaryChart(data) {
     });
 }
 
+// ETH vs. ETC Potential Attackers Table
+// -------------------------------------------------------------------------------
+
 // https://etherscan.io/stat/miner?range=7&blocktype=blocks
 // Tue Aug  2 09:42:24 PDT 2022
 const empiricalMinerHashrateShares_ETH = [
@@ -255,6 +361,7 @@ const empiricalMinerHashrateShares_ETH = [
 ];
 
 const terahash = 1000000000000;
+
 function currentHashrate_TH(chain) {
     let block = ETC_Latest_Block.result;
     if (chain === 'eth') block = ETH_Latest_Block.result;
@@ -307,6 +414,9 @@ function hashrateEstimatesDataToUI() {
     }
 }
 
+// UI, Initializations
+// -------------------------------------------------------------------------------
+
 const dataToUI = () => {
     hashrateEstimatesDataToUI();
 
@@ -334,6 +444,9 @@ function init() {
     blockReward = originalReward * Math.pow(0.8, currentMonetaryPolicyEpoch);
     blockReward = Math.round(blockReward * 100) / 100;
     input_blockReward.value = blockReward;
+
+    input_confirmationTool_USD.onchange(undefined); // Initialize.
+
 
     // Syntax highlighting
     // Prism.highlightAll();

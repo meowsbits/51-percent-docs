@@ -64,11 +64,34 @@
             </tr>
         </table>
 
+        <h4>Confirmation Delay Estimator Tool</h4>
+
+
+        <div class="confirmation-estimator-tool">
+            <p>
+                <label for="confirmation-tool-usd">A transaction of value: USD</label>
+                <input type="number" name="confirmation-tool-usd" id="confirmation-tool-usd" value="100000">
+                <label for="confirmation-tool-etc">= ETC</label>
+                <input type="number" name="confirmation-tool-etc" id="confirmation-tool-etc" value="">
+                <br>
+                should be given a confirmation delay of at least
+                <strong style="" id="confirmation-tool-output-blocks"></strong> blocks,
+                or <strong style="" id="confirmation-tool-output-time"></strong>.
+            </p>
+            <!-- FIXME/TODO -->
+            <!-- I'VE DISABLED VISIBILITY OF THIS ROW FOR NOW. -->
+            <!-- I THINK ITS STILL KIND OF UGLY AND HARD TO READ/USE.-->
+            <!-- Maybe it would be nicer if the row were inserted, highlighted, in the actual table, or plotted in the chart... -->
+            <!-- <table id="confirmation-tool-output-table" style="width: 100%;"></table>-->
+            <table id="confirmation-tool-output-table" style="width: 100%; display: none;"></table>
+        </div>
+
         <p class="modest">
             These estimates are rough. Factors not taken into account include, but are not
             limited to: difficulty adjustment rates, potentially variable hashrate availability (and/or/= cost),
             nor any “luck” margin for the miner’s target total difficulty.
         </p>
+
 
         <h2>History</h2>
 
@@ -93,7 +116,7 @@
                 <td>2020/08/01</td>
                 <td>10_904_146</td>
                 <td>3_594</td>
-                <td>12:12</td>
+                <td>12h 12m</td>
                 <td>$7.81</td>
                 <td>4.9</td>
                 <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
@@ -104,12 +127,14 @@
                 <td>
                     <ul>
                         <li>
-                            <a href="https://medium.com/bitquery/ethereum-classic-51-chain-attack-july-31-2020-8fef107a81d8">BitQuery</a></li>
+                            <a href="https://medium.com/bitquery/ethereum-classic-51-chain-attack-july-31-2020-8fef107a81d8">BitQuery</a>
+                        </li>
                         <li>
                             <a href="https://medium.com/ethereum-classic-labs/statement-regarding-ethereum-classic-chain-reorganization-a0d5c2de8fdf">
                                 ETC Labs</a></li>
                         <li>
-                            <a href="https://www.okx.com/academy/en/okex-responds-to-ethereum-classic-51-attacks-reveals-its-hot-wallet-system-incident-report">OKX Incident Report</a></li>
+                            <a href="https://www.okx.com/academy/en/okex-responds-to-ethereum-classic-51-attacks-reveals-its-hot-wallet-system-incident-report">OKX
+                                Incident Report</a></li>
                     </ul>
                 </td>
             </tr>
@@ -118,7 +143,7 @@
                 <td>2020/08/05</td>
                 <td>10_935_622</td> <!-- 10940068 -->
                 <td>4_446</td> <!-- 4236 per BitQuery, 15h06m-->
-                <td>15:37</td>
+                <td>15h 37m</td>
                 <td>$7.23</td>
                 <td>1.3</td>
                 <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
@@ -128,7 +153,8 @@
                 <td>Bitfinex</td> <!-- <strike>OKX</strike>  -->
                 <td>
                     <ul>
-                        <li><a href="https://bitquery.io/blog/ethereum-classic-attack-8-august-catch-me-if-you-can">BitQuery</a></li>
+                        <li><a href="https://bitquery.io/blog/ethereum-classic-attack-8-august-catch-me-if-you-can">BitQuery</a>
+                        </li>
                         <li><a href="https://twitter.com/binance/status/1291225022866944000">Binance Tweet</a></li>
                     </ul>
 
@@ -141,7 +167,7 @@
                 <td>2020/08/29</td>
                 <td>11_090_590</td>
                 <td>7_278</td>
-                <td>26:20</td>
+                <td>26h 20m</td>
                 <td>$6.53</td>
                 <!-- 11097868=actual highest block, 11097869..11098871=latest 'spotty' mining chapter (1002 blocks) -->
                 <td>3.2</td>
@@ -152,8 +178,10 @@
                 <td>?</td>
                 <td>
                     <ul>
-                        <li><a href="https://www.coindesk</li>.com/markets/2020/08/29/ethereum-classic-hit-by-third-51-attack-in-a-month/">Coindesk</a>
-                        <li><a href="https://twitter.com/etherchain_org/status/1299822510607917056">Bitfly Tweet</a></li>
+                        <li>
+                            <a href="https://www.coindesk</li>.com/markets/2020/08/29/ethereum-classic-hit-by-third-51-attack-in-a-month/">Coindesk</a>
+                        <li><a href="https://twitter.com/etherchain_org/status/1299822510607917056">Bitfly Tweet</a>
+                        </li>
                     </ul>
 
                 </td>
@@ -166,8 +194,10 @@
             rules. The Parity client represented a small minority of nodes at the time.
         </p>
         <p class="modest">
-            In apparently all three attacks, Nicehash.com was used to provide the hashrate necessary to mine the attack. Nicehash has since issued a<a
-                href="https://www.nicehash.com/blog/post/official-response-regarding-the-latest-51-attack-allegations"> statement</a> noting that they do not endorse such behavior.
+            In apparently all three attacks, Nicehash.com was used to provide the hashrate necessary to mine the attack.
+            Nicehash has since issued a<a
+                href="https://www.nicehash.com/blog/post/official-response-regarding-the-latest-51-attack-allegations">
+            statement</a> noting that they do not endorse such behavior.
         </p>
         </p>
 
@@ -262,7 +292,7 @@
                 <th>Address</th>
                 <th>Name</th>
                 <th>Share ETH (%)</th>
-                <th>~Hashrate (xETC)</th>
+                <th>~ Hashrate (xETC)</th>
             </tr>
         </table>
 
@@ -286,7 +316,8 @@
             MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
             incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the
             competitive chain segment.
-            With an increased cost of producing a competitive chain, finality expectations for the honest public network rise.
+            With an increased cost of producing a competitive chain, finality expectations for the honest public network
+            rise.
         </p>
 
         <blockquote>This all seems reasonable! <sup><a
@@ -410,7 +441,8 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             <li>
                 Do <strong>nothing</strong>. A valid argument can claim that the issue lies with the risk management
                 practices
-                of the defrauded consumer, not the network; the fault being a too-short confirmation delay relative to the transaction
+                of the defrauded consumer, not the network; the fault being a too-short confirmation delay relative to
+                the transaction
                 value.
                 This option was impossible due to constraints and pressure from the community.
                 Network finality is associated with network utility.
@@ -539,13 +571,13 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         <p>If we assume that the revenue should roughly match the production cost in ETC as it seems to in ETH then we
             could expect a mining cost of 16384 ETC * 36 USD/ETC = 589_824 USD / day, or 24_576 USD / hr.</p>
 
-<!--        <h3>Further Reading</h3>-->
+        <!--        <h3>Further Reading</h3>-->
 
-<!--        &lt;!&ndash;        - [gist:meowsbits Make ETC Mutable Again?](https://gist.github.com/meowsbits/adcb6a4e12431809bf3b138a2ada6d5e)&ndash;&gt;-->
-<!--        &lt;!&ndash;        - [gist:meowsbits How to Mutate Ethereum Classic Account States](https://gist.github.com/meowsbits/8fa2ec4b8cca828ce6aec3863fedd6d6)&ndash;&gt;-->
-<!--        &lt;!&ndash;        - [gist:meowsbits Reorg Caps and Confirmation Limits: A Primer on Soft Finality Arbitration](https://gist.github.com/96bb1856b0051f78a59a1f7e79d03854)&ndash;&gt;-->
+        <!--        &lt;!&ndash;        - [gist:meowsbits Make ETC Mutable Again?](https://gist.github.com/meowsbits/adcb6a4e12431809bf3b138a2ada6d5e)&ndash;&gt;-->
+        <!--        &lt;!&ndash;        - [gist:meowsbits How to Mutate Ethereum Classic Account States](https://gist.github.com/meowsbits/8fa2ec4b8cca828ce6aec3863fedd6d6)&ndash;&gt;-->
+        <!--        &lt;!&ndash;        - [gist:meowsbits Reorg Caps and Confirmation Limits: A Primer on Soft Finality Arbitration](https://gist.github.com/96bb1856b0051f78a59a1f7e79d03854)&ndash;&gt;-->
 
-<!--        &lt;!&ndash;        <a href="https://www.nicehash.com/blog/post/official-statement-regarding-the-latest-51-percent-attack-allegations-aug-2020#!"></a>&ndash;&gt;-->
+        <!--        &lt;!&ndash;        <a href="https://www.nicehash.com/blog/post/official-statement-regarding-the-latest-51-percent-attack-allegations-aug-2020#!"></a>&ndash;&gt;-->
 
 
     </main>
