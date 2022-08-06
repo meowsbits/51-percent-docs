@@ -71,13 +71,107 @@
         </p>
 
         <h2 id="what-a-51-percent-attack-is">What a 51-percent attack is</h2>
-        <p>A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
+
+        <p>
+            A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
             renegging on their side of some transaction after receiving a counterparty’s corresponding payment.</p>
-        <p>They do this by secretly mining a chain which critically omits the depositing transaction to the
+        <p>
+            They do this by secretly mining a chain which critically omits the depositing transaction to the
             counterparty. Once the attacker receives the victim’s side of the exchange (which was predicated on the
             attacker’s deposit), the attacker publishes their chain, invalidating their end of the bargain.</p>
-        <p>History is rewritten, and the attacker has received something for nothing, less the cost of carrying out the
+        <p>
+            History is rewritten, and the attacker has received something for nothing, less the cost of carrying out the
             scheme.</p>
+
+        <h2>History of 51-percent attacks on ETC</h2>
+
+        <p>
+            In August 2020 a series of three 51-percent attacks were published on the Ethereum Classic network.
+            These attacks were:
+        <table>
+            <tr class="header">
+                <th>Date</th>
+                <th>Start Block</th>
+                <th>Blocks Reorged</th>
+                <th>ETC Hashrate</th>
+                <th>Attacker Address</th>
+                <th>Fraud Value</th>
+                <th>Victim</th>
+                <th>References</th>
+            </tr>
+
+            <tr>
+                <td>2020/08/01</td>
+                <td>10_904_146</td>
+                <td>3_594</td>
+                <td>4.9Th/s</td>
+                <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
+                    0x75d1e5477f1fdaad6e0e3d433ab69b08c482f14e
+                </td>
+                <td>5.6M USD (807_000+ ETC)</td>
+                <td>OKX</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="https://medium.com/bitquery/ethereum-classic-51-chain-attack-july-31-2020-8fef107a81d8">BitQuery</a></li>
+                        <li>
+                            <a href="https://medium.com/ethereum-classic-labs/statement-regarding-ethereum-classic-chain-reorganization-a0d5c2de8fdf">
+                                ETC Labs</a></li>
+                        <li>
+                            <a href="https://www.okx.com/academy/en/okex-responds-to-ethereum-classic-51-attacks-reveals-its-hot-wallet-system-incident-report">OKX Incident Report</a></li>
+                    </ul>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>2020/08/05</td>
+                <td>10_935_622</td> <!-- 10940068 -->
+                <td>4_446</td> <!-- 4236 per BitQuery, 15h06m-->
+                <td>1.3Th/s</td>
+                <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
+                    0x3936968A445B723fdd0C0407efFfcaECb07cab19
+                </td>
+                <td>3.3M USD (465_444 ETC)</td> <!-- same as above -->
+                <td>Bitfinex</td> <!-- <strike>OKX</strike>  -->
+                <td>
+                    <ul>
+                        <li><a href="https://bitquery.io/blog/ethereum-classic-attack-8-august-catch-me-if-you-can">BitQuery</a></li>
+                        <li><a href="https://twitter.com/binance/status/1291225022866944000">Binance Tweet</a></li>
+                    </ul>
+
+                </td>
+            </tr>
+            <!--        <a href="https://2miners.com/blog/ethereum-classic-under-another-51-attack-what-do-we-know-about-the-attackers-actions/"></a>-->
+            <!--        <a href="https://blog.coinbase.com/coinbases-perspective-on-the-recent-ethereum-classic-etc-double-spend-incidents-1fd19ef215f3"></a>-->
+
+            <tr>
+                <td>2020/08/29</td>
+                <td>11_090_590</td>
+                <td>7_278</td>
+                <!-- 11097868=actual highest block, 11097869..11098871=latest 'spotty' mining chapter (1002 blocks) -->
+                <td>3.2Th/s</td>
+                <td style="max-width: 5rem; overflow: hidden; text-overflow: fade(30);">
+                    0x17d1B181C72Be2d3a3212e7725F31F13F7929Ce2
+                </td>
+                <td>?</td>
+                <td>?</td>
+                <td>
+                    <ul>
+                        <li><a href="https://www.coindesk</li>.com/markets/2020/08/29/ethereum-classic-hit-by-third-51-attack-in-a-month/">Coindesk</a>
+                        <li><a href="https://twitter.com/etherchain_org/status/1299822510607917056">Bitfly Tweet</a></li>
+                    </ul>
+
+                </td>
+            </tr>
+        </table>
+
+        <p class="modest">
+            In the first of these reorganizations, a bug in the Parity client caused a network split.
+            The client was unable to handle the large reorganization correctly because of insufficient data pruning
+            rules.
+        </p>
+        </p>
 
         <h2>Hardware Availability (and Cost)</h2>
 
@@ -89,7 +183,7 @@
         <p class="modest">
             See <a href="https://blog.coinbase.com/how-coinbase-views-proof-of-work-security-f4ba1a139da0">
             Coinbase's <i>How Coinbase views proof of work security</i></a> for an introduction to general Proof of Work
-            security considerations.
+            security considerations with regard to hardware.
         </p>
 
         <h3 id="etc-daggerhashimoto-etchash">
@@ -259,8 +353,11 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         <h4>Alternative Strategies</h4>
 
         <p>
-            Given the difficult and urgent problem of increasing finality expectations without increasing hash rate or exchange rate,
-            and without compromising the network's <i>raison d'etre</i>, several strategies were considered.
+            Given the difficult and urgent problem of increasing finality expectations without increasing hash rate or
+            exchange rate,
+            and without compromising the network's <i>raison d'etre</i>, several strategies <a
+                href="https://ethereumclassic.org/blog/2020-09-25-core-devs-call-51-attack-solutions">were
+            considered</a>.
 
             Among these strategies were:
         <ul>
@@ -286,16 +383,22 @@ function isProposedCanonical(original, proposed, commonAncestor) {
                 network's foundational principles.
             </li>
             <li>
-                <strong><a href="https://github.com/ethereumclassic/ECIPs/issues/327">PirlGuard</a></strong>, a subjective scoring strategy, which was evaluated to present unacceptable critical attack vectors.</li>
+                <strong><a href="https://github.com/ethereumclassic/ECIPs/issues/327">PirlGuard</a></strong>, a
+                subjective scoring strategy, which was evaluated to present unacceptable critical attack vectors.
+            </li>
             <li>
-                A <strong><a href="https://github.com/ethereumclassic/ECIPs/blob/381fc5e9f3ae48a0c953227440136308cad221f0/_specs/ecip-1017.md">monetary policy</a></strong> adjustment that would increase the rate of inflation in the short term,
+                A <strong><a
+                    href="https://github.com/ethereumclassic/ECIPs/blob/381fc5e9f3ae48a0c953227440136308cad221f0/_specs/ecip-1017.md">monetary
+                policy</a></strong> adjustment that would increase the rate of inflation in the short term,
                 and decrease it in the long(er) term, while keeping the overall anticipated supply constant.
                 This would have been expected to increase the incentive to mine during the period of paucity,
                 but would have compromised the promises implicit in the design and purpose of the policy.
             </li>
             <li>
-                Do <strong>nothing</strong>. A valid argument can claim that the issue lies with the risk management practices
-                of the defrauded consumer, not the network; a too-short confirmation delay relative to the transaction value.
+                Do <strong>nothing</strong>. A valid argument can claim that the issue lies with the risk management
+                practices
+                of the defrauded consumer, not the network; a too-short confirmation delay relative to the transaction
+                value.
                 This option was impossible due to constraints and pressure from the community.
                 Network finality is associated with network utility.
             </li>
@@ -342,7 +445,8 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             <li>If <span class="q">the attacker has two times the public hashrate (plus epsilon)</span> (<code>(2*publicHashrate+e)/2</code>),
                 and must mine the public chain as well as a competitive chain simultaneously,
                 it stands to reason that their assumed hashrate will be insufficient.
-                If the attacker spends half of their available hashrate (<code>1*publicHashrate+e</code>) mining the public chain,
+                If the attacker spends half of their available hashrate (<code>1*publicHashrate+e</code>) mining the
+                public chain,
                 the resulting hashrate on the public chain will be <code>2*publicHashrate</code>,
                 while the attacker will have only <code>1*public hashrate</code> to spend building the private competing
                 segment.
@@ -350,12 +454,16 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             <li><span class="q">If the honest miners create a block on top of A, then the attacker releases immediately one of his
                 private blocks so that nodes see the attacker block before the honest block, and therefore all the
                 blocks in fork A will be generated by the attacker.</span>
-                Here, the attacker (or the author) underestimates the cost of producing blocks sufficient to suppress those of the rest of the network.
-                If the attacker has <code>1*publicHashrate</code> applied to this purpose in competition with the honest miners,
+                Here, the attacker (or the author) underestimates the cost of producing blocks sufficient to suppress
+                those of the rest of the network.
+                If the attacker has <code>1*publicHashrate</code> applied to this purpose in competition with the honest
+                miners,
                 together themselves representing <code>1*publicHashrate</code>,
-                the attacker's hashrate will only be able to produce a winning block 50% of the time relative to the honest public.
+                the attacker's hashrate will only be able to produce a winning block 50% of the time relative to the
+                honest public.
                 With that understanding, obviously the expectation for the attacker's success approaches zero,
-                since perfect success can be quantified as a sequential <code>n</code> trials with <code>P(n)=0.5**n</code>
+                since perfect success can be quantified as a sequential <code>n</code> trials with
+                <code>P(n)=0.5**n</code>
                 If the attacker is unable to provide a replacement block only <i>once</i>, the honest miners will
                 insert a canonical block with a current timestamp, unraveling the strategy entirely.
             </li>
@@ -385,9 +493,11 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             terrorism (or a controlled market short) since bifurcating the network would likely destroy its value.</p>
 
         <h2>Appendix</h2>
+
         <h3 id="derivation-of-cost-values">Derivation of Cost Values</h3>
         <p>Since marketplace prices for ETC-compatible have become murky with the omission of <code>etchash</code> from
-            popular on-demand hashrate marketplaces, we must assume the task of building a usable estimate for ETC-compatible
+            popular on-demand hashrate marketplaces, we must assume the task of building a usable estimate for
+            ETC-compatible
             hashrate cost. To do so, we build from a general economic intuition that the cost of hashrate should be
             slightly (or somewhat) less than the revenue it earns. If the costs exceeded the revenue, miners would not
             be incentived to commit work to the chain. If the revenue dramatically exceeded the costs, hashrate would
@@ -415,6 +525,15 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         <p>ETC’s block reward is 2.56 ETC, so ETC inflates at least <code>2.56 * 6400 = 16384</code> ETC / day.</p>
         <p>If we assume that the revenue should roughly match the production cost in ETC as it seems to in ETH then we
             could expect a mining cost of 16384 ETC * 36 USD/ETC = 589_824 USD / day, or 24_576 USD / hr.</p>
+
+<!--        <h3>Further Reading</h3>-->
+
+<!--        &lt;!&ndash;        - [gist:meowsbits Make ETC Mutable Again?](https://gist.github.com/meowsbits/adcb6a4e12431809bf3b138a2ada6d5e)&ndash;&gt;-->
+<!--        &lt;!&ndash;        - [gist:meowsbits How to Mutate Ethereum Classic Account States](https://gist.github.com/meowsbits/8fa2ec4b8cca828ce6aec3863fedd6d6)&ndash;&gt;-->
+<!--        &lt;!&ndash;        - [gist:meowsbits Reorg Caps and Confirmation Limits: A Primer on Soft Finality Arbitration](https://gist.github.com/96bb1856b0051f78a59a1f7e79d03854)&ndash;&gt;-->
+
+<!--        &lt;!&ndash;        <a href="https://www.nicehash.com/blog/post/official-statement-regarding-the-latest-51-percent-attack-allegations-aug-2020#!"></a>&ndash;&gt;-->
+
 
     </main>
     <footer>
