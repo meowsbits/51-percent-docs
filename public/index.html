@@ -34,13 +34,13 @@
         <input type="number" name="block-time" id="block-time" disabled value="13.5">
         <label for="block-time">Block Time (Seconds)</label>
         <br>
-        <input type="number" name="block-reward" id="block-reward">
+        <input type="number" name="block-reward" id="block-reward" step=".01">
         <label for="block-reward">Block Reward (ETC)</label>
         <br>
         <input type="number" name="usd-etc" id="usd-etc">
         <label for="usd-etc">USD/ETC</label>
         <br>
-        <input type="number" name="hashrate-efficiency-ratio" id="hashrate-efficiency-ratio">
+        <input type="number" name="hashrate-efficiency-ratio" id="hashrate-efficiency-ratio" step=".01">
         <label for="hashrate-efficiency-ratio">Hashrate <a href="https://en.wikipedia.org/wiki/Efficiency_ratio">Efficiency
             Ratio</a></label>
         <!--        Hashrate Rental Cost is the cost of RENTING a GPU for the attacker to mine on.-->
@@ -71,7 +71,7 @@
         <div class="confirmation-estimator-tool">
             <p>
                 <label for="confirmation-tool-usd">A transaction of value: USD</label>
-                <input type="number" name="confirmation-tool-usd" id="confirmation-tool-usd" value="100000">
+                <input type="number" name="confirmation-tool-usd" id="confirmation-tool-usd" value="100000" step="100">
                 <label for="confirmation-tool-etc">= ETC</label>
                 <input type="number" name="confirmation-tool-etc" id="confirmation-tool-etc" value="">
                 <br>
