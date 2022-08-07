@@ -3,6 +3,7 @@ import {ExchangeData} from "./data";
 import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
 import Chart from 'chart.js/auto';
 import Prism from 'prismjs';
+
 var humanFormat = require("human-format");
 
 // Summary Table
@@ -11,6 +12,8 @@ var humanFormat = require("human-format");
 const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
     60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 12,
     60 * 16, 60 * 24, 60 * 32];
+
+const terahash = 1000000000000;
 
 const summaryTable = document.querySelector('#summary-table');
 const minerTable = document.querySelector('#eth-miners');
@@ -45,6 +48,7 @@ input_usdETC.onchange = function () {
 //
 // This value is defined as HOW MUCH MORE ETC/HOUR THE RENTER PAYS
 // compared to how much they could EARN if they were mining.
+// const empiricalHashrate_ETH = parseInt(ETH_Latest_Block.result.difficulty, 16) / 13.5 / terahash; // TH/s
 const empiricalHashrate_ETH = 930; // TH/s
 const empiricalCost_Ethash_1Ths_24h = 13.9; // ETH
 const empiricalCost_Ethash_930THs_24h_ETH = empiricalCost_Ethash_1Ths_24h * empiricalHashrate_ETH;
@@ -72,7 +76,7 @@ function MiningEstimate(durationMinutes) {
     const costV = -1 * (basisV * marketHashrateRentalCost);
     const revenueV = basisV;
     const penalizedCostV = costV * ECBP1100_Penalty(durationMinutes * 60);
-    
+
     this.duration = durationMinutes; // minutes
     this.blocks = durationMinutes / 60 * blocksPerHour;
     this.cost = costV;
@@ -82,40 +86,40 @@ function MiningEstimate(durationMinutes) {
 }
 
 const miningEstimatePrototype = {
-  toSummaryRowEl() {
-      const row = document.createElement('tr');
-      row.classList.add('summary-table-row');
+    toSummaryRowEl() {
+        const row = document.createElement('tr');
+        row.classList.add('summary-table-row');
 
-      const duration = document.createElement('td');
-      const blocks = document.createElement('td');
-      const cost = document.createElement('td');
-      const revenue = document.createElement('td');
-      const net = document.createElement('td');
-      const messPenalty = document.createElement('td');
-      const penalizedCost = document.createElement('td');
-      const penalizedNet = document.createElement('td');
+        const duration = document.createElement('td');
+        const blocks = document.createElement('td');
+        const cost = document.createElement('td');
+        const revenue = document.createElement('td');
+        const net = document.createElement('td');
+        const messPenalty = document.createElement('td');
+        const penalizedCost = document.createElement('td');
+        const penalizedNet = document.createElement('td');
 
 
-      duration.innerHTML = `${formatDuration(this.duration)}`;
-      blocks.innerHTML = `${Math.round(this.blocks)}`;
-      cost.innerHTML = formatRowNumber(this.cost.toFixed(0));
-      revenue.innerHTML = formatRowNumber(this.revenue.toFixed(0));
-      net.innerHTML = formatRowNumber((this.revenue + this.cost).toFixed(0));
-      messPenalty.innerHTML = this.penalty.toFixed(2);
-      penalizedCost.innerHTML = formatRowNumber(this.penalizedCost.toFixed(0));
-      penalizedNet.innerHTML = formatRowNumber((this.revenue + this.penalizedCost).toFixed(0));
+        duration.innerHTML = `${formatDuration(this.duration)}`;
+        blocks.innerHTML = `${Math.round(this.blocks)}`;
+        cost.innerHTML = formatRowNumber(this.cost.toFixed(0));
+        revenue.innerHTML = formatRowNumber(this.revenue.toFixed(0));
+        net.innerHTML = formatRowNumber((this.revenue + this.cost).toFixed(0));
+        messPenalty.innerHTML = this.penalty.toFixed(2);
+        penalizedCost.innerHTML = formatRowNumber(this.penalizedCost.toFixed(0));
+        penalizedNet.innerHTML = formatRowNumber((this.revenue + this.penalizedCost).toFixed(0));
 
-      row.appendChild(duration);
-      row.appendChild(blocks);
-      row.appendChild(cost);
-      row.appendChild(revenue);
-      row.appendChild(net);
-      row.appendChild(messPenalty);
-      row.appendChild(penalizedCost);
-      row.appendChild(penalizedNet);
+        row.appendChild(duration);
+        row.appendChild(blocks);
+        row.appendChild(cost);
+        row.appendChild(revenue);
+        row.appendChild(net);
+        row.appendChild(messPenalty);
+        row.appendChild(penalizedCost);
+        row.appendChild(penalizedNet);
 
-      return row;
-  }
+        return row;
+    }
 };
 
 Object.assign(MiningEstimate.prototype, miningEstimatePrototype);
@@ -344,8 +348,6 @@ const empiricalMinerHashrateShares_ETH = [
     {address: "0x8b4de256180cfec54c436a470af50f9ee2813dbb", name: "SBI Crypto Pool", percentage: 1.2540},
     {address: "0x28846f1ec065eea239152213373bb58b1c9fc93b", name: "Miner: 0x288...93B", percentage: 0.8995},
 ];
-
-const terahash = 1000000000000;
 
 function currentHashrate_TH(chain) {
     let block = ETC_Latest_Block.result;

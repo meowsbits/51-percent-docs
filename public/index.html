@@ -25,7 +25,7 @@
         <p>
             The following chart and table provide rough estimates for current expected attack costs and revenues.
             Estimates are derived from the configurable values below, along with a constant block time.
-            Hashrate is not required in calculating the table's values.
+            <!--            Hashrate is not required in calculating the table's values.-->
             The <code>Net with MESS (USD)</code> column can be understood as a minimum payout
             from fraud that the attacker would need to break even given the cost of the attack.
         </p>
@@ -41,7 +41,8 @@
         <label for="usd-etc">USD/ETC</label>
         <br>
         <input type="number" name="hashrate-efficiency-ratio" id="hashrate-efficiency-ratio">
-        <label for="hashrate-efficiency-ratio">Hashrate Efficiency Ratio</label>
+        <label for="hashrate-efficiency-ratio">Hashrate <a href="https://en.wikipedia.org/wiki/Efficiency_ratio">Efficiency
+            Ratio</a></label>
         <!--        Hashrate Rental Cost is the cost of RENTING a GPU for the attacker to mine on.-->
         <!--        For example, if a car costs $10_000 new and $1_000 / year to keep, and lasts for 10 years,-->
         <!--        the overall cost of the car is $10_000 + $1_000 * 10 = $20_000, or $2_000 / year.-->
@@ -308,7 +309,8 @@
                 href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
         </p>
         <p>
-            MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in August 2020 worth around 5 million USD.
+            MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
+            August 2020 worth around 5 million USD.
             At this time, the hashrate on ETC was around 5 Th/s, and the exchange rate was around $7 USD/ETC.
             The attacker's hashrate was apparently acquired via Nicehash.com.
         </p>
