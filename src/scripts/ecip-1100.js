@@ -1,10 +1,5 @@
-// export const GetBacon = () => {
-//   const body = fetch('https://baconipsum.com/api/?type=all-meat&paras=3').then(
-//     res => res.json()
-//   );
-//
-//   return body;
-// };
+// This module provides the code for ECIP-1100.
+// It is port of the original code from core-geth.
 
 const ecbp1100PolynomialVCurveFunctionDenominator = 128;
 const ecbp1100PolynomialVXCap = 25132;

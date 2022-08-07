@@ -16,8 +16,7 @@
         <h1>Risk Evaluation of 51-Percent Attacks on Ethereum Classic</h1>
 
         <p>This document provides an analysis of the context and estimates of risk of Proof of Work finality fraud
-            (51-percent
-            attacks) on Ethereum Classic (ETC).</p>
+            (51-percent attacks) on Ethereum Classic (ETC).</p>
     </header>
     <main>
 
@@ -41,13 +40,14 @@
         <input type="number" name="usd-etc" id="usd-etc">
         <label for="usd-etc">USD/ETC</label>
         <br>
-        <input type="number" name="hashrate-rental-cost" id="hashrate-rental-cost">
-        <label for="hashrate-rental-cost">Hashrate Rental Cost</label>
+        <input type="number" name="hashrate-efficiency-ratio" id="hashrate-efficiency-ratio">
+        <label for="hashrate-efficiency-ratio">Hashrate Efficiency Ratio</label>
         <!--        Hashrate Rental Cost is the cost of RENTING a GPU for the attacker to mine on.-->
         <!--        For example, if a car costs $10_000 new and $1_000 / year to keep, and lasts for 10 years,-->
         <!--        the overall cost of the car is $10_000 + $1_000 * 10 = $20_000, or $2_000 / year.-->
         <!--        This car might then be rented out (by the owner) for $2_000 * C / year, where C-->
         <!--        is analogous to the Hashrate Rental Cost defined above.-->
+        <!--        https://en.wikipedia.org/wiki/Efficiency_ratio-->
 
         <canvas id="myChart" width="400" height="200"></canvas>
 
@@ -308,8 +308,7 @@
                 href="https://github.com/ethereumclassic/ECIPs/blob/master/_specs/ecip-1100.md">ECIP-1100</a>.
         </p>
         <p>
-            MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in
-            early August 2020 worth around 5 million USD.
+            MESS was developed and implemented in reaction to a series of three 51-percent attacks occurring on ETC in August 2020 worth around 5 million USD.
             At this time, the hashrate on ETC was around 5 Th/s, and the exchange rate was around $7 USD/ETC.
             The attacker's hashrate was apparently acquired via Nicehash.com.
         </p>
@@ -317,7 +316,8 @@
             MESS increases the cost of producing a competitive chain by opinionating the network clients toward their
             incumbent chain (weak subjectivity), at a rate (pseudo-exponentially) proportional to the length of the
             competitive chain segment.
-            With an increased cost of producing a competitive chain, finality expectations for the honest public network
+            Because of an increased cost of producing a competitive chain, finality expectations for the honest public
+            network
             rise.
         </p>
 
@@ -541,35 +541,50 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         <h2>Appendix</h2>
 
         <h3 id="derivation-of-cost-values">Derivation of Cost Values</h3>
-        <p>Since marketplace prices for ETC-compatible have become murky with the omission of <code>etchash</code> from
+        <p>
+            Since marketplace prices for ETC-compatible hashing power have become murky with the omission of <code>etchash</code>
+            from
             popular on-demand hashrate marketplaces, we must assume the task of building a usable estimate for
-            ETC-compatible
-            hashrate cost. To do so, we build from a general economic intuition that the cost of hashrate should be
-            slightly (or somewhat) less than the revenue it earns. If the costs exceeded the revenue, miners would not
-            be incentived to commit work to the chain. If the revenue dramatically exceeded the costs, hashrate would
-            rise with increased competition for the spoils of the market inefficiency.</p>
-        <p>Given these constraints, we provide a sort of reverse-engineered estimation of ETC’s hashing cost using
+            ETC-compatible hashrate cost.
+            To do so, we build from a general economic intuition that the cost of hashrate should be
+            slightly (or somewhat) less than the revenue it earns.
+            If the costs exceeded the revenue, miners would not be incentived to commit work to the chain. If the
+            revenue dramatically exceeded the costs, hashrate would rise with increased competition for the spoils of
+            the market inefficiency.</p>
+        <p>
+            Given these constraints, we provide a sort of reverse-engineered estimation of ETC’s hashing cost using
             publicly available information for ETC’s younger sister, ETH.</p>
-        <p>We first show that a cost estimate is close to an expected potential revenue.</p>
-        <p>If ETH’s hashrate is 929.397 TH/s and the cost of marketplace DaggerHashimoto hashrate is 0.99 BTC/TH/24h and
+        <p>
+            We first show that a cost estimate is close to an expected potential revenue.</p>
+        <p>
+            If ETH’s hashrate is 929.397 TH/s and the cost of marketplace DaggerHashimoto hashrate is 0.99 BTC/TH/24h
+            and
             the ETH:BTC exchange rate is 0.07127 then the cost of marketplace DaggerHashimoto hashrate in ETH is <code>0.99
-                * (1/0.07127=14) = 13.9</code> ETH/TH/24h</p>
-        <p>At these rates, the cost of an equilibrium chain would be at least matching its current hashrate at the
+            * (1/0.07127=14) = 13.9</code> ETH/TH/24h</p>
+        <p>
+            At these rates, the cost of an equilibrium chain would be at least matching its current hashrate at the
             current hashrate price 929.397 * 13.9 ETH/24h = 12910.1 ETH / 24h</p>
-        <p>ETH’s block time is 13.5 seconds yielding (24<em>60</em>60 seconds / 24hr = 86400 seconds / 13.5 seconds =
+        <p>
+            ETH’s block time is 13.5 seconds yielding (24<em>60</em>60 seconds / 24hr = 86400 seconds / 13.5 seconds =
             6400 blocks / day) ETH’s block reward is 2 ETH / block. <sup><a
-                    href="https://github.com/ethereum/go-ethereum/blob/d8f963811df6ef97c76c9b4f433bf0bc936051e2/consensus/ethash/consensus.go#L44">Source</a></sup>
+                href="https://github.com/ethereum/go-ethereum/blob/d8f963811df6ef97c76c9b4f433bf0bc936051e2/consensus/ethash/consensus.go#L44">Source</a></sup>
         </p>
-        <p>The ETH token currency inflates at at least 6400 blocks * 2 ETH per day = 12800 ETH per day. A competitive
+        <p>
+            The ETH token currency inflates at at least 6400 blocks * 2 ETH per day = 12800 ETH per day. A competitive
             chain could be built at a cost of 12910.1 ETH / day if hashrate were purchased in the on-demand marketplace
             considered.</p>
-        <p>This analysis seems to fit our bespoke intuitive expectations for price vs. revenue models in a competitive
+        <p>
+            This analysis seems to fit our bespoke intuitive expectations for price vs. revenue models in a competitive
             and efficient market.</p>
-        <p>We now apply this validated intuition as a heuristic for ETC’s hashing cost.</p>
-        <p>ETC’s block time is roughly the same as ETH’s (though slightly faster because of relatively greater
+        <p>
+            We now apply this validated intuition as a heuristic for ETC’s hashing cost.</p>
+        <p>
+            ETC’s block time is roughly the same as ETH’s (though slightly faster because of relatively greater
             Difficulty volatility), so ETC also produces 6400 blocks / day.</p>
-        <p>ETC’s block reward is 2.56 ETC, so ETC inflates at least <code>2.56 * 6400 = 16384</code> ETC / day.</p>
-        <p>If we assume that the revenue should roughly match the production cost in ETC as it seems to in ETH then we
+        <p>
+            ETC’s block reward is 2.56 ETC, so ETC inflates at least <code>2.56 * 6400 = 16384</code> ETC / day.</p>
+        <p>
+            If we assume that the revenue should roughly match the production cost in ETC as it seems to in ETH then we
             could expect a mining cost of 16384 ETC * 36 USD/ETC = 589_824 USD / day, or 24_576 USD / hr.</p>
 
         <!--        <h3>Further Reading</h3>-->

@@ -1,13 +1,16 @@
-import {ECBP1100_Penalty} from './utils';
+import {ECBP1100_Penalty} from './ecip-1100';
 import {ExchangeData} from "./data";
-import Chart from 'chart.js/auto';
 import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
+import Chart from 'chart.js/auto';
 import Prism from 'prismjs';
-
 var humanFormat = require("human-format");
 
 // Summary Table
 // -------------------------------------------------------------------------------
+
+const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
+    60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 12,
+    60 * 16, 60 * 24, 60 * 32];
 
 const summaryTable = document.querySelector('#summary-table');
 const minerTable = document.querySelector('#eth-miners');
@@ -30,7 +33,7 @@ input_usdETC.onchange = function () {
     dataToUI();
 }
 
-// marketPriceHashrate defines the profit of a renter of hashrate in ETC/hour.
+// input_hashrateCostRevenueRatio defines the profit of a renter of hashrate in ETC/hour.
 //
 // We assume that the rental price for hashrate is higher than
 // the profit of the miners using the hardware for mining (rather than renting).
@@ -52,9 +55,9 @@ let marketHashrateRentalCost =
     empiricalReward_Ethash_24h_ETH; // eg. 1.0085
 marketHashrateRentalCost = marketHashrateRentalCost.toFixed(4)
 
-const input_marketHashrateRentalCost = document.getElementById('hashrate-rental-cost');
-input_marketHashrateRentalCost.value = marketHashrateRentalCost;
-input_marketHashrateRentalCost.onchange = function () {
+const input_hashrateCostRevenueRatio = document.getElementById('hashrate-efficiency-ratio');
+input_hashrateCostRevenueRatio.value = marketHashrateRentalCost;
+input_hashrateCostRevenueRatio.onchange = function () {
     marketHashrateRentalCost = this.value;
     dataToUI();
 }
@@ -63,40 +66,60 @@ function blockEmissionETC(hours) {
     return blocksPerHour * blockReward * hours;
 }
 
-const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
-    60 * 3, 60 * 4, 60 * 5, 60 * 6, 60 * 7, 60 * 8, 60 * 12,
-    60 * 16, 60 * 24, 60 * 32];
-
-function buildDataObject(durationMinutes) {
+// MiningEstimate is a constructor.
+function MiningEstimate(durationMinutes) {
     const basisV = blockEmissionETC(durationMinutes / 60) * usdETC;
     const costV = -1 * (basisV * marketHashrateRentalCost);
     const revenueV = basisV;
     const penalizedCostV = costV * ECBP1100_Penalty(durationMinutes * 60);
-
-    let obj = {
-        duration: durationMinutes, // minutes
-        blocks: durationMinutes / 60 * blocksPerHour,
-        cost: costV,
-        revenue: revenueV,
-        penalty: ECBP1100_Penalty(durationMinutes * 60),
-        penalizedCost: penalizedCostV,
-    }
-    return obj;
+    
+    this.duration = durationMinutes; // minutes
+    this.blocks = durationMinutes / 60 * blocksPerHour;
+    this.cost = costV;
+    this.revenue = revenueV;
+    this.penalty = ECBP1100_Penalty(durationMinutes * 60);
+    this.penalizedCost = penalizedCostV;
 }
 
-function buildData() {
-    let data = {
-        rows: [],
-    };
+const miningEstimatePrototype = {
+  toSummaryRowEl() {
+      const row = document.createElement('tr');
+      row.classList.add('summary-table-row');
 
-    // Build Rows for table.
-    for (let v of attackDurationVals) {
-        const obj = buildDataObject(v);
-        data.rows.push(obj);
-    }
+      const duration = document.createElement('td');
+      const blocks = document.createElement('td');
+      const cost = document.createElement('td');
+      const revenue = document.createElement('td');
+      const net = document.createElement('td');
+      const messPenalty = document.createElement('td');
+      const penalizedCost = document.createElement('td');
+      const penalizedNet = document.createElement('td');
 
-    return Promise.resolve(data);
-}
+
+      duration.innerHTML = `${formatDuration(this.duration)}`;
+      blocks.innerHTML = `${Math.round(this.blocks)}`;
+      cost.innerHTML = formatRowNumber(this.cost.toFixed(0));
+      revenue.innerHTML = formatRowNumber(this.revenue.toFixed(0));
+      net.innerHTML = formatRowNumber((this.revenue + this.cost).toFixed(0));
+      messPenalty.innerHTML = this.penalty.toFixed(2);
+      penalizedCost.innerHTML = formatRowNumber(this.penalizedCost.toFixed(0));
+      penalizedNet.innerHTML = formatRowNumber((this.revenue + this.penalizedCost).toFixed(0));
+
+      row.appendChild(duration);
+      row.appendChild(blocks);
+      row.appendChild(cost);
+      row.appendChild(revenue);
+      row.appendChild(net);
+      row.appendChild(messPenalty);
+      row.appendChild(penalizedCost);
+      row.appendChild(penalizedNet);
+
+      return row;
+  }
+};
+
+Object.assign(MiningEstimate.prototype, miningEstimatePrototype);
+
 
 function formatDuration(durationMinutes) {
     const days = Math.floor(durationMinutes / 60 / 24);
@@ -116,50 +139,6 @@ function formatRowNumber(num) {
     return `<span class='number ${classList}'>${content}</span>`;
 }
 
-function buildRowEl(r) {
-    const row = document.createElement('tr');
-    row.classList.add('summary-row');
-
-    const duration = document.createElement('td');
-    const blocks = document.createElement('td');
-    const cost = document.createElement('td');
-    const revenue = document.createElement('td');
-    const net = document.createElement('td');
-    const messPenalty = document.createElement('td');
-    const penalizedCost = document.createElement('td');
-    const penalizedNet = document.createElement('td');
-
-
-    duration.innerHTML = `${formatDuration(r.duration)}`;
-    blocks.innerHTML = `${Math.round(r.blocks)}`;
-    cost.innerHTML = formatRowNumber(r.cost.toFixed(0));
-    revenue.innerHTML = formatRowNumber(r.revenue.toFixed(0));
-    net.innerHTML = formatRowNumber((r.revenue + r.cost).toFixed(0));
-    messPenalty.innerHTML = r.penalty.toFixed(2);
-    penalizedCost.innerHTML = formatRowNumber(r.penalizedCost.toFixed(0));
-    penalizedNet.innerHTML = formatRowNumber((r.revenue + r.penalizedCost).toFixed(0));
-
-    row.appendChild(duration);
-    row.appendChild(blocks);
-    row.appendChild(cost);
-    row.appendChild(revenue);
-    row.appendChild(net);
-    row.appendChild(messPenalty);
-    row.appendChild(penalizedCost);
-    row.appendChild(penalizedNet);
-
-    return row;
-}
-
-function fillTable(data) {
-    console.log("Summary Table data", data);
-
-    for (let r of data.rows) {
-        const row = buildRowEl(r);
-        summaryTable.appendChild(row);
-    }
-}
-
 // Confirmation Delay Estimator Tool
 // -------------------------------------------------------------------------------
 
@@ -175,18 +154,23 @@ function fillTable(data) {
  returns: duration in minutes
  */
 function getDurationForPenalizedCost(penalizedCost_USD) {
-    console.log("penalizedCost_USD", penalizedCost_USD);
+    penalizedCost_USD = Math.abs(penalizedCost_USD);
+
     const durationMin = 1; // 1 minute
-    const durationMax = 60 * 24 * 30 * 2; // 2 months
+    const durationMax = 60 * 24 * 30 * 6; // 6 months
     let duration = durationMax / 2; // middle of range
 
     // Define upper and lower bounds for the acceptable return value,
     // since we're just guesstimating here.
     const margin = 0.01;
-    const lower = penalizedCost_USD, upper = penalizedCost_USD * (1 + margin);
+    const boundLower = penalizedCost_USD;
+    const boundUpper = penalizedCost_USD * (1 + margin);
 
     let count = 0; // Escape hatch.
+
+    // delta is the amount of change in the duration that we're making each iteration.
     let delta = durationMax / 2 / 2;
+
     for (; true;) {
 
         // Exit if we've exceeded the escape hatch.
@@ -200,20 +184,21 @@ function getDurationForPenalizedCost(penalizedCost_USD) {
             break;
         }
 
-        const obj = buildDataObject(duration);
+        const obj = new MiningEstimate(duration);
         const net = Math.abs(obj.penalizedCost + obj.revenue);
 
-        if (net >= lower && net <= upper) {
+        if (boundLower <= net && net <= boundUpper) {
             break;
         }
 
-        if (net > upper) {
+        if (net > boundUpper) {
             duration -= delta;
         } else {
             duration += delta;
         }
         delta /= 2;
     }
+    // console.log(`Cost estimator finished in ${count} iterations.`);
 
     return duration;
 }
@@ -234,9 +219,11 @@ input_confirmationTool_USD.onchange = function () {
     output_confirmationToolBlocks.innerText = (out / 60 * blocksPerHour).toFixed(0);
 
     output_confirmationToolTable.innerHTML = "";
-    const row = buildRowEl(buildDataObject(out));
+
+    const row = new MiningEstimate(out).toSummaryRowEl();
+
     row.style.width = "100%";
-    row.classList.remove('summary-row');
+    row.classList.remove('summary-table-row');
     output_confirmationToolTable.appendChild(row);
 };
 
@@ -253,7 +240,7 @@ const ctx = document.getElementById('myChart').getContext('2d');
 let myChart = new Chart(ctx, {});
 
 function summaryChart(data) {
-    let attackCostObjectData = data.rows.map(v => {
+    let attackCostObjectData = data.map(v => {
         return {x: v.duration, y: v.revenue + v.penalizedCost};
     });
 
@@ -291,7 +278,6 @@ function summaryChart(data) {
                 }
             },
             layout: {
-                padding: 10,
                 autoPadding: true,
             },
             scales: {
@@ -301,7 +287,7 @@ function summaryChart(data) {
                         text: 'Attack Duration',
                     },
                     min: 0,
-                    max: Math.max(...attackCostObjectData.map(v => v.x)) * 1.03,
+                    max: Math.max(...attackCostObjectData.map(v => v.x)),
                     type: 'linear',
                     ticks: {
                         callback: function (value, index, values) {
@@ -314,9 +300,8 @@ function summaryChart(data) {
                         display: true,
                         text: 'Net: Revenue - Expense',
                     },
-                    // min: -10000000,
                     max: Math.max(...attackCostObjectData.map(v => v.y)),
-                    min: Math.min(...attackCostObjectData.map(v => v.y)) * 1.03,
+                    min: Math.min(...attackCostObjectData.map(v => v.y)),
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function (value, index, ticks) {
@@ -420,13 +405,14 @@ function hashrateEstimatesDataToUI() {
 const dataToUI = () => {
     hashrateEstimatesDataToUI();
 
-    buildData().then(data => {
-        document.querySelectorAll('.summary-row').forEach(row => {
-            row.remove();
-        })
-        fillTable(data);
-        summaryChart(data);
-    });
+    document.querySelectorAll('.summary-table-row').forEach(row => row.remove());
+    const data = attackDurationVals.map(duration => new MiningEstimate(duration));
+    data.forEach(el => summaryTable.appendChild(el.toSummaryRowEl()));
+    summaryChart(data);
+    // buildData().then(data => {
+    //     fillTable(data);
+    //     summaryChart(data);
+    // });
 }
 
 function init() {
