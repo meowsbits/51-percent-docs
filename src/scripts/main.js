@@ -36,6 +36,24 @@ input_usdETC.onchange = function () {
     dataToUI();
 }
 
+// const empiricalHashrate_ETH = parseInt(ETH_Latest_Block.result.difficulty, 16) / 13.5 / terahash; // TH/s
+
+// These estimates are constant assumptions taken empirically from Nicehash.com on 20220804.
+// They yield a default value of 1.0099 efficiency, which seems reasonable.
+// Being slightly higher than 1 indicates that it is more profitable to mine ETH than it is to rent hashrate out for
+// someone else to mine ETH.
+// Of course, this is sensible for the on-demand hashrate marketplace.
+// A lower value, below 1, would be reasonable for the miner owning their hashing capital outright.
+const empiricalHashrate_ETH = 930; // TH/s
+const empiricalCost_Ethash_1Ths_24h = 13.9; // ETH
+const empiricalCost_Ethash_930THs_24h_ETH = empiricalCost_Ethash_1Ths_24h * empiricalHashrate_ETH;
+const empiricalReward_Ethash_24h_ETH = 60 * 60 * 24 / 13.5 * 2; // =12800
+
+let marketHashrateRentalCost =
+    empiricalCost_Ethash_930THs_24h_ETH /
+    empiricalReward_Ethash_24h_ETH;
+marketHashrateRentalCost = marketHashrateRentalCost.toFixed(4) // eg. 1.0099
+
 // input_hashrateCostRevenueRatio defines the profit of a renter of hashrate in ETC/hour.
 //
 // We assume that the rental price for hashrate is higher than
@@ -48,17 +66,6 @@ input_usdETC.onchange = function () {
 //
 // This value is defined as HOW MUCH MORE ETC/HOUR THE RENTER PAYS
 // compared to how much they could EARN if they were mining.
-// const empiricalHashrate_ETH = parseInt(ETH_Latest_Block.result.difficulty, 16) / 13.5 / terahash; // TH/s
-const empiricalHashrate_ETH = 930; // TH/s
-const empiricalCost_Ethash_1Ths_24h = 13.9; // ETH
-const empiricalCost_Ethash_930THs_24h_ETH = empiricalCost_Ethash_1Ths_24h * empiricalHashrate_ETH;
-const empiricalReward_Ethash_24h_ETH = 60 * 60 * 24 / 13.5 * 2; // =12800
-
-let marketHashrateRentalCost =
-    empiricalCost_Ethash_930THs_24h_ETH /
-    empiricalReward_Ethash_24h_ETH; // eg. 1.0085
-marketHashrateRentalCost = marketHashrateRentalCost.toFixed(4)
-
 const input_hashrateCostRevenueRatio = document.getElementById('hashrate-efficiency-ratio');
 input_hashrateCostRevenueRatio.value = marketHashrateRentalCost;
 input_hashrateCostRevenueRatio.onchange = function () {
@@ -154,6 +161,7 @@ function formatRowNumber(num) {
 // It is not guaranteed to work.
 // It is not guaranteed to be correct.
 // It is not guaranteed to be fast.
+// PS. Copilot wrote this for me.
 /*
  returns: duration in minutes
  */
