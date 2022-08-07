@@ -416,18 +416,13 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             Among these strategies were:
         <ul>
             <li>
-                Several <strong><a
-                    href="https://github.com/ethereumclassic/ECIPs/blob/7c596137e88038fccc293f42a2a3d01c54c27c35/_specs/ecip-1097.md">checkpointing
-                protocols</a></strong>,
-                which depended on the assertion of an authority entity,
-                compromising of the core principle of decentralized and permissionless consensus,
-                and necessitating the intractable problem of to whom to the authoritative trust would be assigned.
+                Several <strong><a href="https://github.com/ethereumclassic/ECIPs/blob/7c596137e88038fccc293f42a2a3d01c54c27c35/_specs/ecip-1097.md">checkpointing protocols</a></strong>, which depended on the assertion of an authority entity,
+                compromising the core principles of decentralized and permissionless consensus,
+                and necessitating the intractable problem of to Whom to the authoritative trust would be assigned.
             </li>
             <li>
                 A <strong><a href="https://veriblock.org/">proof-of-proof protocol</a></strong> which delegated
-                consensus to a third-party authority entity (ie. Bitcoin), which was not a participant in the original
-                consensus protocol. Not only did this "export" trust(lessness) to a 3rd party, but would have required a
-                burdensome amount of effort to implement satisfactorily.
+                trust(lessness) to a third-party authority entity (ie. Bitcoin). This has the same fundamental problem as checkpointing: authority assignment.
             </li>
             <li>
                 A <strong>peer-to-peer <a
@@ -449,11 +444,8 @@ function isProposedCanonical(original, proposed, commonAncestor) {
                 but would have compromised the promises implicit in the design and purpose of the policy.
             </li>
             <li>
-                Do <strong>nothing</strong>. A valid argument can claim that the issue lies with the risk management
-                practices
-                of the defrauded consumer, not the network; the fault being a too-short confirmation delay relative to
-                the transaction
-                value.
+                Do <strong>nothing</strong>. A valid argument can claim that the issue is one of criminal behavior and risk management practices of the defrauded consumer, not the network protocol.
+                An adequate confirmation delay relative to transaction value mitigates the risk effectively.
                 This option was impossible due to constraints and pressure from the community.
                 Network finality is associated with network utility.
             </li>
@@ -534,7 +526,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
 
         <h4 id="mess-vulnerabilities">MESS Known Vulnerabilities</h4>
         <p>Because the MESS protocol induces nodes to act decisively on an evaluation of a subjective data point (local
-            head), network consensus is vulnerable to bifurcation under circumstances which are expected to be rare, or
+            head), network consensus is vulnerable to bifurcation under circumstances which are expected to be
             difficult to achieve (from an attacker’s persepctive: <em>costly</em>).</p>
         <p>An effort has been made to quantify the expected cost of such a vulnerability. This effort from December 2020
             estimated the cost at around “20_000 USD upfront, and 5_000 USD per month to maintain the split.” <sup><a
