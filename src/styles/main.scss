@@ -1,5 +1,6 @@
 @import 'reset.scss';
 @import 'prismjs/themes/prism.css';
+@import 'tocbot/src/scss/tocbot';
 
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
   //background: none !important;
@@ -154,4 +155,13 @@ tr.header {
   background-color: #fffafa;
     padding: 0.5rem 1rem;
   line-height: 1.8rem;
+}
+
+.my-position-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }

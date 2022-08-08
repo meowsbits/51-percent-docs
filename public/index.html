@@ -13,14 +13,18 @@
 <body>
 <div class="wrapper">
     <header>
-        <h1>Risk Evaluation of 51-Percent Attacks on Ethereum Classic</h1>
+        <h1 id="home">Risk Evaluation of 51-Percent Attacks on Ethereum Classic</h1>
 
         <p>This document provides an analysis of the context and estimates of risk of Proof of Work finality fraud
             (51-percent attacks) on Ethereum Classic (ETC).</p>
     </header>
+<!--    <div class="my-position-fixed">-->
+        <div class="js-toc"></div>
+<!--    </div>-->
+
     <main>
         <!-- --------------------------------------------------------------------------------------- -->
-        <h2>Summary</h2>
+        <h2 id="section-summary">Summary</h2>
 
         <p>
             The following chart and table provide rough estimates for current expected attack costs and revenues.
@@ -65,8 +69,7 @@
             </tr>
         </table>
 
-        <h4>Confirmation Delay Estimator Tool</h4>
-
+        <h4 id="section-confirmation-delay-estimator-tool">Confirmation Delay Estimator Tool</h4>
 
         <div class="confirmation-estimator-tool">
             <p>
@@ -95,7 +98,7 @@
         </p>
 
         <!-- --------------------------------------------------------------------------------------- -->
-        <h2>History</h2>
+        <h2 id="section-history">History</h2>
 
         <p>
             In August 2020 a series of three 51-percent attacks were published on the Ethereum Classic network.
@@ -204,9 +207,9 @@
         </p>
 
         <!-- --------------------------------------------------------------------------------------- -->
-        <h2>Analysis: Chain State Finality</h2>
+        <h2 id="section-analysis-chain-state-finality">Analysis: Chain State Finality</h2>
 
-        <h3 id="what-a-51-percent-attack-is">What a 51-percent attack is</h3>
+        <h3 id="section-what-a-51-percent-attack-is">What a 51-percent attack is</h3>
 
         <p>
             A “51% attack” is a scheme in which an “attacker” commits fraud against some victim, with the attacker
@@ -219,7 +222,7 @@
             History is rewritten, and the attacker has received something for nothing, less the cost of carrying out the
             scheme.</p>
 
-        <h3>Hashing Availability (and Cost)</h3>
+        <h3 id="section-hashing-availability">Hashing Availability (and Cost)</h3>
 
         <p>
             In order for an attacker to mount an attack, they must have the capital necessary to do so.
@@ -240,9 +243,7 @@
             security considerations with regard to hardware.
         </p>
 
-        <h4 id="etc-daggerhashimoto-etchash">
-            Mining Algorithm
-        </h4>
+        <h4 id="section-etc-daggerhashimoto-etchash">Mining Algorithm</h4>
         <p>
             The original mining algorithm <i>Dagger-Hashimoto</i> (aka <code>ethash</code>), still in use today by
             Ethereum,
@@ -279,7 +280,7 @@
             for ETC and <code>etchash</code>.
         </p>
 
-        <h3>Potential Hashrate Availability Estimates</h3>
+        <h3 id="section-potential-hashrate-availability-estimates">Potential Hashrate Availability Estimates</h3>
 
         <p>
             While Ethereum obviously represents the largest application of ETC-compatible hash power<sup>
@@ -321,7 +322,7 @@
             </tr>
         </table>
 
-        <h3 id="mess">MESS: A Finality Mechanism</h3>
+        <h3 id="section-mess">MESS: A Finality Mechanism</h3>
 
         <p>
             MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a
@@ -349,7 +350,7 @@
                 href="https://github.com/ethereumclassic/ECIPs/issues/374#issuecomment-694156719">@vbuterin</a></sup>
         </blockquote>
 
-        <h4 id="mess-effects">MESS Protocol</h4>
+        <h4 id="section-mess-effects">MESS Protocol</h4>
 
         <p>
             The "penalty" curve implemented by MESS is a function of the length (as timestamp difference) of the
@@ -420,9 +421,9 @@ function isProposedCanonical(original, proposed, commonAncestor) {
 }</code></pre>
         </p>
 
-        <h4>MESS Rationale</h4>
+        <h4 id="section-mess-rationale">MESS Rationale</h4>
 
-        <h5>Alternative Strategies</h5>
+        <h5 id="section-mess-alternative-strategies">Alternative Strategies</h5>
 
         <p>
             Given the difficult and urgent problem of increasing finality expectations without increasing hash rate or
@@ -475,8 +476,8 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         Ultimately, <strong>MESS</strong> was selected for its simplicity, robustness, and closeness to core principles.
         </p>
 
-        <h4>MESS Discussion</h4>
-        <h5>Concern: Timestamp Manipulation + Network-wide Sybil Attack</h5>
+        <h4 id="section-mess-discussion">MESS Discussion</h4>
+        <h5 id="section-mess-discussion-concern-timestamps-plus-sybil">Concern: Timestamp Manipulation + Network-wide Sybil Attack</h5>
         One participant in the discussion of MESS raised a concern as follows:
         <p>
         <blockquote>
@@ -546,7 +547,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
         </ul>
         </p>
 
-        <h4 id="mess-vulnerabilities">MESS Known Vulnerabilities</h4>
+        <h4 id="section-mess-vulnerabilities">MESS Known Vulnerabilities</h4>
         <p>Because the MESS protocol induces nodes to act decisively on an evaluation of a subjective data point (local
             head), network consensus is vulnerable to bifurcation under circumstances which are expected to be
             difficult to achieve (from an attacker’s persepctive: <em>costly</em>).</p>
@@ -572,7 +573,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
     and thus how much is at stake (over time; as a frequency).
     The volume measurement then needs to be shared (as shares; ratios) over the clients by confirmation delay rates.
 -->
-        <h2>Analysis: Consumer Risk Profiles and Transaction Volume</h2>
+        <h2 id="section-analysis-consumer-risk-profiles-tx-volume">Analysis: Consumer Risk Profiles and Transaction Volume</h2>
 
         <p>
             Although chain state finality expectations are important in understanding finality fraud risk,
@@ -687,7 +688,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             fill in this table's confirmation delay fields.
         </p>
 
-        <h2>Outlook</h2>
+        <h2 id="section-outlook">Outlook</h2>
 
         <p>
             The fundamental solution to Ethereum Classic's finality fraud and attack risk exposure is
@@ -712,7 +713,7 @@ function isProposedCanonical(original, proposed, commonAncestor) {
 
         <hr>
         <!-- --------------------------------------------------------------------------------------- -->
-        <h2>Appendix</h2>
+        <h2 id="section-appendix">Appendix</h2>
 
         <h3 id="derivation-of-cost-values">Derivation of Cost Values</h3>
         <p>

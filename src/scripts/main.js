@@ -3,6 +3,7 @@ import {ExchangeData} from "./exchangedata";
 import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
 import Chart from 'chart.js/auto';
 import Prism from 'prismjs';
+import * as tocbot from "tocbot";
 
 const humanFormat = require("human-format");
 
@@ -532,6 +533,22 @@ function init() {
     for (let i = 0; i < codeBlocks.length; i++) {
         Prism.highlightElement(codeBlocks[i]);
     }
+
+    tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.js-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.wrapper',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h2, h3, h4',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+        collapseDepth: 4,
+        orderedList: false,
+        // positionFixedSelector: '.my-position-fixed',
+        // scrollSmoothOffset: 50,
+        // headingsOffset: 10,
+    });
 
     return dataToUI();
 }
