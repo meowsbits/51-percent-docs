@@ -466,7 +466,7 @@ function hashrateEstimatesDataToUI() {
 
     for (let miner of empiricalMinerHashrateShares_ETH) {
         const row = document.createElement('tr');
-        row.classList.add('miner-row');
+        row.classList.add('miner-hashrate-estimate-row');
 
         const minerAddressCell = document.createElement('td');
         minerAddressCell.style.maxWidth = '5rem';
@@ -495,6 +495,8 @@ function hashrateEstimatesDataToUI() {
 // -------------------------------------------------------------------------------
 
 const dataToUI = () => {
+
+    document.querySelectorAll('.miner-hashrate-estimate-row').forEach(row => row.remove());
     hashrateEstimatesDataToUI();
 
     document.querySelectorAll('.summary-table-row').forEach(row => row.remove());
