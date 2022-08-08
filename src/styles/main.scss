@@ -74,15 +74,21 @@
   }
 
   footer {
-    border-top: 1px solid #ccc;
-    padding-top: 2rem;
-    margin-top: 2rem;
+    //border-top: 1px solid #ccc;
+    //padding-top: 2rem;
+    //margin-top: 2rem;
     margin-bottom: 2rem;
     min-height: 50px;
     display: flex;
     justify-content: flex-start;
   }
 }
+
+hr {
+  color: #ddd;
+  margin: 5rem;
+}
+
 
 span.number {
   &.positive {
