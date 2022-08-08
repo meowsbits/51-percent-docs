@@ -496,9 +496,6 @@ function hashrateEstimatesDataToUI() {
 
 const dataToUI = () => {
 
-    document.querySelectorAll('.miner-hashrate-estimate-row').forEach(row => row.remove());
-    hashrateEstimatesDataToUI();
-
     document.querySelectorAll('.summary-table-row').forEach(row => row.remove());
     const data = attackDurationVals.map(duration => new MiningEstimate(duration));
     data.forEach(el => summaryTable.appendChild(el.toSummaryRowEl()));
@@ -514,6 +511,7 @@ function init() {
     console.log("ETC_latestBlock", ETC_Latest_Block);
     console.log("ETH_latestBlock", ETH_Latest_Block);
 
+
     // ETC
     const blockNumber = parseInt(ETC_Latest_Block.result.number, 16);
 
@@ -527,6 +525,8 @@ function init() {
 
     input_confirmationTool_USD.onchange(undefined); // Initialize.
 
+    hashrateEstimatesDataToUI();
+    
     messPenaltyChart();
 
     // Syntax highlighting
