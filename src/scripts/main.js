@@ -1,10 +1,10 @@
 import {ECBP1100_Penalty} from './ecip-1100';
-import {ExchangeData} from "./data";
+import {ExchangeData} from "./exchangedata";
 import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
 import Chart from 'chart.js/auto';
 import Prism from 'prismjs';
 
-var humanFormat = require("human-format");
+const humanFormat = require("human-format");
 
 // Summary Table
 // -------------------------------------------------------------------------------
@@ -150,106 +150,11 @@ function formatRowNumber(num) {
     return `<span class='number ${classList}'>${content}</span>`;
 }
 
-// Confirmation Delay Estimator Tool
-// -------------------------------------------------------------------------------
-
-// getDurationForPenalizedCost returns the duration in minutes that are equivalent
-// to the given penalized cost.
-// This is: How long to wait for a transaction of X ETC value.
-// FIXME(hard):
-// The logic is trial-and-error.
-// It is not guaranteed to work.
-// It is not guaranteed to be correct.
-// It is not guaranteed to be fast.
-// PS. Copilot wrote this for me.
-/*
- returns: duration in minutes
- */
-function getDurationForPenalizedCost(penalizedCost_USD) {
-    penalizedCost_USD = Math.abs(penalizedCost_USD);
-
-    const durationMin = 1; // 1 minute
-    const durationMax = 60 * 24 * 30 * 6; // 6 months
-    let duration = durationMax / 2; // middle of range
-
-    // Define upper and lower bounds for the acceptable return value,
-    // since we're just guesstimating here.
-    const margin = 0.01;
-    const boundLower = penalizedCost_USD;
-    const boundUpper = penalizedCost_USD * (1 + margin);
-
-    let count = 0; // Escape hatch.
-
-    // delta is the amount of change in the duration that we're making each iteration.
-    let delta = durationMax / 2 / 2;
-
-    for (; true;) {
-
-        // Exit if we've exceeded the escape hatch.
-        count++;
-        if (count > 1000) break;
-
-        if (duration + delta > durationMax) {
-            break;
-        }
-        if (duration - delta < durationMin) {
-            break;
-        }
-
-        const obj = new MiningEstimate(duration);
-        const net = Math.abs(obj.penalizedCost + obj.revenue);
-
-        if (boundLower <= net && net <= boundUpper) {
-            break;
-        }
-
-        if (net > boundUpper) {
-            duration -= delta;
-        } else {
-            duration += delta;
-        }
-        delta /= 2;
-    }
-    // console.log(`Cost estimator finished in ${count} iterations.`);
-
-    return duration;
-}
-
-const input_confirmationTool_USD = document.getElementById('confirmation-tool-usd');
-const input_confirmationTool_ETC = document.getElementById('confirmation-tool-etc');
-
-const output_confirmationToolTime = document.getElementById('confirmation-tool-output-time');
-const output_confirmationToolBlocks = document.getElementById('confirmation-tool-output-blocks');
-const output_confirmationToolTable = document.getElementById('confirmation-tool-output-table');
-
-input_confirmationTool_USD.onchange = function () {
-    input_confirmationTool_ETC.value = (input_confirmationTool_USD.value / usdETC).toFixed(3);
-
-    const out = getDurationForPenalizedCost(this.value);
-
-    output_confirmationToolTime.innerText = formatDuration(out);
-    output_confirmationToolBlocks.innerText = (out / 60 * blocksPerHour).toFixed(0);
-
-    output_confirmationToolTable.innerHTML = "";
-
-    const row = new MiningEstimate(out).toSummaryRowEl();
-
-    row.style.width = "100%";
-    row.classList.remove('summary-table-row');
-    output_confirmationToolTable.appendChild(row);
-};
-
-input_confirmationTool_ETC.onchange = function () {
-    input_confirmationTool_USD.value = (this.value * usdETC).toFixed(2);
-    input_confirmationTool_USD.onchange();
-};
-
-
 // Summary Chart
 // -------------------------------------------------------------------------------
 
-const ctx = document.getElementById('myChart').getContext('2d');
-let myChart = new Chart(ctx, {});
+const summaryChartContext = document.getElementById('summary-chart').getContext('2d');
+let summaryChartInstance = new Chart(summaryChartContext, {});
 
 function summaryChart(data) {
     let attackCostObjectData = data.map(v => {
@@ -263,7 +168,7 @@ function summaryChart(data) {
 
     // We have to destroy the chart if we want to repaint it,
     // which we always do, since the chart variable is initialized globally.
-    myChart.destroy();
+    summaryChartInstance.destroy();
 
     let chartData = {
         datasets: [
@@ -276,7 +181,7 @@ function summaryChart(data) {
         ]
     };
 
-    myChart = new Chart(ctx, {
+    summaryChartInstance = new Chart(summaryChartContext, {
         type: 'line',
         data: chartData,
         options: {
@@ -328,6 +233,182 @@ function summaryChart(data) {
         }
     });
 }
+
+// MESS Penalty Chart
+// -------------------------------------------------------------------------------
+const messPenaltyChartContext = document.getElementById('mess-penalty-chart').getContext('2d');
+let messPenaltyChartInstance = new Chart(messPenaltyChartContext, {});
+
+function messPenaltyChart() {
+
+    const data = [1,2,3,4].concat(...attackDurationVals)
+        .filter(el => el < 10*60)
+        .map(v => {return {x: v, y: ECBP1100_Penalty(v * 60)};
+    });
+
+    messPenaltyChartInstance.destroy()
+    const chartData = {
+        datasets: [
+            {
+                label: 'MESS Penalty',
+                data: data,
+                backgroundColor: '#8B0000FF',
+                clip: 5,
+            }
+        ]
+    };
+
+    messPenaltyChartInstance = new Chart(messPenaltyChartContext, {
+        type: 'line',
+        data: chartData,
+        options: {
+            plugins: {
+                title: {
+                    text: 'MESS Penalty Curve',
+                    display: true,
+                },
+                legend: {
+                    display: false,
+                }
+            },
+            layout: {
+                autoPadding: true,
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Attack Duration',
+                    },
+                    min: 0,
+                    max: Math.max(...data.map(v => v.x)),
+                    type: 'linear',
+                    ticks: {
+                        callback: function (value, index, values) {
+                            return formatDuration(value);
+                        }
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Penalty TD Multiple',
+                    },
+                    max: Math.max(...data.map(v => v.y)),
+                    min: Math.min(...data.map(v => v.y)),
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        // callback: function (value, index, ticks) {
+                        //     return '$' + humanFormat(value, {
+                        //             maxDecimals: 'auto',
+                        //         }
+                        //     );
+                        // }
+                    }
+                },
+            }
+        }
+    });
+}
+
+// Confirmation Delay Estimator Tool
+// -------------------------------------------------------------------------------
+
+// getDurationForPenalizedCost returns the duration in minutes that are equivalent
+// to the given penalized cost.
+// This is: How long to wait for a transaction of X ETC value.
+// It does something like a binary search on the duration.
+// FIXME(hard):
+// The logic is trial-and-error.
+// It is not guaranteed to work.
+// It is not guaranteed to be correct.
+// It is not guaranteed to be fast.
+// PS. Copilot wrote this comment for me.
+/*
+ returns: duration in minutes
+ */
+function getDurationForPenalizedCost(penalizedCost_USD) {
+    penalizedCost_USD = Math.abs(penalizedCost_USD);
+
+    const domainMin = 1; // 1 minute
+    const domainMax = 60 * 24 * 30 * 6; // 6 months
+    let seek = domainMax / 2; // middle of range
+
+    // Define upper and lower bounds for the acceptable return value,
+    // since we're just guesstimating here.
+    // Note that the UPPER BOUND ONLY gets the margin of error.
+    // We want the error to err long, because erring short would
+    // err on the side risking a too-short confirmation delay.
+    const boundLower = penalizedCost_USD;
+    const boundUpper = penalizedCost_USD * 1.01; // 1% margin of error
+
+    let count = 0; // Escape hatch.
+
+    // delta is the amount of change in the domain (guesstimate) that we're making each iteration.
+    // That is: how much to adjust our guess if we're not yet within the bounds.
+    let delta = domainMax / 2 / 2;
+
+    for (; true;) {
+
+        // Exit if we've exceeded the escape hatch.
+        count++;
+        if (count > 1000) break;
+
+        if (seek + delta > domainMax) {
+            break;
+        }
+        if (seek - delta < domainMin) {
+            break;
+        }
+
+        const obj = new MiningEstimate(seek);
+        const net = Math.abs(obj.penalizedCost + obj.revenue);
+
+        if (boundLower <= net && net <= boundUpper) {
+            break;
+        }
+
+        if (net > boundUpper) {
+            seek -= delta;
+        } else {
+            seek += delta;
+        }
+        delta /= 2;
+    }
+    // console.log(`Cost estimator finished in ${count} iterations.`);
+
+    return seek;
+}
+
+const input_confirmationTool_USD = document.getElementById('confirmation-tool-usd');
+const input_confirmationTool_ETC = document.getElementById('confirmation-tool-etc');
+
+const output_confirmationToolTime = document.getElementById('confirmation-tool-output-time');
+const output_confirmationToolBlocks = document.getElementById('confirmation-tool-output-blocks');
+const output_confirmationToolTable = document.getElementById('confirmation-tool-output-table');
+
+input_confirmationTool_USD.onchange = function () {
+    input_confirmationTool_ETC.value = (input_confirmationTool_USD.value / usdETC).toFixed(3);
+
+    const out = getDurationForPenalizedCost(this.value);
+
+    output_confirmationToolTime.innerText = formatDuration(out);
+    output_confirmationToolBlocks.innerText = (out / 60 * blocksPerHour).toFixed(0);
+
+    output_confirmationToolTable.innerHTML = "";
+
+    const row = new MiningEstimate(out).toSummaryRowEl();
+
+    row.style.width = "100%";
+    row.classList.remove('summary-table-row');
+    output_confirmationToolTable.appendChild(row);
+};
+
+input_confirmationTool_ETC.onchange = function () {
+    input_confirmationTool_USD.value = (this.value * usdETC).toFixed(2);
+    input_confirmationTool_USD.onchange();
+};
+
 
 // ETH vs. ETC Potential Attackers Table
 // -------------------------------------------------------------------------------
@@ -443,6 +524,7 @@ function init() {
 
     input_confirmationTool_USD.onchange(undefined); // Initialize.
 
+    messPenaltyChart();
 
     // Syntax highlighting
     // Prism.highlightAll();

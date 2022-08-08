@@ -19,7 +19,7 @@
             (51-percent attacks) on Ethereum Classic (ETC).</p>
     </header>
     <main>
-
+        <!-- --------------------------------------------------------------------------------------- -->
         <h2>Summary</h2>
 
         <p>
@@ -50,7 +50,7 @@
         <!--        is analogous to the Hashrate Rental Cost defined above.-->
         <!--        https://en.wikipedia.org/wiki/Efficiency_ratio-->
 
-        <canvas id="myChart" width="400" height="200"></canvas>
+        <canvas id="summary-chart" width="400" height="200"></canvas>
 
         <table id="summary-table">
             <tr class="header">
@@ -94,7 +94,7 @@
             nor any “luck” margin for the miner’s target total difficulty.
         </p>
 
-
+        <!-- --------------------------------------------------------------------------------------- -->
         <h2>History</h2>
 
         <p>
@@ -203,7 +203,9 @@
         </p>
         </p>
 
-        <h2>Analysis</h2>
+        <!-- --------------------------------------------------------------------------------------- -->
+        <h2>Analysis: Chain State Finality</h2>
+
         <h3 id="what-a-51-percent-attack-is">What a 51-percent attack is</h3>
 
         <p>
@@ -229,7 +231,8 @@
             and a very important limitation for the attack strategy.
         </p>
         <p>
-            Hashrate cost is a function of (at least) the hardware itself and the cost of running the hardware, ie. electricity.
+            Hashrate cost is a function of (at least) the hardware itself and the cost of running the hardware, ie.
+            electricity.
         </p>
         <p class="modest">
             See <a href="https://blog.coinbase.com/how-coinbase-views-proof-of-work-security-f4ba1a139da0">
@@ -279,8 +282,21 @@
         <h3>Potential Hashrate Availability Estimates</h3>
 
         <p>
-            If we consider only the hashrate on Ethereum, which is applicable to Ethereum Classic,
-            we can identify the entities in possession of sufficient hashrate to attack Ethereum Classic.
+            While Ethereum obviously represents the largest application of ETC-compatible hash power<sup>
+            <a href="https://en.bitcoinwiki.org/wiki/Dagger-Hashimoto">Dagger-Hashimoto</a>/<a href="https://en.bitcoinwiki.org/wiki/Ethash#Coins">Ethash</a>
+        </sup>,
+            there are other applications which together compose a global supply.
+            For example, <a href="https://2miners.com/exp-network-hashrate">Expanse (EXP)</a> and
+            <a href="https://ubiqsmart.com/">Ubiq (UBQ)</a> both use the memory-hard <strike>Dagger-Hashimoto</strike>
+            Ethash mining algorithm,
+            but represent 24.83 Gh/s <sup><a href="https://2miners.com/exp-network-hashrate">2miners</a></sup>
+            and 4.28 Gh/s <sup><a href="https://minerstat.com/coin/UBQ/network-hashrate">minerstat</a></sup>
+            respectively, or around 1/1200 and 1/7000 that of ETC.
+        </p>
+
+        <p>
+            Considering only the hashrate on Ethereum,
+            we can identify entities in possession of sufficient hashrate to attack Ethereum Classic.
         </p>
 
         <p>
@@ -306,7 +322,6 @@
         </table>
 
         <h3 id="mess">MESS</h3>
-
 
         <p>
             MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a
@@ -340,10 +355,13 @@
             The "penalty" curve implemented by MESS is a function of the length (as timestamp difference) of the
             incumbent competitive chain segment. This curve is graphed below:
         </p>
-        <div class="" style="text-align: center;">
-            <img src="https://user-images.githubusercontent.com/45600330/181563591-38d25db3-8e6f-40fc-8e0d-2b3f9d0919ea.png"
-                 alt="ecbp1100-polynomial" style="max-width: 400px; display: inline-block;"/>
-        </div>
+
+        <canvas id="mess-penalty-chart" width="400" height="200"></canvas>
+
+<!--        <div class="" style="text-align: center;">-->
+<!--            <img src="https://user-images.githubusercontent.com/45600330/181563591-38d25db3-8e6f-40fc-8e0d-2b3f9d0919ea.png"-->
+<!--                 alt="ecbp1100-polynomial" style="max-width: 400px; display: inline-block;"/>-->
+<!--        </div>-->
 
         <p>
             This curve expresses a unitless multiple imposed as a comparative demand on the competing chain segment
@@ -416,13 +434,16 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             Among these strategies were:
         <ul>
             <li>
-                Several <strong><a href="https://github.com/ethereumclassic/ECIPs/blob/7c596137e88038fccc293f42a2a3d01c54c27c35/_specs/ecip-1097.md">checkpointing protocols</a></strong>, which depended on the assertion of an authority entity,
+                Several <strong><a
+                    href="https://github.com/ethereumclassic/ECIPs/blob/7c596137e88038fccc293f42a2a3d01c54c27c35/_specs/ecip-1097.md">checkpointing
+                protocols</a></strong>, which depended on the assertion of an authority entity,
                 compromising the core principles of decentralized and permissionless consensus,
                 and necessitating the intractable problem of to Whom to the authoritative trust would be assigned.
             </li>
             <li>
                 A <strong><a href="https://veriblock.org/">proof-of-proof protocol</a></strong> which delegated
-                trust(lessness) to a third-party authority entity (ie. Bitcoin). This has the same fundamental problem as checkpointing: authority assignment.
+                trust(lessness) to a third-party authority entity (ie. Bitcoin). This has the same fundamental problem
+                as checkpointing: authority assignment.
             </li>
             <li>
                 A <strong>peer-to-peer <a
@@ -444,7 +465,8 @@ function isProposedCanonical(original, proposed, commonAncestor) {
                 but would have compromised the promises implicit in the design and purpose of the policy.
             </li>
             <li>
-                Do <strong>nothing</strong>. A valid argument can claim that the issue is one of criminal behavior and risk management practices of the defrauded consumer, not the network protocol.
+                Do <strong>nothing</strong>. A valid argument can claim that the issue is one of criminal behavior and
+                risk management practices of the defrauded consumer, not the network protocol.
                 An adequate confirmation delay relative to transaction value mitigates the risk effectively.
                 This option was impossible due to constraints and pressure from the community.
                 Network finality is associated with network utility.
@@ -539,6 +561,156 @@ function isProposedCanonical(original, proposed, commonAncestor) {
             victims, the vulnerability resulting from the mechanics of the MESS protocol is nearer in spirit to
             terrorism (or a controlled market short) since bifurcating the network would likely destroy its value.</p>
 
+        <!-- --------------------------------------------------------------------------------------- -->
+        <!--
+    For a GOOD risk analysis of fraud on ETC, there are some more important things to consider:
+    - ETC transaction throughput value, the number and scale (value) of transactions per second. (ie. Volume).
+    - Exchange (client) confirmation rates.
+    Since the risk of fraud is borne and controlled by the client (eg. an exchange),
+    the analysis needs to try to understand the outlooks of client behavior.
+    We can use transaction throughput (ie. Volume) to measure how much currency is being traded,
+    and thus how much is at stake (over time; as a frequency).
+    The volume measurement then needs to be shared (as shares; ratios) over the clients by confirmation delay rates.
+-->
+        <h2>Analysis: Consumer Risk Profiles and Transaction Volume</h2>
+
+        <p>
+            Although chain state finality expectations are important in understanding finality fraud risk,
+            consumer behavior and overall trading volume are equally important to understanding an overall risk profile
+            since the risks from fraud are largely borne and managed by the consumer.
+        </p>
+
+        <p>
+            <strong>Consumer behavior</strong> is important because risk profiles considered in aggregate
+            define the risk exposure for the market in general. In the context of this document,
+            we 'll limit our consideration of consumers to high-profile cryptocurrency exchanges,
+            expecting that they represent a sufficient heuristic for the market at large.
+        </p>
+
+        <p>
+            <strong>Transaction (trading) volume</strong> is important because it represents the value at stake for some
+            measure of risk.
+            It should be noted that in this context, "transaction volume" is not necessarily spot exchange volume,
+            but the volume of transactional value moved through the network.
+            Conventional trading volume, on the other hand, can be managed in proprietary escrow by exchanges at a layer
+            above the network's.
+        </p>
+        <p>
+            Chain state analysis shows that for the last 7 days from the time of writing,
+            the ETC network had mean and median transaction values of 35 ETC and 43 ETC per transaction respectively,
+            and a mean 8 transactions per block.
+        </p>
+
+        <table style="width: 100%;">
+            <tr>
+                <th>Exchange</th>
+                <th>Share Market Volume</th>
+                <th>Confirmation Delay (Blocks)</th>
+                <th>Source</th>
+            </tr>
+            <tr>
+                <td>Upbit.com</td>
+                <td>21.37%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Binance.com</td>
+                <td>~17+%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>OKX.com</td>
+                <td>4.39+%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>AAX.com</td>
+                <td>2.88%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Gate.io</td>
+                <td>1.58%</td> <!-- estimated market share (share of volume traded) -->
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Huobi.com</td>
+                <td>1.31%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Coinbase.com</td>
+                <td>1.1%</td>
+                <td>3000?,10000?</td>
+                <td>
+                    <a href="https://help.coinbase.com/en/coinbase/getting-started/crypto-education/ethereum-classic-etc-faq">help.coinbase.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Kraken.com</td>
+                <td>0.9%</td> <!-- estimated market share (share of volume traded) -->
+                <td>40000</td>
+                <td>
+                    <a href="https://support.kraken.com/hc/en-us/articles/203325283-Cryptocurrency-deposit-processing-times">support.kraken.com</a>
+                </td>
+            </tr>
+            <tr>
+                <td>coinone.co.kr</td>
+                <td>0.89%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>kucoin.com</td>
+                <td>0.7%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Bitfinex.com</td>
+                <td>0.11%</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <p class="modest">
+            <a href="https://coinmarketcap.com/currencies/ethereum-classic/markets/">Table data source</a>.
+            Do you trade on one of these platforms? If so, please
+            <a href="https://github.com/meowsbits/51-percent-docs/edit/master/public/index.html">help</a>
+            fill in this table's confirmation delay fields.
+        </p>
+
+        <h2>Outlook</h2>
+
+        <p>
+            The fundamental solution to Ethereum Classic's finality fraud and attack risk exposure is
+            an increase in hash rate relative to the global availability of applicable hash power.
+            Hash rate is highly correlated with exchange rate, which, ostensibly, is associated with the utility and
+            desirability of the network.
+        </p>
+        <p>
+            The Ethereum network is currently the dominant application of ETC-compatible hash power,
+            representing hash and exchange rates around 20-50x that of Ethereum Classic.
+        </p>
+        <p>
+            Ethereum plans to move to Proof of Stake in the near future, which will forcibly eject its mining interests.
+            As the second largest cryptocurrency application of this hash power, it stands to reason that ETC should
+            expect its hash rate to be augmented by at least some of those abandoned miners.
+        </p>
+        <p>
+            If Ethereum Classic achieves the position as the dominant application of the hash power,
+            its risk exposures would drop to a minimum, MESS would become useless, and exchange rate should correspond
+            to these improvements.
+        </p>
+
+        <!-- --------------------------------------------------------------------------------------- -->
         <h2>Appendix</h2>
 
         <h3 id="derivation-of-cost-values">Derivation of Cost Values</h3>
