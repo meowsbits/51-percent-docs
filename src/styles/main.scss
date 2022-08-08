@@ -1,6 +1,4 @@
 @import 'reset.scss';
-
-
 @import 'prismjs/themes/prism.css';
 
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
@@ -8,9 +6,41 @@
   background: #f5f4fd !important;
 }
 
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin for-desktop-up {
+  @media (min-width: 1200px) { @content; }
+}
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
+
+//// usage
+//.my-box {
+//  padding: 10px;
+//
+//  @include for-desktop-up {
+//    padding: 20px;
+//  }
+//}
+
 .wrapper {
   min-height: 100vh;
+  max-width: 100vw;
   display: grid;
+  //@include for-phone-only {
+  //  grid-template-columns: 1fr;
+  //}
+  //@include for-tablet-portrait-up {
+  //  grid-template-columns: 1fr 2fr 1fr;
+  //}
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-rows: auto 1fr auto;
   line-height: 23px;

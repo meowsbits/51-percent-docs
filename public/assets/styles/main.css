@@ -149,6 +149,7 @@ h5 {
 
 .wrapper {
   min-height: 100vh;
+  max-width: 100vw;
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-rows: auto 1fr auto;
