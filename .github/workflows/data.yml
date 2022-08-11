@@ -60,8 +60,8 @@ jobs:
           curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.etc.rpc.rivet.cloud > data/rivet_etc_latest_block.json
           curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.eth.rpc.rivet.cloud > data/rivet_eth_latest_block.json
           
-          echo "Generated code. DO NOT EDIT." > src/scripts/chaindata.js
-          echo "These constant values are installed via .github/data.yml" >> src/scripts/chaindata.js
+          echo "// Generated code. DO NOT EDIT." > src/scripts/chaindata.js
+          echo "// These constant values are installed via .github/data.yml" >> src/scripts/chaindata.js
           echo >> src/scripts/chaindata.js
           echo -n "export const ETC_Latest_Block = " >> src/scripts/chaindata.js
           cat data/rivet_etc_latest_block.json >> src/scripts/chaindata.js

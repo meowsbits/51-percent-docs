@@ -495,15 +495,10 @@ function hashrateEstimatesDataToUI() {
 // -------------------------------------------------------------------------------
 
 const dataToUI = () => {
-
     document.querySelectorAll('.summary-table-row').forEach(row => row.remove());
     const data = attackDurationVals.map(duration => new MiningEstimate(duration));
     data.forEach(el => summaryTable.appendChild(el.toSummaryRowEl()));
     summaryChart(data);
-    // buildData().then(data => {
-    //     fillTable(data);
-    //     summaryChart(data);
-    // });
 }
 
 function init() {
@@ -526,7 +521,7 @@ function init() {
     input_confirmationTool_USD.onchange(undefined); // Initialize.
 
     hashrateEstimatesDataToUI();
-    
+
     messPenaltyChart();
 
     // Syntax highlighting
