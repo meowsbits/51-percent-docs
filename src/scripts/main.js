@@ -217,8 +217,9 @@ function summaryChart(data) {
                 y: {
                     title: {
                         display: true,
-                        text: 'Net: Revenue - Expense',
+                        text: 'Net = Revenue - Expense',
                     },
+                    position: 'right',
                     max: Math.max(...attackCostObjectData.map(v => v.y)),
                     min: Math.min(...attackCostObjectData.map(v => v.y)),
                     ticks: {
