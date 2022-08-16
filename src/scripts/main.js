@@ -1,6 +1,7 @@
 import {ECBP1100_Penalty} from './ecip-1100';
 import {ExchangeData} from "./exchangedata";
 import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
+import {WhatToMine} from "./whattomine";
 import Chart from 'chart.js/auto';
 import Prism from 'prismjs';
 import * as tocbot from "tocbot";
@@ -491,6 +492,60 @@ function hashrateEstimatesDataToUI() {
     }
 }
 
+// WhatToMine
+// -------------------------------------------------------------------------------
+
+// ======================================================================
+// formats a given hashrate (H/s) to humand readable hashrate
+// like xxx.yyy GH/s
+// ======================================================================
+
+var formatHashrate= function(rate) {
+    let unit= 'H/s';
+    if(rate >= 1000) { rate /= 1000; unit= 'KH/s'; }
+    if(rate >= 1000) { rate /= 1000; unit= 'MH/s'; }
+    if(rate >= 1000) { rate /= 1000; unit= 'GH/s'; }
+    if(rate >= 1000) { rate /= 1000; unit= 'TH/s'; }
+    if(rate >= 1000) { rate /= 1000; unit= 'PH/s'; }
+    return (rate.toFixed(2) + ' ' + unit);
+}
+
+const whatToMineTable = document.getElementById('applied-hashrate-shares');
+function buildWhatToMineTable() {
+    let data = [];
+    for (let coin of Object.keys(WhatToMine.coins)) {
+        data.push({name: coin, ...WhatToMine.coins[coin]});
+    }
+    data.sort((a, b) => b.nethash - a.nethash);
+    for (let coin of data) {
+        const row = document.createElement('tr');
+        row.classList.add('whattomine-row');
+
+        const coinname = document.createElement('td');
+        coinname.innerHTML = `${coin.name} <sup>${coin.tag}</sup>`;
+        const algorithm = document.createElement('td');
+        algorithm.innerHTML = coin.algorithm;
+        const nethash = document.createElement('td');
+        nethash.innerHTML = formatHashrate(coin.nethash);
+        const nethashVsETC = document.createElement('td');
+        nethashVsETC.innerHTML = `${(coin.nethash / WhatToMine.coins.EthereumClassic.nethash).toFixed(3)}`;
+        if (coin.nethash < WhatToMine.coins.EthereumClassic.nethash) {
+            nethashVsETC.innerHTML += ` = 1/${(1/(coin.nethash / WhatToMine.coins.EthereumClassic.nethash)).toFixed(0)}`;
+        }
+        const marketcap = document.createElement('td');
+        marketcap.innerHTML = coin.market_cap;
+
+
+        row.appendChild(coinname);
+        row.appendChild(algorithm);
+        row.appendChild(nethash);
+        row.appendChild(nethashVsETC);
+        row.appendChild(marketcap);
+        whatToMineTable.appendChild(row);
+    }
+
+}
+
 // UI, Initializations
 // -------------------------------------------------------------------------------
 
@@ -524,6 +579,8 @@ function init() {
 
     messPenaltyChart();
 
+    buildWhatToMineTable();
+
     // Syntax highlighting
     // Prism.highlightAll();
     const codeBlocks = document.querySelectorAll('pre code.prism');
@@ -546,6 +603,8 @@ function init() {
         // scrollSmoothOffset: 50,
         // headingsOffset: 10,
     });
+
+    fetch
 
     return dataToUI();
 }
