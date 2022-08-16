@@ -244,10 +244,11 @@ let messPenaltyChartInstance = new Chart(messPenaltyChartContext, {});
 
 function messPenaltyChart() {
 
-    const data = [1,2,3,4].concat(...attackDurationVals)
-        .filter(el => el < 10*60)
-        .map(v => {return {x: v, y: ECBP1100_Penalty(v * 60)};
-    });
+    const data = [1, 2, 3, 4].concat(...attackDurationVals)
+        .filter(el => el < 10 * 60)
+        .map(v => {
+            return {x: v, y: ECBP1100_Penalty(v * 60)};
+        });
 
     messPenaltyChartInstance.destroy()
     const chartData = {
@@ -501,17 +502,33 @@ function hashrateEstimatesDataToUI() {
 // like xxx.yyy GH/s
 // ======================================================================
 
-var formatHashrate= function(rate) {
-    let unit= 'H/s';
-    if(rate >= 1000) { rate /= 1000; unit= 'KH/s'; }
-    if(rate >= 1000) { rate /= 1000; unit= 'MH/s'; }
-    if(rate >= 1000) { rate /= 1000; unit= 'GH/s'; }
-    if(rate >= 1000) { rate /= 1000; unit= 'TH/s'; }
-    if(rate >= 1000) { rate /= 1000; unit= 'PH/s'; }
-    return (rate.toFixed(2) + ' ' + unit);
+var formatHashrate = function (rate, precision) {
+    let unit = 'h/s';
+    if (rate >= 1000) {
+        rate /= 1000;
+        unit = 'Kh/s';
+    }
+    if (rate >= 1000) {
+        rate /= 1000;
+        unit = 'Mh/s';
+    }
+    if (rate >= 1000) {
+        rate /= 1000;
+        unit = 'Gh/s';
+    }
+    if (rate >= 1000) {
+        rate /= 1000;
+        unit = 'Th/s';
+    }
+    if (rate >= 1000) {
+        rate /= 1000;
+        unit = 'Ph/s';
+    }
+    return (rate.toFixed(precision) + ' ' + unit);
 }
 
 const whatToMineTable = document.getElementById('applied-hashrate-shares');
+
 function buildWhatToMineTable() {
     let data = [];
     for (let coin of Object.keys(WhatToMine.coins)) {
@@ -527,11 +544,11 @@ function buildWhatToMineTable() {
         const algorithm = document.createElement('td');
         algorithm.innerHTML = coin.algorithm;
         const nethash = document.createElement('td');
-        nethash.innerHTML = formatHashrate(coin.nethash);
+        nethash.innerHTML = formatHashrate(coin.nethash, 2);
         const nethashVsETC = document.createElement('td');
         nethashVsETC.innerHTML = `${(coin.nethash / WhatToMine.coins.EthereumClassic.nethash).toFixed(3)}`;
         if (coin.nethash < WhatToMine.coins.EthereumClassic.nethash) {
-            nethashVsETC.innerHTML += ` = 1/${(1/(coin.nethash / WhatToMine.coins.EthereumClassic.nethash)).toFixed(0)}`;
+            nethashVsETC.innerHTML += ` = 1/${(1 / (coin.nethash / WhatToMine.coins.EthereumClassic.nethash)).toFixed(0)}`;
         }
         const marketcap = document.createElement('td');
         marketcap.innerHTML = coin.market_cap;
@@ -545,6 +562,54 @@ function buildWhatToMineTable() {
         whatToMineTable.appendChild(row);
     }
 
+}
+
+// WhatToMine chart
+// -------------------------------------------------------------------------------
+
+const whatToMineChartCtx = document.getElementById('whattomine-chart').getContext('2d');
+let whatToMineChartInstance = new Chart(whatToMineChartCtx, {});
+
+function whatToMineChart() {
+    whatToMineChartInstance.destroy()
+    let data = [];
+    for (let coin of Object.keys(WhatToMine.coins)) {
+        data.push({name: coin, ...WhatToMine.coins[coin]});
+    }
+    data.sort((a, b) => b.nethash - a.nethash);
+    const labels = data.map(coin => coin.name);
+    const datasets = [{
+        data: data.map(coin => coin.nethash),
+    }];
+    console.log("labels", labels);
+    console.log("datasets", datasets);
+    whatToMineChartInstance = new Chart(whatToMineChartCtx, {
+        type: 'bar',
+        data: {
+            datasets: datasets,
+            labels: labels,
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: "Hashrate",
+                    },
+                    ticks: {
+                        callback: function (value, index, values) {
+                            return formatHashrate(value, 0);
+                        }
+                    }
+                }
+            }
+        }
+    })
 }
 
 // UI, Initializations
@@ -581,6 +646,7 @@ function init() {
     messPenaltyChart();
 
     buildWhatToMineTable();
+    whatToMineChart();
 
     // Syntax highlighting
     // Prism.highlightAll();

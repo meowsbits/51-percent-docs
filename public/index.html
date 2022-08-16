@@ -280,7 +280,7 @@
             for ETC and <code>etchash</code>.
         </p>
 
-        <h3 id="section-hashrate-market-share">Compatible Hashrate Market Share</h3>
+        <h3 id="section-hardware-market-share">Compatible Hardware Market Share</h3>
 
         <p>
             While Ethereum obviously represents the largest application of ETC-compatible hash power<sup>
@@ -292,18 +292,28 @@
             but represent only a small fraction of the total global supply.
         </p>
 
+        <canvas id="whattomine-chart" width="400" height="200" style="margin-top: 2rem;"></canvas>
+
         <table id="applied-hashrate-shares" style="width: 100%;">
             <tr class="header">
                 <th>Name</th>
-                <th>Algo</th>
+                <th>PoW Algorithm</th>
                 <th>Hashrate</th>
-                <th>Hashrate / ETC Hashrate</th>
+                <th>Hashrate xETC</th>
                 <th>Market Cap</th>
             </tr>
         </table>
         <p class="modest">
             <a href="https://whattomine.com/coins?aq_69xt=0&aq_68xt=0&aq_68=0&aq_67xt=0&aq_66xt=0&aq_vii=0&aq_5700xt=0&aq_5700=0&aq_5600xt=0&aq_vega64=0&aq_vega56=0&aq_39Ti=0&aq_3090=0&aq_38Ti=0&aq_3080=0&aq_38L=0&aq_37Ti=0&aq_3070=0&aq_37L=0&aq_3060Ti=0&aq_36TiL=0&aq_3060=0&aq_36L=0&aq_66=0&aq_55xt8=0&aq_580=0&aq_570=0&aq_480=3&aq_470=0&aq_fury=0&aq_380=0&aq_a5=0&aq_a45=0&aq_a4=0&aq_a2=0&aq_2080Ti=0&aq_2080=0&aq_2070=0&aq_2060=0&aq_166s=0&aq_1660Ti=0&aq_1660=0&aq_1080Ti=0&aq_1080=0&aq_1070Ti=0&aq_1070=0&aq_10606=0&aq_1050Ti=0&aq_u63610=0&eth=true&factor%5Beth_hr%5D=0.0&factor%5Beth_p%5D=0.0&e4g=true&factor%5Be4g_hr%5D=0.0&factor%5Be4g_p%5D=0.0&factor%5Bzh_hr%5D=0.0&factor%5Bzh_p%5D=0.0&factor%5Bcnh_hr%5D=0.0&factor%5Bcnh_p%5D=0.0&factor%5Bcng_hr%5D=0.0&factor%5Bcng_p%5D=0.0&factor%5Bcnf_hr%5D=0.0&factor%5Bcnf_p%5D=0.0&factor%5Bcx_hr%5D=0.0&factor%5Bcx_p%5D=0.0&factor%5Beqa_hr%5D=0.0&factor%5Beqa_p%5D=0.0&factor%5Bcc_hr%5D=0.0&factor%5Bcc_p%5D=0.0&factor%5Bcr29_hr%5D=0.0&factor%5Bcr29_p%5D=0.0&factor%5Bct31_hr%5D=0.0&factor%5Bct31_p%5D=0.0&factor%5Bct32_hr%5D=0.0&factor%5Bct32_p%5D=0.0&factor%5Beqb_hr%5D=0.0&factor%5Beqb_p%5D=0.0&factor%5Brmx_hr%5D=0.0&factor%5Brmx_p%5D=0.0&factor%5Bns_hr%5D=0.0&factor%5Bns_p%5D=0.0&factor%5Bal_hr%5D=0.0&factor%5Bal_p%5D=0.0&factor%5Bops_hr%5D=0.0&factor%5Bops_p%5D=0.0&factor%5Beqz_hr%5D=0.0&factor%5Beqz_p%5D=0.0&factor%5Bzlh_hr%5D=0.0&factor%5Bzlh_p%5D=0.0&factor%5Bkpw_hr%5D=0.0&factor%5Bkpw_p%5D=0.0&factor%5Bppw_hr%5D=0.0&factor%5Bppw_p%5D=0.0&factor%5Bx25x_hr%5D=0.0&factor%5Bx25x_p%5D=0.0&factor%5Bfpw_hr%5D=0.0&factor%5Bfpw_p%5D=0.0&factor%5Bvh_hr%5D=0.0&factor%5Bvh_p%5D=0.0&factor%5Bcost%5D=0.1&factor%5Bcost_currency%5D=USD&sort=Profitability24&volume=0&revenue=24h&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=binance&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bitforex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=coinex&factor%5Bexchanges%5D%5B%5D=dove&factor%5Bexchanges%5D%5B%5D=exmo&factor%5Bexchanges%5D%5B%5D=gate&factor%5Bexchanges%5D%5B%5D=graviex&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=hotbit&factor%5Bexchanges%5D%5B%5D=ogre&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=stex&dataset=Main&commit=Calculate">Source</a>
             <a href="https://whattomine.com/coins.json?eth=true&factor%5Beth_hr%5D=0.0&factor%5Beth_p%5D=0.0&e4g=true&factor%5Be4g_hr%5D=0.0&factor%5Be4g_p%5D=0.0&factor%5Bzh_hr%5D=0.0&factor%5Bzh_p%5D=0.0&factor%5Bcnh_hr%5D=0.0&factor%5Bcnh_p%5D=0.0&factor%5Bcng_hr%5D=0.0&factor%5Bcng_p%5D=0.0&factor%5Bcnf_hr%5D=0.0&factor%5Bcnf_p%5D=0.0&factor%5Bcx_hr%5D=0.0&factor%5Bcx_p%5D=0.0&factor%5Beqa_hr%5D=0.0&factor%5Beqa_p%5D=0.0&factor%5Bcc_hr%5D=0.0&factor%5Bcc_p%5D=0.0&factor%5Bcr29_hr%5D=0.0&factor%5Bcr29_p%5D=0.0&factor%5Bct31_hr%5D=0.0&factor%5Bct31_p%5D=0.0&factor%5Bct32_hr%5D=0.0&factor%5Bct32_p%5D=0.0&factor%5Beqb_hr%5D=0.0&factor%5Beqb_p%5D=0.0&factor%5Brmx_hr%5D=0.0&factor%5Brmx_p%5D=0.0&factor%5Bns_hr%5D=0.0&factor%5Bns_p%5D=0.0&factor%5Bal_hr%5D=0.0&factor%5Bal_p%5D=0.0&factor%5Bops_hr%5D=0.0&factor%5Bops_p%5D=0.0&factor%5Beqz_hr%5D=0.0&factor%5Beqz_p%5D=0.0&factor%5Bzlh_hr%5D=0.0&factor%5Bzlh_p%5D=0.0&factor%5Bkpw_hr%5D=0.0&factor%5Bkpw_p%5D=0.0&factor%5Bppw_hr%5D=0.0&factor%5Bppw_p%5D=0.0&factor%5Bx25x_hr%5D=0.0&factor%5Bx25x_p%5D=0.0&factor%5Bfpw_hr%5D=0.0&factor%5Bfpw_p%5D=0.0&factor%5Bvh_hr%5D=0.0&factor%5Bvh_p%5D=0.0&factor%5Bcost%5D=0.1&factor%5Bcost_currency%5D=USD&sort=Profitability24&volume=0&revenue=24h&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=binance&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bitforex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=coinex&factor%5Bexchanges%5D%5B%5D=dove&factor%5Bexchanges%5D%5B%5D=exmo&factor%5Bexchanges%5D%5B%5D=gate&factor%5Bexchanges%5D%5B%5D=graviex&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=hotbit&factor%5Bexchanges%5D%5B%5D=ogre&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=stex&dataset=Main">(JSON)</a>
+        </p>
+
+        <p>
+            An emphasis on the technological (eg. hardware) limitations for a network's relative hashrate,
+            determined by its Proof of Work algorithm, is worth repeating.
+            For example, the hashrate on Bitcoin (BTC) at the time of writing is
+            206_853 Ph/s <sup><a href="https://whattomine.com/coins/1-btc-sha-256">WhatToMine</a></sup>.
+            However, much of the specialized hardware in use for this application is inapplicable to the Ethash algorithm.
         </p>
 
         <h3 id="section-potential-hashrate-availability-estimates">Potential Hashrate Availability Estimates</h3>
