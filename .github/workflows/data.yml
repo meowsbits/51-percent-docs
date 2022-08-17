@@ -53,9 +53,11 @@ jobs:
         run: |
           mkdir -p data
           curl "https://api.nomics.com/v1/currencies/ticker?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1" > data/exchange_rates.json
-          echo -n "export const ExchangeData =" > src/scripts/data.js
-          cat data/exchange_rates.json >> src/scripts/data.js
-          echo -n ";" >> src/scripts/data.js
+          echo "// Generated code. DO NOT EDIT." > data/exchangedata.js
+          echo "// These constant values are installed via .github/data.yml" >> data/exchangedata.js
+          echo -n "export const ExchangeData =" >> src/scripts/exchangedata.js
+          cat data/exchange_rates.json >> src/scripts/exchangedata.js
+          echo ";" >> src/scripts/exchangedata.js
           
           curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.etc.rpc.rivet.cloud > data/rivet_etc_latest_block.json
           curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.eth.rpc.rivet.cloud > data/rivet_eth_latest_block.json
