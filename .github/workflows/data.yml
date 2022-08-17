@@ -53,8 +53,8 @@ jobs:
         run: |
           mkdir -p data
           curl "https://api.nomics.com/v1/currencies/ticker?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1" > data/exchange_rates.json
-          echo "// Generated code. DO NOT EDIT." > data/exchangedata.js
-          echo "// These constant values are installed via .github/data.yml" >> data/exchangedata.js
+          echo "// Generated code. DO NOT EDIT." > src/scripts/exchangedata.js
+          echo "// These constant values are installed via .github/data.yml" >> src/scripts/exchangedata.js
           echo -n "export const ExchangeData =" >> src/scripts/exchangedata.js
           cat data/exchange_rates.json >> src/scripts/exchangedata.js
           echo ";" >> src/scripts/exchangedata.js
