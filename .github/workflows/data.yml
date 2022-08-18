@@ -52,34 +52,35 @@ jobs:
           RIVET_API_KEY: ${{ secrets.RIVET_API_KEY }}
         run: |
           mkdir -p data
-          curl "https://api.nomics.com/v1/currencies/ticker?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1" > data/exchange_rates.json
-          echo "// Generated code. DO NOT EDIT." > src/scripts/exchangedata.js
-          echo "// These constant values are installed via .github/data.yml" >> src/scripts/exchangedata.js
-          echo -n "export const ExchangeData =" >> src/scripts/exchangedata.js
-          cat data/exchange_rates.json >> src/scripts/exchangedata.js
-          echo ";" >> src/scripts/exchangedata.js
+          if curl "https://api.nomics.com/v1/currencies/ticker?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1" > public/assets/data/exchange_rates.json.tmp; then
+            mv public/assets/data/exchange_rates.json.tmp public/assets/data/exchange_rates.json
+          else
+            echo "Failed to fetch exchange rates"
+            exit 1
+          fi
+
           
-          curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.etc.rpc.rivet.cloud > data/rivet_etc_latest_block.json
-          curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.eth.rpc.rivet.cloud > data/rivet_eth_latest_block.json
+          if curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.etc.rpc.rivet.cloud > public/assets/data/rivet_etc_latest_block.json.tmp; then
+            mv public/assets/data/rivet_etc_latest_block.json.tmp public/assets/data/rivet_etc_latest_block.json
+          else
+            echo "Failed to fetch latest block"
+            exit 1
+          fi
           
-          echo "// Generated code. DO NOT EDIT." > src/scripts/chaindata.js
-          echo "// These constant values are installed via .github/data.yml" >> src/scripts/chaindata.js
-          echo >> src/scripts/chaindata.js
-          echo -n "export const ETC_Latest_Block = " >> src/scripts/chaindata.js
-          cat data/rivet_etc_latest_block.json >> src/scripts/chaindata.js
-          echo ";" >> src/scripts/chaindata.js
-          echo -n "export const ETH_Latest_Block = " >> src/scripts/chaindata.js
-          cat data/rivet_eth_latest_block.json >> src/scripts/chaindata.js
-          echo ";" >> src/scripts/chaindata.js
           
-          curl 'https://whattomine.com/coins.json?eth=true&factor%5Beth_hr%5D=0.0&factor%5Beth_p%5D=0.0&e4g=true&factor%5Be4g_hr%5D=0.0&factor%5Be4g_p%5D=0.0&factor%5Bzh_hr%5D=0.0&factor%5Bzh_p%5D=0.0&factor%5Bcnh_hr%5D=0.0&factor%5Bcnh_p%5D=0.0&factor%5Bcng_hr%5D=0.0&factor%5Bcng_p%5D=0.0&factor%5Bcnf_hr%5D=0.0&factor%5Bcnf_p%5D=0.0&factor%5Bcx_hr%5D=0.0&factor%5Bcx_p%5D=0.0&factor%5Beqa_hr%5D=0.0&factor%5Beqa_p%5D=0.0&factor%5Bcc_hr%5D=0.0&factor%5Bcc_p%5D=0.0&factor%5Bcr29_hr%5D=0.0&factor%5Bcr29_p%5D=0.0&factor%5Bct31_hr%5D=0.0&factor%5Bct31_p%5D=0.0&factor%5Bct32_hr%5D=0.0&factor%5Bct32_p%5D=0.0&factor%5Beqb_hr%5D=0.0&factor%5Beqb_p%5D=0.0&factor%5Brmx_hr%5D=0.0&factor%5Brmx_p%5D=0.0&factor%5Bns_hr%5D=0.0&factor%5Bns_p%5D=0.0&factor%5Bal_hr%5D=0.0&factor%5Bal_p%5D=0.0&factor%5Bops_hr%5D=0.0&factor%5Bops_p%5D=0.0&factor%5Beqz_hr%5D=0.0&factor%5Beqz_p%5D=0.0&factor%5Bzlh_hr%5D=0.0&factor%5Bzlh_p%5D=0.0&factor%5Bkpw_hr%5D=0.0&factor%5Bkpw_p%5D=0.0&factor%5Bppw_hr%5D=0.0&factor%5Bppw_p%5D=0.0&factor%5Bx25x_hr%5D=0.0&factor%5Bx25x_p%5D=0.0&factor%5Bfpw_hr%5D=0.0&factor%5Bfpw_p%5D=0.0&factor%5Bvh_hr%5D=0.0&factor%5Bvh_p%5D=0.0&factor%5Bcost%5D=0.1&factor%5Bcost_currency%5D=USD&sort=Profitability24&volume=0&revenue=24h&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=binance&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bitforex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=coinex&factor%5Bexchanges%5D%5B%5D=dove&factor%5Bexchanges%5D%5B%5D=exmo&factor%5Bexchanges%5D%5B%5D=gate&factor%5Bexchanges%5D%5B%5D=graviex&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=hotbit&factor%5Bexchanges%5D%5B%5D=ogre&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=stex&dataset=Main' > data/whattomine_gpu.json
+          if curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "id": 1, "method": "eth_getBlockByNumber", "params": ["latest", false]}' https://${RIVET_API_KEY}.eth.rpc.rivet.cloud > public/assets/data/rivet_eth_latest_block.json.tmp; then
+            mv public/assets/data/rivet_eth_latest_block.json.tmp public/assets/data/rivet_eth_latest_block.json
+          else
+            echo "Failed to fetch latest block"
+            exit 1
+          fi
           
-          echo "// Generated code. DO NOT EDIT." > src/scripts/whattomine.js
-          echo "// These constant values are installed via .github/data.yml" >> src/scripts/whattomine.js
-          echo >> src/scripts/whattomine.js
-          echo -n "export const WhatToMine = " >> src/scripts/whattomine.js
-          cat data/whattomine_gpu.json >> src/scripts/whattomine.js
-          echo ";" >> src/scripts/whattomine.js
+          if curl 'https://whattomine.com/coins.json?eth=true&factor%5Beth_hr%5D=0.0&factor%5Beth_p%5D=0.0&e4g=true&factor%5Be4g_hr%5D=0.0&factor%5Be4g_p%5D=0.0&factor%5Bzh_hr%5D=0.0&factor%5Bzh_p%5D=0.0&factor%5Bcnh_hr%5D=0.0&factor%5Bcnh_p%5D=0.0&factor%5Bcng_hr%5D=0.0&factor%5Bcng_p%5D=0.0&factor%5Bcnf_hr%5D=0.0&factor%5Bcnf_p%5D=0.0&factor%5Bcx_hr%5D=0.0&factor%5Bcx_p%5D=0.0&factor%5Beqa_hr%5D=0.0&factor%5Beqa_p%5D=0.0&factor%5Bcc_hr%5D=0.0&factor%5Bcc_p%5D=0.0&factor%5Bcr29_hr%5D=0.0&factor%5Bcr29_p%5D=0.0&factor%5Bct31_hr%5D=0.0&factor%5Bct31_p%5D=0.0&factor%5Bct32_hr%5D=0.0&factor%5Bct32_p%5D=0.0&factor%5Beqb_hr%5D=0.0&factor%5Beqb_p%5D=0.0&factor%5Brmx_hr%5D=0.0&factor%5Brmx_p%5D=0.0&factor%5Bns_hr%5D=0.0&factor%5Bns_p%5D=0.0&factor%5Bal_hr%5D=0.0&factor%5Bal_p%5D=0.0&factor%5Bops_hr%5D=0.0&factor%5Bops_p%5D=0.0&factor%5Beqz_hr%5D=0.0&factor%5Beqz_p%5D=0.0&factor%5Bzlh_hr%5D=0.0&factor%5Bzlh_p%5D=0.0&factor%5Bkpw_hr%5D=0.0&factor%5Bkpw_p%5D=0.0&factor%5Bppw_hr%5D=0.0&factor%5Bppw_p%5D=0.0&factor%5Bx25x_hr%5D=0.0&factor%5Bx25x_p%5D=0.0&factor%5Bfpw_hr%5D=0.0&factor%5Bfpw_p%5D=0.0&factor%5Bvh_hr%5D=0.0&factor%5Bvh_p%5D=0.0&factor%5Bcost%5D=0.1&factor%5Bcost_currency%5D=USD&sort=Profitability24&volume=0&revenue=24h&factor%5Bexchanges%5D%5B%5D=&factor%5Bexchanges%5D%5B%5D=binance&factor%5Bexchanges%5D%5B%5D=bitfinex&factor%5Bexchanges%5D%5B%5D=bitforex&factor%5Bexchanges%5D%5B%5D=bittrex&factor%5Bexchanges%5D%5B%5D=coinex&factor%5Bexchanges%5D%5B%5D=dove&factor%5Bexchanges%5D%5B%5D=exmo&factor%5Bexchanges%5D%5B%5D=gate&factor%5Bexchanges%5D%5B%5D=graviex&factor%5Bexchanges%5D%5B%5D=hitbtc&factor%5Bexchanges%5D%5B%5D=hotbit&factor%5Bexchanges%5D%5B%5D=ogre&factor%5Bexchanges%5D%5B%5D=poloniex&factor%5Bexchanges%5D%5B%5D=stex&dataset=Main' > public/assets/data/whattomine_gpu.json.tmp; then
+            mv public/assets/data/whattomine_gpu.json.tmp public/assets/data/whattomine_gpu.json
+          else
+            echo "Failed to fetch whattomine gpu data"
+            exit 1
+          fi
 
       - run: yarn
       - run: yarn build

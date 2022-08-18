@@ -1,12 +1,14 @@
 import {ECBP1100_Penalty} from './ecip-1100';
-import {ExchangeData} from "./exchangedata";
-import {ETC_Latest_Block, ETH_Latest_Block} from "./chaindata";
-import {WhatToMine} from "./whattomine";
 import Chart from 'chart.js/auto';
 import Prism from 'prismjs';
 import * as tocbot from "tocbot";
 
 const humanFormat = require("human-format");
+
+// Weirdly global vars that will be filled with fetch responses.
+let ETC_Latest_Block = {};
+let ETH_Latest_Block = {};
+let ExchangeData = [{price: 40}];
 
 // Summary Table
 // -------------------------------------------------------------------------------
@@ -442,17 +444,14 @@ const empiricalMinerHashrateShares_ETH = [
     {address: "0x28846f1ec065eea239152213373bb58b1c9fc93b", name: "Miner: 0x288...93B", percentage: 0.8995},
 ];
 
-function currentHashrate_TH(chain) {
-    let block = ETC_Latest_Block.result;
-    if (chain === 'eth') block = ETH_Latest_Block.result;
-
+function currentHashrate_TH(block) {
     return parseInt(block.difficulty, 16) / 13 / terahash;
 }
 
 
 function hashrateEstimatesDataToUI() {
-    const hr_ETH = currentHashrate_TH('eth');
-    const hr_ETC = currentHashrate_TH('etc');
+    const hr_ETH = currentHashrate_TH(ETH_Latest_Block.result);
+    const hr_ETC = currentHashrate_TH(ETC_Latest_Block.result);
     const hr_ETC_GlobalShare = (hr_ETC / (hr_ETH + hr_ETC) * 100);
 
     document.getElementById('eth-hashrate-current').innerHTML = hr_ETH.toFixed(1) + 'TH/s';
@@ -529,10 +528,10 @@ var formatHashrate = function (rate, precision) {
 
 const whatToMineTable = document.getElementById('applied-hashrate-shares');
 
-function buildWhatToMineTable() {
+function buildWhatToMineTable(whatToMineData) {
     let data = [];
-    for (let coin of Object.keys(WhatToMine.coins)) {
-        data.push({name: coin, ...WhatToMine.coins[coin]});
+    for (let coin of Object.keys(whatToMineData.coins)) {
+        data.push({name: coin, ...whatToMineData.coins[coin]});
     }
     data.sort((a, b) => b.nethash - a.nethash);
     for (let coin of data) {
@@ -546,9 +545,9 @@ function buildWhatToMineTable() {
         const nethash = document.createElement('td');
         nethash.innerHTML = formatHashrate(coin.nethash, 2);
         const nethashVsETC = document.createElement('td');
-        nethashVsETC.innerHTML = `${(coin.nethash / WhatToMine.coins.EthereumClassic.nethash).toFixed(3)}`;
-        if (coin.nethash < WhatToMine.coins.EthereumClassic.nethash) {
-            nethashVsETC.innerHTML += ` = 1/${(1 / (coin.nethash / WhatToMine.coins.EthereumClassic.nethash)).toFixed(0)}`;
+        nethashVsETC.innerHTML = `${(coin.nethash / whatToMineData.coins.EthereumClassic.nethash).toFixed(3)}`;
+        if (coin.nethash < whatToMineData.coins.EthereumClassic.nethash) {
+            nethashVsETC.innerHTML += ` = 1/${(1 / (coin.nethash / whatToMineData.coins.EthereumClassic.nethash)).toFixed(0)}`;
         }
         const marketcap = document.createElement('td');
         marketcap.innerHTML = coin.market_cap;
@@ -570,11 +569,11 @@ function buildWhatToMineTable() {
 const whatToMineChartCtx = document.getElementById('whattomine-chart').getContext('2d');
 let whatToMineChartInstance = new Chart(whatToMineChartCtx, {});
 
-function whatToMineChart() {
+function whatToMineChart(whatToMineData) {
     whatToMineChartInstance.destroy()
     let data = [];
-    for (let coin of Object.keys(WhatToMine.coins)) {
-        data.push({name: coin, ...WhatToMine.coins[coin]});
+    for (let coin of Object.keys(whatToMineData.coins)) {
+        data.push({name: coin, ...whatToMineData.coins[coin]});
     }
     data.sort((a, b) => b.nethash - a.nethash);
     const labels = data.map(coin => coin.name);
@@ -624,56 +623,77 @@ const dataToUI = () => {
 
 function init() {
 
-    console.log("ETC_latestBlock", ETC_Latest_Block);
-    console.log("ETH_latestBlock", ETH_Latest_Block);
+
+    Promise.all([
+        fetch('./assets/data/exchange_rates.json')
+            .then(response => response.json())
+            .then(data => {
+                ExchangeData = data;
+            }),
+        fetch('./assets/data/rivet_etc_latest_block.json')
+            .then(response => response.json())
+            .then(data => {
+                ETC_Latest_Block = data;
+            }),
+        fetch('./assets/data/rivet_eth_latest_block.json')
+            .then(response => response.json())
+            .then(data => {
+                ETH_Latest_Block = data;
+            }),
+        fetch('./assets/data/whattomine_gpu.json')
+            .then(response => response.json())
+            .then(data => {
+                console.log("whattomine_gpu", data);
+                buildWhatToMineTable(data);
+                whatToMineChart(data);
+            }),
+    ]).then(() => {
+
+        console.log("ETC_latestBlock", ETC_Latest_Block);
+        console.log("ETH_latestBlock", ETH_Latest_Block);
 
 
-    // ETC
-    const blockNumber = parseInt(ETC_Latest_Block.result.number, 16);
+        // ETC
+        const blockNumber = parseInt(ETC_Latest_Block.result.number, 16);
 
-    const monetaryPolicyStart = 5000000, monetaryPolicyEpoch = 5000000;
+        const monetaryPolicyStart = 5000000, monetaryPolicyEpoch = 5000000;
 
-    const currentMonetaryPolicyEpoch = Math.ceil((blockNumber - monetaryPolicyStart) / monetaryPolicyEpoch);
-    const originalReward = 5;
-    blockReward = originalReward * Math.pow(0.8, currentMonetaryPolicyEpoch);
-    blockReward = Math.round(blockReward * 100) / 100;
-    input_blockReward.value = blockReward;
+        const currentMonetaryPolicyEpoch = Math.ceil((blockNumber - monetaryPolicyStart) / monetaryPolicyEpoch);
+        const originalReward = 5;
+        blockReward = originalReward * Math.pow(0.8, currentMonetaryPolicyEpoch);
+        blockReward = Math.round(blockReward * 100) / 100;
+        input_blockReward.value = blockReward;
 
-    input_confirmationTool_USD.onchange(undefined); // Initialize.
+        input_confirmationTool_USD.onchange(undefined); // Initialize.
 
-    hashrateEstimatesDataToUI();
+        hashrateEstimatesDataToUI();
 
-    messPenaltyChart();
+        messPenaltyChart();
 
-    buildWhatToMineTable();
-    whatToMineChart();
+        // Syntax highlighting
+        // Prism.highlightAll();
+        const codeBlocks = document.querySelectorAll('pre code.prism');
+        for (let i = 0; i < codeBlocks.length; i++) {
+            Prism.highlightElement(codeBlocks[i]);
+        }
 
-    // Syntax highlighting
-    // Prism.highlightAll();
-    const codeBlocks = document.querySelectorAll('pre code.prism');
-    for (let i = 0; i < codeBlocks.length; i++) {
-        Prism.highlightElement(codeBlocks[i]);
-    }
-
-    tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.js-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.wrapper',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: 'h2, h3, h4',
-        // For headings inside relative or absolute positioned containers within content.
-        hasInnerContainers: true,
-        collapseDepth: 4,
-        orderedList: false,
-        // positionFixedSelector: '.my-position-fixed',
-        // scrollSmoothOffset: 50,
-        // headingsOffset: 10,
+        tocbot.init({
+            // Where to render the table of contents.
+            tocSelector: '.js-toc',
+            // Where to grab the headings to build the table of contents.
+            contentSelector: '.wrapper',
+            // Which headings to grab inside of the contentSelector element.
+            headingSelector: 'h2, h3, h4',
+            // For headings inside relative or absolute positioned containers within content.
+            hasInnerContainers: true,
+            collapseDepth: 4,
+            orderedList: false,
+            // positionFixedSelector: '.my-position-fixed',
+            // scrollSmoothOffset: 50,
+            // headingsOffset: 10,
+        });
+        return dataToUI();
     });
-
-    fetch
-
-    return dataToUI();
 }
 
 init();
