@@ -664,6 +664,10 @@ function init() {
         blockReward = Math.round(blockReward * 100) / 100;
         input_blockReward.value = blockReward;
 
+        usdETC = Math.round(+ExchangeData[0].price * 100) / 100 || 36;
+        input_usdETC.value = usdETC;
+
+
         input_confirmationTool_USD.onchange(undefined); // Initialize.
 
         hashrateEstimatesDataToUI();
