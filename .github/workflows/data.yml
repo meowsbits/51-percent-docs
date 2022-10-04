@@ -48,7 +48,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Fetch and interpolate the data
         env:
-          NOMICS_API_KEY: ${{ secrets.NOMICS_API_KEY }}
+          COINAPI_API_KEY: ${{ secrets.COINAPI_API_KEY }}
           RIVET_API_KEY: ${{ secrets.RIVET_API_KEY }}
         run: |
           mkdir -p data
