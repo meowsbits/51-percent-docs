@@ -675,7 +675,7 @@ function init() {
 
         input_confirmationTool_USD.onchange(undefined); // Initialize.
 
-        hashrateEstimatesDataToUI();
+        // hashrateEstimatesDataToUI();
 
         messPenaltyChart();
 
