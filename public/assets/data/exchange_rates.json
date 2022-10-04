@@ -1,1 +1,3 @@
-Authentication failed. Check your API key and our documentation at docs.nomics.com for details. If you don't have a key, you can get one at NomicsAPI.com
+{
+  "error": "You didn\u0027t specify API key or it is incorrectly formatted. You should do it in query string parameter \u0060apikey\u0060 or in http header named \u0060X-CoinAPI-Key\u0060"
+}
