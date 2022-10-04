@@ -52,7 +52,7 @@ jobs:
           RIVET_API_KEY: ${{ secrets.RIVET_API_KEY }}
         run: |
           mkdir -p data
-          if curl "https://api.nomics.com/v1/currencies/ticker?key=${NOMICS_API_KEY}&ids=ETC&interval=1d,30d&convert=USD&per-page=100&page=1" > public/assets/data/exchange_rates.json.tmp; then
+          if curl https://rest.coinapi.io/v1/exchangerate/ETC/USD --request GET --header "X-CoinAPI-Key: ${COINAPI_API_KEY}" > public/assets/data/exchange_rates.json.tmp; then
             mv public/assets/data/exchange_rates.json.tmp public/assets/data/exchange_rates.json
           else
             echo "Failed to fetch exchange rates"

@@ -8,7 +8,12 @@ const humanFormat = require("human-format");
 // Weirdly global vars that will be filled with fetch responses.
 let ETC_Latest_Block = {};
 let ETH_Latest_Block = {};
-let ExchangeData = [{price: 40}];
+let ExchangeData = {
+    "time": "2022-10-04T16:53:22.0000000Z",
+    "asset_id_base": "ETC",
+    "asset_id_quote": "USD",
+    "rate": 27.724502988404161925542335229
+};
 
 // Summary Table
 // -------------------------------------------------------------------------------
@@ -32,7 +37,7 @@ input_blockReward.onchange = function () {
 
 const blocksPerHour = 60.0 * 60 / 13.0;
 
-let usdETC = Math.round(+ExchangeData[0].price * 100) / 100 || 36;
+let usdETC = Math.round(+ExchangeData.rate * 100) / 100 || 36;
 const input_usdETC = document.getElementById('usd-etc');
 input_usdETC.value = usdETC;
 input_usdETC.onchange = function () {
@@ -664,7 +669,7 @@ function init() {
         blockReward = Math.round(blockReward * 100) / 100;
         input_blockReward.value = blockReward;
 
-        usdETC = Math.round(+ExchangeData[0].price * 100) / 100 || 36;
+        usdETC = Math.round(+ExchangeData.rate * 100) / 100 || 36;
         input_usdETC.value = usdETC;
 
 
