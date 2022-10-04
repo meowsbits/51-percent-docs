@@ -25,7 +25,7 @@ const attackDurationVals = [5, 10, 15, 30, 45, 60, 75, 90, 105, 120,
 const terahash = 1000000000000;
 
 const summaryTable = document.querySelector('#summary-table');
-const minerTable = document.querySelector('#eth-miners');
+// const minerTable = document.querySelector('#eth-miners');
 
 let blockReward = 2.56;
 const input_blockReward = document.getElementById('block-reward');
