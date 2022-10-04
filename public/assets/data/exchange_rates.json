@@ -1,3 +1,6 @@
 {
-  "error": "You didn\u0027t specify API key or it is incorrectly formatted. You should do it in query string parameter \u0060apikey\u0060 or in http header named \u0060X-CoinAPI-Key\u0060"
+  "time": "2022-10-04T17:57:48.0000000Z",
+  "asset_id_base": "ETC",
+  "asset_id_quote": "USD",
+  "rate": 27.672940152084341353206854632
 }
