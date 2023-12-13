@@ -121,9 +121,9 @@ const miningEstimatePrototype = {
         cost.innerHTML = formatRowNumber(this.cost.toFixed(0));
         revenue.innerHTML = formatRowNumber(this.revenue.toFixed(0));
         net.innerHTML = formatRowNumber((this.revenue + this.cost).toFixed(0));
-        messPenalty.innerHTML = this.penalty.toFixed(2);
-        penalizedCost.innerHTML = formatRowNumber(this.penalizedCost.toFixed(0));
-        penalizedNet.innerHTML = formatRowNumber((this.revenue + this.penalizedCost).toFixed(0));
+        messPenalty.innerHTML = `<s>${this.penalty.toFixed(2)}</s>`;
+        penalizedCost.innerHTML = `<s>${formatRowNumber(this.penalizedCost.toFixed(0))}</s>`;
+        penalizedNet.innerHTML = `<s>${formatRowNumber((this.revenue + this.penalizedCost).toFixed(0))}</s>`;
 
         row.appendChild(duration);
         row.appendChild(blocks);
