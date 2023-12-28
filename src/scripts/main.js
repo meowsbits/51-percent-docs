@@ -238,8 +238,8 @@ function summaryChart(data) {
                         text: 'Net = Revenue - Expense',
                     },
                     position: 'right',
-                    max: Math.max(...attackCostObjectData_Penalized.map(v => v.y)),
-                    min: Math.min(...attackCostObjectData_Penalized.map(v => v.y)),
+                    min: Math.min(...attackCostObjectData_Penalized.map(v => v.y), ...attackCostObjectData_UnPenalized.map(v => v.y)),
+                    max: Math.max(...attackCostObjectData_Penalized.map(v => v.y), ...attackCostObjectData_UnPenalized.map(v => v.y)),
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function (value, index, ticks) {
