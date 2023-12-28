@@ -223,8 +223,8 @@ function summaryChart(data) {
                         display: true,
                         text: 'Attack Duration',
                     },
-                    min: 0,
-                    max: Math.max(...attackCostObjectData_Penalized.map(v => v.x)),
+                    // min: 0,
+                    // max: Math.max(...attackCostObjectData_Penalized.map(v => v.x)),
                     type: 'linear',
                     ticks: {
                         callback: function (value, index, values) {
@@ -238,8 +238,8 @@ function summaryChart(data) {
                         text: 'Net = Revenue - Expense',
                     },
                     position: 'right',
-                    min: Math.min(...attackCostObjectData_Penalized.map(v => v.y), ...attackCostObjectData_UnPenalized.map(v => v.y)),
-                    max: Math.max(...attackCostObjectData_Penalized.map(v => v.y), ...attackCostObjectData_UnPenalized.map(v => v.y)),
+                    // min: Math.min(...attackCostObjectData_Penalized.map(v => v.y), ...attackCostObjectData_UnPenalized.map(v => v.y)),
+                    // max: Math.max(...attackCostObjectData_Penalized.map(v => v.y), ...attackCostObjectData_UnPenalized.map(v => v.y)),
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function (value, index, ticks) {
@@ -303,7 +303,7 @@ function messPenaltyChart() {
                         text: 'Attack Duration',
                     },
                     min: 0,
-                    max: Math.max(...data.map(v => v.x)),
+                    // max: Math.max(...data.map(v => v.x)),
                     type: 'linear',
                     ticks: {
                         callback: function (value, index, values) {
