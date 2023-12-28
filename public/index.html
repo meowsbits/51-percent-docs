@@ -17,6 +17,16 @@
 
             <p>This document provides an analysis of the context and estimates of risk of Proof of Work finality fraud
                 (51-percent attacks) on Ethereum Classic (ETC).</p>
+
+            <p id="mess-deactivation-notice">
+                MESS is scheduled for deactivation in late January, 2024. See <a
+                    href="./#section-mess-deactivation">MESS Deactivation</a> for more information.
+                <br>
+                The specification
+                proposal is <a href="https://github.com/ethereumclassic/ECIPs/pull/520">ECBP-1110</a>,
+                and the associated community discussion around this proposal can be found <a
+                    href="https://github.com/orgs/ethereumclassic/discussions/522">here</a>.
+            </p>
         </header>
         <!--    <div class="my-position-fixed">-->
         <div class="js-toc"></div>
@@ -30,8 +40,16 @@
                 The following chart and table provide rough estimates for current expected attack costs and revenues.
                 Estimates are derived from the configurable values below, along with a constant block time.
                 <!--            Hashrate is not required in calculating the table's values.-->
-                The <code>Net with MESS (USD)</code> column can be understood as a minimum payout
-                from fraud that the attacker would need to break even given the cost of the attack.
+                The <code><s>Net with MESS (USD)</s></code> column can be understood as a minimum payout
+                from fraud that the attacker would need to break even given the cost of the attack under MESS.
+            </p>
+            <p>
+                The <b style="color:#00008B;">dataset <i>without</i> MESS</b> is essentially driven by the efficiency ratio,
+                since the attacker is assumed to recoup their costs through block rewards, as any miner would be. The <code>Net (USD)</code>
+                column can be understood as a minimum payout from fraud that the attacker would need to break even
+                given their costs associated with hardware acquisition and other overhead (defined reductively via the
+                Hashrate Efficienty Ratio input). An efficiency ratio of 1.0 is equivalent to a scenario where cost is equivalent
+                to revenue.
             </p>
 
 
@@ -57,6 +75,9 @@
 
             <canvas id="summary-chart" width="400" height="200"></canvas>
 
+            <p class="modest">
+                <b><s>Striked headers</s></b> indicate the planned deactivation of the MESS artificial finality feature.
+            </p>
             <table id="summary-table">
                 <tr class="header">
                     <th>Duration (HH:MM)</th>
@@ -69,9 +90,6 @@
                     <th><s>Net with MESS (USD)</s></th>
                 </tr>
             </table>
-            <p class="modest">
-                <b><s>Striked headers</s></b> indicate the planned deactivation of the MESS artificial finality feature.
-            </p>
 
             <h4 id="section-confirmation-delay-estimator-tool">Confirmation Delay Estimator Tool</h4>
 
@@ -367,7 +385,7 @@
             <!--            </tr>-->
             <!--        </table>-->
 
-            <h3 id="section-mess">MESS: A Finality Mechanism</h3>
+            <h3 id="section-mess"><s>MESS: A Finality Mechanism</s></h3>
 
             <p>
                 MESS stands for “Modified Exponential Subjective Scoring.” MESS is a protocol strategy <a
@@ -649,6 +667,25 @@ function isProposedCanonical(original, proposed, commonAncestor) {
                 victims, the vulnerability resulting from the mechanics of the MESS protocol is nearer in spirit to
                 terrorism (or a controlled market short) since bifurcating the network would likely destroy its value.
             </p>
+
+            <h4 id="section-mess-deactivation">MESS Deactivation (January 2024)</h4>
+            <p>
+                Since the introduction of MESS on Ethereum Classic in late 2020, Ethereum (ETH) has dropped PoW in favor
+                of a proprietary Proof-of-Stake block emission strategy. This has left Ethereum Classic as the leading
+                consumer of applied Dagger-Hashimoto-compatible hashrate in the cryptocurrency ecosystem; see
+                <a href="./#section-hardware-market-share">Hardware Market Share</a>.
+            </p>
+            <p>
+                The rationale behind its removal assumes that the risks inherent in its maintenance and operation,
+                which are not well defined, weigh more heavily in the balance than the risk to the network of another
+                51% attack
+                given ETC's dominance in the applied Dagger-Hashimoto market.
+            </p>
+            <p>
+                Community discussion around deactivation can be found <a
+                    href="https://github.com/orgs/ethereumclassic/discussions/522">here</a>.
+            </p>
+
 
             <!-- --------------------------------------------------------------------------------------- -->
             <!--

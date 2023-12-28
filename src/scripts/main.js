@@ -166,12 +166,17 @@ const summaryChartContext = document.getElementById('summary-chart').getContext(
 let summaryChartInstance = new Chart(summaryChartContext, {});
 
 function summaryChart(data) {
-    let attackCostObjectData = data.map(v => {
+    // attackCostObjectData_Penalized maps the MiningEstimate objects to the chart data format for penalized (MESS) scenario.
+    let attackCostObjectData_Penalized = data.map(v => {
         return { x: v.duration, y: v.revenue + v.penalizedCost };
+    });
+    // attackCostObjectData_UnPenalized maps the MiningEstimate objects to the chart data format for unpenalized (no MESS) scenario.
+    let attackCostObjectData_UnPenalized = data.map(v => {
+        return { x: v.duration, y: v.revenue + v.cost };
     });
 
     // Filter to show only first 8 hours. The rest is too much.
-    // attackCostObjectData = attackCostObjectData.filter(v => v.x < 60*8);
+    // attackCostObjectData_Penalized = attackCostObjectData_Penalized.filter(v => v.x < 60*8);
 
     console.log("Summary Chart data", data);
 
@@ -183,10 +188,16 @@ function summaryChart(data) {
         datasets: [
             {
                 label: 'Attack Cost under MESS',
-                data: attackCostObjectData,
+                data: attackCostObjectData_Penalized,
                 backgroundColor: '#8B0000FF',
                 clip: 5,
-            }
+            },
+            {
+                label: 'Attack Cost without MESS',
+                data: attackCostObjectData_UnPenalized,
+                backgroundColor: '#00008BFF',
+                clip: 5,
+            },
         ]
     };
 
@@ -196,11 +207,11 @@ function summaryChart(data) {
         options: {
             plugins: {
                 title: {
-                    text: 'Attack Cost Accounting under MESS',
+                    text: 'Attack Cost/Revenue Accounting, with and without MESS',
                     display: true,
                 },
                 legend: {
-                    display: false,
+                    display: true,
                 }
             },
             layout: {
@@ -213,7 +224,7 @@ function summaryChart(data) {
                         text: 'Attack Duration',
                     },
                     min: 0,
-                    max: Math.max(...attackCostObjectData.map(v => v.x)),
+                    max: Math.max(...attackCostObjectData_Penalized.map(v => v.x)),
                     type: 'linear',
                     ticks: {
                         callback: function (value, index, values) {
@@ -227,8 +238,8 @@ function summaryChart(data) {
                         text: 'Net = Revenue - Expense',
                     },
                     position: 'right',
-                    max: Math.max(...attackCostObjectData.map(v => v.y)),
-                    min: Math.min(...attackCostObjectData.map(v => v.y)),
+                    max: Math.max(...attackCostObjectData_Penalized.map(v => v.y)),
+                    min: Math.min(...attackCostObjectData_Penalized.map(v => v.y)),
                     ticks: {
                         // Include a dollar sign in the ticks
                         callback: function (value, index, ticks) {
