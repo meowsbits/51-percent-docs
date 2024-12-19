@@ -1,3 +1,6 @@
 {
-  "error": "You requested specific single item that we don\u0027t have at this moment."
+  "time": "2024-12-19T03:00:01.7000000Z",
+  "asset_id_base": "ETC",
+  "asset_id_quote": "USD",
+  "rate": 28.9734263823458
 }
