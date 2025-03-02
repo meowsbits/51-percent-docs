@@ -1,6 +1,13 @@
 {
-  "time": "2025-03-01T02:59:47.0000000Z",
-  "asset_id_base": "ETC",
-  "asset_id_quote": "USD",
-  "rate": 19.6292256172284
+  "title": "Forbidden",
+  "status": 429,
+  "detail": "Quota exceeded: Value of Invoices Past Due Too High.",
+  "error": "Forbidden (Quota exceeded: Value of Invoices Past Due Too High.)",
+  "QuotaKey": "PASTDUE",
+  "QuotaName": "Value of Invoices Past Due Too High",
+  "QuotaType": "Organization Limit",
+  "QuotaValueCurrentUsage": 130,
+  "QuotaValue": 0,
+  "QuotaValueUnit": "$",
+  "QuotaValueAdjustable": "Yes, resolve past due invoices, payment issues."
 }
