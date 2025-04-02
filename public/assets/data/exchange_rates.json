@@ -6,7 +6,7 @@
   "QuotaKey": "PASTDUE",
   "QuotaName": "Value of Invoices Past Due Too High",
   "QuotaType": "Organization Limit",
-  "QuotaValueCurrentUsage": 130,
+  "QuotaValueCurrentUsage": 656,
   "QuotaValue": 0,
   "QuotaValueUnit": "$",
   "QuotaValueAdjustable": "Yes, resolve past due invoices, payment issues."
