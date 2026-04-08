@@ -1,6 +1,8 @@
 {
-  "time": "2026-04-07T04:38:11.1000000Z",
-  "asset_id_base": "ETC",
-  "asset_id_quote": "USD",
-  "rate": 8.19577302860773
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+  "title": "Internal Server Error",
+  "status": 500,
+  "detail": "An error occurred while processing your request. Please try again later.",
+  "error": "Internal Server Error (An error occurred while processing your request. Please try again later.)",
+  "traceId": "c85dc8b0f0838f9205435e992e457e61"
 }
